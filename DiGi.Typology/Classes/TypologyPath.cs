@@ -1,11 +1,7 @@
-﻿using DiGi.Core.Classes;
-using DiGi.Core.Enums;
-using DiGi.Core.Interfaces;
-using DiGi.Typology.Interfaces;
+﻿using DiGi.Typology.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
