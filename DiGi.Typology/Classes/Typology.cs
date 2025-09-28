@@ -37,12 +37,12 @@ namespace DiGi.Typology.Classes
 
         }
 
-        public Typology(TypologyItem typologyItem)
+        public Typology(TypologyItem? typologyItem)
         {
             this.typologyItem = Core.Query.Clone(typologyItem);
         }
 
-        public Typology(TypologyItem typologyItem, IEnumerable<Typology>? subTypologies)
+        public Typology(TypologyItem? typologyItem, IEnumerable<Typology>? subTypologies)
         {
             this.typologyItem = Core.Query.Clone(typologyItem);
 
@@ -161,7 +161,7 @@ namespace DiGi.Typology.Classes
             return typology_Parent.GetTypology(typologyPath.GetTypologyPath(1, typologyPath.Count - 1));
         }
 
-        public Typology? GetTypology(IEnumerable<int> values)
+        public Typology? GetTypology(IEnumerable<int>? values)
         {
             if(values is null)
             {
@@ -236,7 +236,7 @@ namespace DiGi.Typology.Classes
             return typology_Parent.Update(new TypologyItem(typologyPath.GetTypologyPath(1, typologyPath.Count - 1), typologyItem));
         }
 
-        public Typology? Update(IEnumerable<int> values, string? name, string? description)
+        public Typology? Update(IEnumerable<int>? values, string? name, string? description)
         {
             return Update(new TypologyItem(new TypologyPath(values), name, description));
         }
