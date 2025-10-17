@@ -1,12 +1,13 @@
 ﻿using DiGi.Core.Interfaces;
 using DiGi.Typology.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace DiGi.Typology.Classes
 {
-    public class TypologyItem : Core.Classes.SerializableObject, ITypologyObject, INamedObject, IDescribableObject
+    public class TypologyItem : Core.Classes.SerializableObject, ITypologyObject, INamedObject, IDescribableObject, IComparable<TypologyItem>
     {
         [JsonInclude, JsonPropertyName("TypologyPath")]
         private readonly TypologyPath? typologyPath;
@@ -26,6 +27,12 @@ namespace DiGi.Typology.Classes
         {
             typologyPath = values == null ? null : new TypologyPath(values);
             this.description = description;
+            this.name = name;
+        }
+
+        public TypologyItem(IEnumerable<int>? values, string? name)
+        {
+            typologyPath = values == null ? null : new TypologyPath(values);
             this.name = name;
         }
 
@@ -102,7 +109,22 @@ namespace DiGi.Typology.Classes
                 return typologyPath;
             }
         }
-        
+
+        public int CompareTo(TypologyItem typologyItem)
+        {
+            if (typologyPath == null)
+            {
+                return int.MinValue;
+            }
+
+            if (typologyItem?.typologyPath == null)
+            {
+                return 1; // non-null > null
+            }
+
+            return typologyPath.CompareTo(typologyItem.typologyPath);
+        }
+
         public override string ToString()
         {
             string? path = typologyPath?.ToString();

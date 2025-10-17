@@ -1,5 +1,7 @@
-﻿using DiGi.Core.Interfaces;
+﻿using DiGi.Core.Classes;
+using DiGi.Core.Interfaces;
 using DiGi.Typology.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
@@ -7,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace DiGi.Typology.Classes
 {
-    public class Typology : Core.Classes.SerializableObject, ITypologyObject, INamedObject, IDescribableObject
+    public class Typology : SerializableObject, ITypologyObject, INamedObject, IDescribableObject, IComparable<Typology>
     {
         [JsonInclude, JsonPropertyName("References")]
         private readonly HashSet<string> references = [];
@@ -107,11 +109,11 @@ namespace DiGi.Typology.Classes
             private set
             {
                 subTypologies?.Clear();
-                if(value != null)
+                if (value != null)
                 {
                     foreach (Typology typology in value)
                     {
-                        if(typology?.typologyItem?.TypologyPath?.Index is int index)
+                        if (typology?.typologyItem?.TypologyPath?.Index is int index)
                         {
                             subTypologies![index] = typology;
                         }
@@ -121,6 +123,13 @@ namespace DiGi.Typology.Classes
             }
         }
 
+        public TypologyPath? TypologyPath
+        {
+            get
+            {
+                return typologyItem?.TypologyPath;
+            }
+        }
         public bool AddReference(string? reference)
         {
             if (reference == null)
@@ -131,11 +140,31 @@ namespace DiGi.Typology.Classes
             return references.Add(reference);
         }
 
+        public int CompareTo(Typology typology)
+        {
+            if (typologyItem == null)
+            {
+                return int.MinValue;
+            }
+
+            if (typology?.typologyItem == null)
+            {
+                return 1; // non-null > null
+            }
+
+            return typologyItem.CompareTo(typology.typologyItem);
+        }
+
         public Typology? GetTypology(TypologyPath? typologyPath)
         {
             if (typologyPath is null)
             {
                 return null;
+            }
+
+            if(typologyPath.Count == 0)
+            {
+                return this;
             }
 
             if (typologyPath.ParentCount <= 0)
@@ -171,6 +200,36 @@ namespace DiGi.Typology.Classes
             return GetTypology(new TypologyPath(values));
         }
 
+        public List<TypologyPath>? GetTypologyPaths(bool includeNested = false)
+        {
+            if(SubTypologies == null)
+            {
+                return null;
+            }
+
+            List<TypologyPath> result = [];
+            foreach (Typology subTypology in subTypologies.Values)
+            {
+                if(subTypology?.typologyItem?.TypologyPath is not TypologyPath typologyPath)
+                {
+                    continue;
+                }
+
+                result.Add(typologyPath);
+
+                if(includeNested)
+                {
+                    List<TypologyPath>? typologyPaths = subTypology.GetTypologyPaths(includeNested);
+                    if(typologyPaths != null)
+                    {
+                        result.AddRange(typologyPaths);
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public override string ToString()
         {
             return typologyItem?.ToString() ?? base.ToString();
@@ -188,6 +247,53 @@ namespace DiGi.Typology.Classes
             return true;
         }
 
+        public bool TryGetTypologies(TypologyPath? typologyPath, string name, out List<Typology>? typologies)
+        {
+            typologies = null;
+
+            if(typologyPath is null)
+            {
+                return false;
+            }
+            
+            Typology? typology = GetTypology(typologyPath);
+            if (typology?.subTypologies is null)
+            {
+                return false;
+            }
+
+            typologies = [];
+
+            foreach (Typology subTypology in typology.subTypologies.Values)
+            {
+                if (subTypology.Name != name)
+                {
+                    continue;
+                }
+
+                typologies.Add(subTypology);
+            }
+
+            return typologies is not null && typologies.Count > 0;
+        }
+
+        public bool TryGetTypologies(IEnumerable<int> values, string name, out List<Typology>? typologies)
+        {
+            typologies = null;
+
+            if(values == null)
+            {
+                return false;
+            }
+
+            return TryGetTypologies(new TypologyPath(values), name, out typologies);
+        }
+
+        public bool TryGetTypologies(string name, out List<Typology>? typologies)
+        {
+            return TryGetTypologies(new TypologyPath((IEnumerable<int>)[]), name, out typologies);
+        }
+
         public Typology? Update(TypologyItem? typologyItem)
         {
             if(typologyItem is null)
@@ -199,10 +305,10 @@ namespace DiGi.Typology.Classes
             {
                 if(!TryGetLastIndex(out int index))
                 {
-                    index = 1;
+                    index = 0;
                 }
 
-                typologyPath = new TypologyPath([index]);
+                typologyPath = new TypologyPath([index + 1]);
             }
 
             Typology? result;
@@ -238,12 +344,22 @@ namespace DiGi.Typology.Classes
 
         public Typology? Update(IEnumerable<int>? values, string? name, string? description)
         {
-            return Update(new TypologyItem(new TypologyPath(values), name, description));
+            return Update(new TypologyItem(values == null ? null : new TypologyPath(values), name, description));
         }
 
         public Typology? Update(string? name, string? description)
         {
             return Update(new TypologyItem(null, name, description));
+        }
+
+        public Typology? Update(string? name)
+        {
+            return Update(new TypologyItem(null, name));
+        }
+
+        public Typology? Update(IEnumerable<int>? values, string? name)
+        {
+            return Update(new TypologyItem(values, name));
         }
     }
 }

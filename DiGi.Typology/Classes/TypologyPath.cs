@@ -1,4 +1,7 @@
-﻿using DiGi.Typology.Interfaces;
+﻿using DiGi.Core.Classes;
+using DiGi.Core.Interfaces;
+using DiGi.Typology.Interfaces;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +10,7 @@ using System.Text.Json.Serialization;
 
 namespace DiGi.Typology.Classes
 {
-    public class TypologyPath : Core.Classes.SerializableObject, ITypologyObject, IEnumerable<int>
+    public class TypologyPath : SerializableObject, ITypologyObject, IEnumerable<int>, IComparable<TypologyPath>
     {
         [JsonInclude, JsonPropertyName("Values")]
         private readonly List<int> values = [];
@@ -103,6 +106,30 @@ namespace DiGi.Typology.Classes
             return new TypologyPath(values);
         }
 
+        public static TypologyPath? operator +(TypologyPath? typologyPath_1, TypologyPath? typologyPath_2)
+        {
+            if (typologyPath_1 is null && typologyPath_2 is null)
+            {
+                return null;
+            }
+
+            if (typologyPath_1?.values is not List<int> values_1)
+            {
+                return new TypologyPath(typologyPath_2);
+            }
+
+            if (typologyPath_2?.values is not List<int> values_2)
+            {
+                return new TypologyPath(typologyPath_1);
+            }
+
+            values_1 = [.. values_1];
+
+            values_1.AddRange(values_2);
+
+            return new TypologyPath(values_1);
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is not TypologyPath typologyPath)
@@ -153,33 +180,49 @@ namespace DiGi.Typology.Classes
             return new TypologyPath(values.GetRange(index, count));
         }
 
+        public List<TypologyPath> GetTypologyPaths()
+        {
+            List<TypologyPath> result = [];
+            for (int i = 0; i < ParentCount; i++)
+            {
+                if (GetParent(i) is not TypologyPath typologyPath)
+                {
+                    continue;
+                }
+
+                result.Add(typologyPath);
+
+            }
+
+            return result;
+        }
+
         public override string ToString()
         {
             return string.Join(".", values);
         }
 
-        public static TypologyPath? operator +(TypologyPath? typologyPath_1, TypologyPath? typologyPath_2)
+        public int CompareTo(TypologyPath typologyPath)
         {
-            if (typologyPath_1 is null && typologyPath_2 is null)
+            if (typologyPath == null)
             {
-                return null;
+                return 1; // non-null > null
             }
 
-            if (typologyPath_1?.values is not List<int> values_1)
+            int count = values.Count;
+            int count_Temp = typologyPath.values.Count;
+
+            int minLength = Math.Min(count, count_Temp);
+
+            for (int i = 0; i < minLength; i++)
             {
-                return new TypologyPath(typologyPath_2);
+                int cmp = values[i].CompareTo(typologyPath.values[i]);
+                if (cmp != 0)
+                    return cmp;
             }
 
-            if (typologyPath_2?.values is not List<int> values_2)
-            {
-                return new TypologyPath(typologyPath_1);
-            }
-
-            values_1 = [.. values_1];
-
-            values_1.AddRange(values_2);
-
-            return new TypologyPath(values_1);
+            // If all elements equal, shorter array comes first
+            return count.CompareTo(count_Temp);
         }
     }
 }
