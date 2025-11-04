@@ -130,6 +130,7 @@ namespace DiGi.Typology.Classes
                 return typologyItem?.TypologyPath;
             }
         }
+        
         public bool AddReference(string? reference)
         {
             if (reference == null)
@@ -155,6 +156,59 @@ namespace DiGi.Typology.Classes
             return typologyItem.CompareTo(typology.typologyItem);
         }
 
+        public bool Contains(string reference, bool includeNested = false)
+        {
+            if (reference is null)
+            {
+                return false;
+            }
+
+            if (references is not null)
+            {
+                if (references.Contains(reference))
+                {
+                    return true;
+                }
+            }
+
+            if (!includeNested)
+            {
+                return false;
+            }
+
+            foreach (Typology subTypology in subTypologies.Values)
+            {
+                if (subTypology.Contains(reference, includeNested))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public HashSet<string> GetReferences(bool includeNested)
+        {
+            HashSet<string> result = [.. references];
+
+            if (!includeNested || subTypologies is null || subTypologies.Count == 0)
+            {
+                return result;
+            }
+
+            foreach(Typology subTypology in subTypologies.Values)
+            {
+                if(subTypology.GetReferences(includeNested) is not HashSet<string> subReferences)
+                {
+                    continue;
+                }
+
+                result.UnionWith(subReferences);
+            }
+
+            return result;
+        }
+        
         public Typology? GetTypology(TypologyPath? typologyPath)
         {
             if (typologyPath is null)
@@ -229,7 +283,7 @@ namespace DiGi.Typology.Classes
 
             return result;
         }
-
+        
         public override string ToString()
         {
             return typologyItem?.ToString() ?? base.ToString();

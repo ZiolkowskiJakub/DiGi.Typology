@@ -1,5 +1,4 @@
 ﻿using DiGi.Core.Classes;
-using DiGi.Core.Interfaces;
 using DiGi.Typology.Interfaces;
 using System;
 using System.Collections;
@@ -130,6 +129,29 @@ namespace DiGi.Typology.Classes
             return new TypologyPath(values_1);
         }
 
+        public int CompareTo(TypologyPath typologyPath)
+        {
+            if (typologyPath == null)
+            {
+                return 1; // non-null > null
+            }
+
+            int count = values.Count;
+            int count_Temp = typologyPath.values.Count;
+
+            int minLength = Math.Min(count, count_Temp);
+
+            for (int i = 0; i < minLength; i++)
+            {
+                int cmp = values[i].CompareTo(typologyPath.values[i]);
+                if (cmp != 0)
+                    return cmp;
+            }
+
+            // If all elements equal, shorter array comes first
+            return count.CompareTo(count_Temp);
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is not TypologyPath typologyPath)
@@ -200,29 +222,6 @@ namespace DiGi.Typology.Classes
         public override string ToString()
         {
             return string.Join(".", values);
-        }
-
-        public int CompareTo(TypologyPath typologyPath)
-        {
-            if (typologyPath == null)
-            {
-                return 1; // non-null > null
-            }
-
-            int count = values.Count;
-            int count_Temp = typologyPath.values.Count;
-
-            int minLength = Math.Min(count, count_Temp);
-
-            for (int i = 0; i < minLength; i++)
-            {
-                int cmp = values[i].CompareTo(typologyPath.values[i]);
-                if (cmp != 0)
-                    return cmp;
-            }
-
-            // If all elements equal, shorter array comes first
-            return count.CompareTo(count_Temp);
         }
     }
 }
