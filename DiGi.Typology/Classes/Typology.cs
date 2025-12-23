@@ -19,7 +19,7 @@ namespace DiGi.Typology.Classes
 
         [JsonInclude, JsonPropertyName("TypologyItem")]
         private TypologyItem? typologyItem;
-        
+
         public Typology(Typology? typology)
             : base(typology)
         {
@@ -36,7 +36,6 @@ namespace DiGi.Typology.Classes
         public Typology(JsonObject? jsonObject)
             : base(jsonObject)
         {
-
         }
 
         public Typology(TypologyItem? typologyItem)
@@ -119,7 +118,6 @@ namespace DiGi.Typology.Classes
                         }
                     }
                 }
-
             }
         }
 
@@ -130,7 +128,7 @@ namespace DiGi.Typology.Classes
                 return typologyItem?.TypologyPath;
             }
         }
-        
+
         public bool AddReference(string? reference)
         {
             if (reference == null)
@@ -196,9 +194,9 @@ namespace DiGi.Typology.Classes
                 return result;
             }
 
-            foreach(Typology subTypology in subTypologies.Values)
+            foreach (Typology subTypology in subTypologies.Values)
             {
-                if(subTypology.GetReferences(includeNested) is not HashSet<string> subReferences)
+                if (subTypology.GetReferences(includeNested) is not HashSet<string> subReferences)
                 {
                     continue;
                 }
@@ -208,7 +206,7 @@ namespace DiGi.Typology.Classes
 
             return result;
         }
-        
+
         public Typology? GetTypology(TypologyPath? typologyPath)
         {
             if (typologyPath is null)
@@ -216,7 +214,7 @@ namespace DiGi.Typology.Classes
                 return null;
             }
 
-            if(typologyPath.Count == 0)
+            if (typologyPath.Count == 0)
             {
                 return this;
             }
@@ -246,7 +244,7 @@ namespace DiGi.Typology.Classes
 
         public Typology? GetTypology(IEnumerable<int>? values)
         {
-            if(values is null)
+            if (values is null)
             {
                 return null;
             }
@@ -256,7 +254,7 @@ namespace DiGi.Typology.Classes
 
         public List<TypologyPath>? GetTypologyPaths(bool includeNested = false)
         {
-            if(SubTypologies == null)
+            if (SubTypologies == null)
             {
                 return null;
             }
@@ -264,17 +262,17 @@ namespace DiGi.Typology.Classes
             List<TypologyPath> result = [];
             foreach (Typology subTypology in subTypologies.Values)
             {
-                if(subTypology?.typologyItem?.TypologyPath is not TypologyPath typologyPath)
+                if (subTypology?.typologyItem?.TypologyPath is not TypologyPath typologyPath)
                 {
                     continue;
                 }
 
                 result.Add(typologyPath);
 
-                if(includeNested)
+                if (includeNested)
                 {
                     List<TypologyPath>? typologyPaths = subTypology.GetTypologyPaths(includeNested);
-                    if(typologyPaths != null)
+                    if (typologyPaths != null)
                     {
                         result.AddRange(typologyPaths);
                     }
@@ -283,7 +281,7 @@ namespace DiGi.Typology.Classes
 
             return result;
         }
-        
+
         public override string ToString()
         {
             return typologyItem?.ToString() ?? base.ToString();
@@ -305,11 +303,11 @@ namespace DiGi.Typology.Classes
         {
             typologies = null;
 
-            if(typologyPath is null)
+            if (typologyPath is null)
             {
                 return false;
             }
-            
+
             Typology? typology = GetTypology(typologyPath);
             if (typology?.subTypologies is null)
             {
@@ -335,7 +333,7 @@ namespace DiGi.Typology.Classes
         {
             typologies = null;
 
-            if(values == null)
+            if (values == null)
             {
                 return false;
             }
@@ -350,14 +348,14 @@ namespace DiGi.Typology.Classes
 
         public Typology? Update(TypologyItem? typologyItem)
         {
-            if(typologyItem is null)
+            if (typologyItem is null)
             {
                 return null;
             }
 
-            if(typologyItem.TypologyPath is not TypologyPath typologyPath)
+            if (typologyItem.TypologyPath is not TypologyPath typologyPath)
             {
-                if(!TryGetLastIndex(out int index))
+                if (!TryGetLastIndex(out int index))
                 {
                     index = 0;
                 }
@@ -372,7 +370,7 @@ namespace DiGi.Typology.Classes
                 typologyPath_Parent = (this.typologyItem?.TypologyPath + typologyPath)!;
 
                 result = GetTypology(typologyPath_Parent);
-                if(result is null)
+                if (result is null)
                 {
                     result = new Typology(new TypologyItem(typologyPath_Parent, typologyItem));
                 }
@@ -387,7 +385,7 @@ namespace DiGi.Typology.Classes
             }
 
             Typology? typology_Parent = GetTypology(typologyPath_Parent);
-            if(typology_Parent is null)
+            if (typology_Parent is null)
             {
                 typology_Parent = new Typology(new TypologyItem(this.typologyItem?.TypologyPath + typologyPath_Parent, null, null));
                 subTypologies[typologyPath_Parent.Index] = typology_Parent;

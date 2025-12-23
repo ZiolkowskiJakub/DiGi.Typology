@@ -16,7 +16,7 @@ namespace DiGi.Typology.Classes
 
         public TypologyPath(IEnumerable<int>? values)
         {
-            if(values != null)
+            if (values != null)
             {
                 this.values = [.. values];
             }
@@ -33,7 +33,6 @@ namespace DiGi.Typology.Classes
         public TypologyPath(JsonObject? jsonObject)
             : base(jsonObject)
         {
-
         }
 
         public int Count
@@ -50,7 +49,6 @@ namespace DiGi.Typology.Classes
             {
                 return values.Count == 0 ? -1 : values.Last();
             }
-
         }
 
         public TypologyPath? Parent
@@ -83,7 +81,6 @@ namespace DiGi.Typology.Classes
             }
         }
 
-        
         public static explicit operator List<int>?(TypologyPath? typologyPath)
         {
             if (typologyPath is null)
@@ -94,7 +91,6 @@ namespace DiGi.Typology.Classes
             return [.. typologyPath.values];
         }
 
-        
         public static explicit operator TypologyPath?(List<int>? values)
         {
             if (values == null)
@@ -213,7 +209,6 @@ namespace DiGi.Typology.Classes
                 }
 
                 result.Add(typologyPath);
-
             }
 
             return result;

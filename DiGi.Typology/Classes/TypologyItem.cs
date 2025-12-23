@@ -17,10 +17,9 @@ namespace DiGi.Typology.Classes
 
         [JsonInclude, JsonPropertyName("Name")]
         private string? name;
-        
+
         public TypologyItem()
         {
-
         }
 
         public TypologyItem(IEnumerable<int>? values, string? name, string? description)
@@ -59,13 +58,12 @@ namespace DiGi.Typology.Classes
         public TypologyItem(JsonObject? jsonObject)
             : base(jsonObject)
         {
-
         }
 
         public TypologyItem(TypologyItem? typologyItem)
-            :base(typologyItem)
+            : base(typologyItem)
         {
-            if(typologyItem is not null)
+            if (typologyItem is not null)
             {
                 typologyPath = Core.Query.Clone(typologyItem.typologyPath);
                 description = typologyItem.description;

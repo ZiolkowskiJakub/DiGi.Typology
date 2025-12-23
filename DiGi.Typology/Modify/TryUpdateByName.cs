@@ -23,7 +23,7 @@ namespace DiGi.Typology
                 @out.Description = description;
             }
 
-            if(@out is null)
+            if (@out is null)
             {
                 return false;
             }

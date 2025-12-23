@@ -8,20 +8,16 @@ namespace DiGi.Typology.Classes
         public TypologyFile(TypologyFile? typologyFile)
             : base(typologyFile)
         {
-
         }
 
         public TypologyFile(JsonObject? jsonObject)
             : base(jsonObject)
         {
-
         }
 
         public TypologyFile(string path)
             : base(path)
         {
-
         }
-
     }
 }
