@@ -1,4 +1,4 @@
-﻿namespace DiGi.Typology.Constans
+﻿namespace DiGi.Typology.Constants
 {
     public static class FileExtension
     {
