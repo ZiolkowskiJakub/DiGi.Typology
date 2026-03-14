@@ -1,4 +1,4 @@
-﻿namespace DiGi.Typology.Constants
+﻿namespace DiGi.Typology.Constans
 {
     public static class FileTypeName
     {
