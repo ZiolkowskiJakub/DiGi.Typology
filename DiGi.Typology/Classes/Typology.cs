@@ -121,6 +121,7 @@ namespace DiGi.Typology.Classes
             }
         }
 
+        [JsonIgnore]
         public TypologyPath? TypologyPath
         {
             get
