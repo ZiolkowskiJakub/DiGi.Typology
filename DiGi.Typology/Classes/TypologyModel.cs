@@ -2,8 +2,6 @@
 using DiGi.Core.Interfaces;
 using DiGi.Typology.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -16,11 +14,10 @@ namespace DiGi.Typology.Classes
 
         [JsonInclude, JsonPropertyName(nameof(Typology))]
         private Typology? typology = null;
-        
-        public TypologyModel()
-            :base()
-        {
 
+        public TypologyModel()
+            : base()
+        {
         }
 
         public TypologyModel(Guid guid, string? name, Typology? typology)
@@ -40,7 +37,7 @@ namespace DiGi.Typology.Classes
         public TypologyModel(TypologyModel? typologyModel)
             : base(typologyModel)
         {
-            if(typologyModel is not null)
+            if (typologyModel is not null)
             {
                 typology = Core.Query.Clone(typologyModel.typology);
                 name = typologyModel.name;
@@ -48,9 +45,8 @@ namespace DiGi.Typology.Classes
         }
 
         public TypologyModel(JsonObject? jsonObject)
-            :base(jsonObject)
+            : base(jsonObject)
         {
-
         }
 
         [JsonIgnore]
@@ -80,6 +76,5 @@ namespace DiGi.Typology.Classes
                 typology = value;
             }
         }
-
     }
 }
