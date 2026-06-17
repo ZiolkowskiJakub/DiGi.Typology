@@ -169,7 +169,8 @@ namespace DiGi.Typology.Classes
                 return typologyItem?.TypologyPath;
             }
         }
-/// <summary>
+
+        /// <summary>
         /// Adds a reference to the typology.
         /// </summary>
         /// <param name="reference">The reference string to add.</param>
@@ -357,6 +358,7 @@ namespace DiGi.Typology.Classes
 
             return result;
         }
+
         /// <summary>Returns a string representation of the current typology.</summary>
         /// <returns>A string representing the typology item or the base object string.</returns>
         public override string ToString()
