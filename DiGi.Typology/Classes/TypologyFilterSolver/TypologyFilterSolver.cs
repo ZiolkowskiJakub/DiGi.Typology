@@ -13,14 +13,14 @@ namespace DiGi.Typology.Classes
     public abstract class TypologyFilterSolver<TTypologyFilter, TObject> : IOneToOneSolver<TTypologyFilter, Typology> where TTypologyFilter : ITypologyFilter<TTypologyFilter>
     {
         /// <summary>
-        /// Default TypologyItem for Typology root
-        /// </summary>
-        public TypologyItem? TypologyItem { get; set; } = null;
-
-        /// <summary>
         /// Gets or sets the input typology filter used for solving.
         /// </summary>
         public TTypologyFilter? Input { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of source objects to evaluate.
+        /// </summary>
+        public IEnumerable<TObject>? Objects { get; set; }
 
         /// <summary>
         /// Gets the resulting typology output from the solving process.
@@ -28,9 +28,20 @@ namespace DiGi.Typology.Classes
         public Typology? Output { get; private set; }
 
         /// <summary>
-        /// Gets or sets the collection of source objects to evaluate.
+        /// Default TypologyItem for Typology root
         /// </summary>
-        public IEnumerable<TObject>? Objects { get; set; }
+        public TypologyItem? TypologyItem { get; set; } = null;
+
+        public TypologyFilterSolver()
+        {
+
+        }
+
+        public TypologyFilterSolver(TTypologyFilter? typologyFilter, IEnumerable<TObject>? objects)
+        {
+            Input = typologyFilter;
+            Objects = objects;
+        }
 
         /// <summary>
         /// Solves and populates the typology output by evaluating the input filter against the objects.
@@ -49,14 +60,6 @@ namespace DiGi.Typology.Classes
 
             return true;
         }
-
-        /// <summary>
-        /// Extracts the target evaluation value from the specified object using the current filter context.
-        /// </summary>
-        /// <param name="typologyFilter">The current typology filter context.</param>
-        /// <param name="object">The object to extract the value from.</param>
-        /// <returns>The extracted value, or null.</returns>
-        protected abstract object? GetValue(TTypologyFilter? typologyFilter, TObject? @object);
 
         /// <summary>
         /// Gets a unique reference identifier string for the specified object.
@@ -86,6 +89,13 @@ namespace DiGi.Typology.Classes
         /// <returns>A new typology item, or null.</returns>
         protected abstract TypologyItem? GetTypologyItem(TTypologyFilter? typologyFilter, ITypologyFilterRuleData? typologyFilterRuleData);
 
+        /// <summary>
+        /// Extracts the target evaluation value from the specified object using the current filter context.
+        /// </summary>
+        /// <param name="typologyFilter">The current typology filter context.</param>
+        /// <param name="object">The object to extract the value from.</param>
+        /// <returns>The extracted value, or null.</returns>
+        protected abstract object? GetValue(TTypologyFilter? typologyFilter, TObject? @object);
         private List<Typology>? Solve(Typology? typology, TTypologyFilter typologyFilter, IEnumerable<TObject>? objects)
         {
             if (typology is null || typologyFilter is null || objects is null)
