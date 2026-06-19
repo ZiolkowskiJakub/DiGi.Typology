@@ -32,11 +32,19 @@ namespace DiGi.Typology.Classes
         /// </summary>
         public TypologyItem? TypologyItem { get; set; } = null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypologyFilterSolver{TTypologyFilter, TObject}"/> class.
+        /// </summary>
         public TypologyFilterSolver()
         {
 
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypologyFilterSolver{TTypologyFilter, TObject}"/> class with a specified typology filter and collection of objects.
+        /// </summary>
+        /// <param name="typologyFilter">The input typology filter.</param>
+        /// <param name="objects">The collection of source objects to evaluate.</param>
         public TypologyFilterSolver(TTypologyFilter? typologyFilter, IEnumerable<TObject>? objects)
         {
             Input = typologyFilter;
