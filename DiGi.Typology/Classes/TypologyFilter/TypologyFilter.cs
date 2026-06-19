@@ -11,16 +11,6 @@ namespace DiGi.Typology.Classes
     public abstract class TypologyFilter<TTypologyFilter> : SerializableObject, ITypologyFilter<TTypologyFilter> where TTypologyFilter : TypologyFilter<TTypologyFilter>
     {
         /// <summary>
-        /// Gets or sets the rule associated with this typology filter.
-        /// </summary>
-        public ITypologyFilterRule? Rule { get; set; }
-
-        /// <summary>
-        /// Gets or sets the nested typology filter to apply sequentially.
-        /// </summary>
-        public TTypologyFilter? Filter { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TypologyFilter{TTypologyFilter}"/> class.
         /// </summary>
         protected TypologyFilter()
@@ -50,6 +40,16 @@ namespace DiGi.Typology.Classes
                 Rule = Core.Query.Clone(typologyFilter_Other.Rule);
             }
         }
+
+        /// <summary>
+        /// Gets or sets the nested typology filter to apply sequentially.
+        /// </summary>
+        public TTypologyFilter? Filter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rule associated with this typology filter.
+        /// </summary>
+        public ITypologyFilterRule? Rule { get; set; }
     }
 
     /// <summary>
@@ -59,11 +59,6 @@ namespace DiGi.Typology.Classes
     /// <typeparam name="TValue">The type of the filter value.</typeparam>
     public abstract class TypologyFilter<TTypologyFilter, TValue> : TypologyFilter<TTypologyFilter>, ITypologyFilter<TTypologyFilter, TValue> where TTypologyFilter : TypologyFilter<TTypologyFilter>
     {
-        /// <summary>
-        /// Gets or sets the value associated with this typology filter.
-        /// </summary>
-        public TValue? Value { get; set; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TypologyFilter{TTypologyFilter, TValue}"/> class.
         /// </summary>
@@ -93,5 +88,10 @@ namespace DiGi.Typology.Classes
                 Value = typologyFilter.Value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the value associated with this typology filter.
+        /// </summary>
+        public TValue? Value { get; set; }
     }
 }
