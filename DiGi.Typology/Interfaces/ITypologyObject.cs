@@ -1,6 +1,6 @@
 ﻿namespace DiGi.Typology.Interfaces
 {
-    internal interface ITypologyObject : Core.Interfaces.IObject
+    public interface ITypologyObject : Core.Interfaces.IObject
     {
     }
 }
