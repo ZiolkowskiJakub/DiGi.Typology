@@ -18,7 +18,6 @@ namespace DiGi.Typology.Classes
         public ColumnTypologyFilterSolver()
             : base()
         {
-
         }
 
         /// <summary>
@@ -29,7 +28,6 @@ namespace DiGi.Typology.Classes
         public ColumnTypologyFilterSolver(ColumnTypologyFilter<TColumn> columnTypologyFilter, Table<TColumn, TRow> table)
             : base(columnTypologyFilter, table?.Rows)
         {
-
         }
 
         /// <summary>
@@ -40,20 +38,19 @@ namespace DiGi.Typology.Classes
         public ColumnTypologyFilterSolver(ColumnTypologyFilter<TColumn> columnTypologyFilter, IEnumerable<TRow> rows)
             : base(columnTypologyFilter, rows)
         {
-
         }
 
         protected override TypologyItem? GetTypologyItem(ColumnTypologyFilter<TColumn>? typologyFilter, ITypologyFilterRuleData? typologyFilterRuleData)
         {
-            if(typologyFilter is null || typologyFilterRuleData is null || typologyFilter.Value is not TColumn column)
+            if (typologyFilter is null || typologyFilterRuleData is null || typologyFilter.Value is not TColumn column)
             {
                 return null;
             }
 
             string name = $"{column.Name ?? string.Empty} {typologyFilterRuleData.ToString()}";
-            
+
             string? description = null;
-            if(column is IExtendedColumn extendedColumn)
+            if (column is IExtendedColumn extendedColumn)
             {
                 description = extendedColumn.Description;
             }
@@ -67,7 +64,7 @@ namespace DiGi.Typology.Classes
 
         protected override object? GetValue(ColumnTypologyFilter<TColumn>? typologyFilter, TRow? @object)
         {
-            if(@object is null || typologyFilter is null || typologyFilter.Value is not TColumn column)
+            if (@object is null || typologyFilter is null || typologyFilter.Value is not TColumn column)
             {
                 return null;
             }

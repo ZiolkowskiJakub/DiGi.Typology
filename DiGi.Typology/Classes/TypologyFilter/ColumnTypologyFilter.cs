@@ -13,9 +13,9 @@ namespace DiGi.Typology.Classes
         /// <summary>
         /// Initializes a new instance of the <see cref="ColumnTypologyFilter{UColumn}"/> class.
         /// </summary>
-        public ColumnTypologyFilter() 
-            :base()
-        { 
+        public ColumnTypologyFilter()
+            : base()
+        {
         }
 
         /// <summary>
@@ -69,4 +69,3 @@ namespace DiGi.Typology.Classes
         }
     }
 }
-

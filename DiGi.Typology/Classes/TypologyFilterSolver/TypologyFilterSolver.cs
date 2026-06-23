@@ -37,7 +37,6 @@ namespace DiGi.Typology.Classes
         /// </summary>
         public TypologyFilterSolver()
         {
-
         }
 
         /// <summary>
@@ -104,6 +103,7 @@ namespace DiGi.Typology.Classes
         /// <param name="object">The object to extract the value from.</param>
         /// <returns>The extracted value, or null.</returns>
         protected abstract object? GetValue(TTypologyFilter? typologyFilter, TObject? @object);
+
         private List<Typology>? Solve(Typology? typology, TTypologyFilter typologyFilter, IEnumerable<TObject>? objects)
         {
             if (typology is null || typologyFilter is null || objects is null)
