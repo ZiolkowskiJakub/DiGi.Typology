@@ -1,4 +1,4 @@
-#### [DiGi\.Typology](index.md 'index')
+#### [DiGi\.Typology](DiGi.Typology.Overview.md 'DiGi\.Typology\.Overview')
 
 ## DiGi\.Typology\.Constants Namespace
 ### Classes
