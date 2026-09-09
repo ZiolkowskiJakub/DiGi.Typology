@@ -497,7 +497,9 @@ namespace DiGi.Typology.Classes
             {
                 if (!TryGetLastIndex(out int index))
                 {
-                    index = 0;
+                    // Seed -1 so the first generated child lands at index [0], consistent
+                    // with the SubTypologies setter and the -1 "no path" sentinel in TypologyPath.Index.
+                    index = -1;
                 }
 
                 typologyPath = new TypologyPath([index + 1]);
