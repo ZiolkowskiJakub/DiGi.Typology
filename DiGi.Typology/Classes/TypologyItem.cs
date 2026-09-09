@@ -12,13 +12,13 @@ namespace DiGi.Typology.Classes
     /// </summary>
     public class TypologyItem : Core.Classes.SerializableObject, ITypologyObject, INamedObject, IDescribableObject, IComparable<TypologyItem>
     {
-        [JsonInclude, JsonPropertyName("TypologyPath")]
+        [JsonInclude, JsonPropertyName(nameof(TypologyPath))]
         private readonly TypologyPath? typologyPath;
 
-        [JsonInclude, JsonPropertyName("Description")]
+        [JsonInclude, JsonPropertyName(nameof(Description))]
         private string? description;
 
-        [JsonInclude, JsonPropertyName("Name")]
+        [JsonInclude, JsonPropertyName(nameof(Name))]
         private string? name;
 
         /// <summary>

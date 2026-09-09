@@ -646,6 +646,20 @@ public RangeValueRuleData(System.Text.Json.Nodes.JsonObject jsonObject);
 `jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
 
 The JSON object containing range rule data\.
+### Properties
+
+<a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.Range'></a>
+
+## RangeValueRuleData\<TValueType\>\.Range Property
+
+Gets the range of values\.
+
+```csharp
+public DiGi.Core.Classes.Range<TValueType>? Range { get; }
+```
+
+#### Property Value
+[DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueRuleData_TValueType_.TValueType 'DiGi\.Typology\.Classes\.RangeValueRuleData\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')
 ### Methods
 
 <a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.Equals(DiGi.Typology.Classes.RangeValueRuleData_TValueType_)'></a>
@@ -2497,6 +2511,19 @@ The zero\-based index of the element to get\.
 
 #### Property Value
 [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')
+
+<a name='DiGi.Typology.Classes.TypologyPath.Values'></a>
+
+## TypologyPath\.Values Property
+
+Gets the sequence of index values making up the path\.
+
+```csharp
+public System.Collections.Generic.List<int> Values { get; }
+```
+
+#### Property Value
+[System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
 ### Methods
 
 <a name='DiGi.Typology.Classes.TypologyPath.CompareTo(DiGi.Typology.Classes.TypologyPath)'></a>
@@ -2828,6 +2855,20 @@ public UniqueValueRuleData(System.Text.Json.Nodes.JsonObject jsonObject);
 `jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
 
 The JSON object containing unique value rule data\.
+### Properties
+
+<a name='DiGi.Typology.Classes.UniqueValueRuleData.Value'></a>
+
+## UniqueValueRuleData\.Value Property
+
+Gets the wrapped value\.
+
+```csharp
+public object? Value { get; }
+```
+
+#### Property Value
+[System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
 ### Methods
 
 <a name='DiGi.Typology.Classes.UniqueValueRuleData.Equals(DiGi.Typology.Classes.UniqueValueRuleData)'></a>

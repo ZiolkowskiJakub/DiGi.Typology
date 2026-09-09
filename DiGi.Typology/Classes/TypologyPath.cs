@@ -14,7 +14,7 @@ namespace DiGi.Typology.Classes
     /// </summary>
     public class TypologyPath : SerializableObject, ITypologyObject, IEnumerable<int>, IComparable<TypologyPath>
     {
-        [JsonInclude, JsonPropertyName("Values")]
+        [JsonInclude, JsonPropertyName(nameof(Values))]
         private readonly List<int> values = [];
 
         /// <summary>
@@ -71,6 +71,18 @@ namespace DiGi.Typology.Classes
             get
             {
                 return values.Count == 0 ? -1 : values.Last();
+            }
+        }
+
+        /// <summary>
+        /// Gets the sequence of index values making up the path.
+        /// </summary>
+        [JsonIgnore]
+        public List<int> Values
+        {
+            get
+            {
+                return [.. values];
             }
         }
 

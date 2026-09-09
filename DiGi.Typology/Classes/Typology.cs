@@ -14,13 +14,13 @@ namespace DiGi.Typology.Classes
     /// </summary>
     public class Typology : SerializableObject, ITypologyObject, INamedObject, IDescribableObject, IComparable<Typology>
     {
-        [JsonInclude, JsonPropertyName("References")]
+        [JsonInclude, JsonPropertyName(nameof(References))]
         private readonly HashSet<string> references = [];
 
         [JsonIgnore]
         private readonly Dictionary<int, Typology> subTypologies = [];
 
-        [JsonInclude, JsonPropertyName("TypologyItem")]
+        [JsonInclude, JsonPropertyName(nameof(TypologyItem))]
         private TypologyItem? typologyItem;
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace DiGi.Typology.Classes
         /// index rather than being discarded, so the assigned key may differ from the path the
         /// sub-typology reports.</para>
         /// </summary>
-        [JsonInclude, JsonPropertyName("SubTypologies")]
+        [JsonInclude, JsonPropertyName(nameof(SubTypologies))]
         public List<Typology>? SubTypologies
         {
             get

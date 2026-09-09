@@ -10,8 +10,20 @@ namespace DiGi.Typology.Classes
     /// <typeparam name="TValueType">The underlying type of the range values.</typeparam>
     public class RangeValueRuleData<TValueType> : TypologyFilterRuleData<RangeValueRuleData<TValueType>>
     {
-        [JsonInclude, JsonPropertyName("Range")]
+        [JsonInclude, JsonPropertyName(nameof(Range))]
         private readonly Range<TValueType>? range = null;
+
+        /// <summary>
+        /// Gets the range of values.
+        /// </summary>
+        [JsonIgnore]
+        public Range<TValueType>? Range
+        {
+            get
+            {
+                return range;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeValueRuleData{TValueType}"/> class with a JSON object.

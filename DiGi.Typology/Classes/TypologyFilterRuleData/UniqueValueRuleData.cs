@@ -8,8 +8,20 @@ namespace DiGi.Typology.Classes
     /// </summary>
     public class UniqueValueRuleData : TypologyFilterRuleData<UniqueValueRuleData>
     {
-        [JsonInclude, JsonPropertyName("Value")]
+        [JsonInclude, JsonPropertyName(nameof(Value))]
         private readonly object? value = null;
+
+        /// <summary>
+        /// Gets the wrapped value.
+        /// </summary>
+        [JsonIgnore]
+        public object? Value
+        {
+            get
+            {
+                return value;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UniqueValueRuleData"/> class with a JSON object.
