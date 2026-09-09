@@ -165,12 +165,17 @@ namespace DiGi.Typology.Classes
         /// <returns>A value indicating the relative order of the objects being compared.</returns>
         public int CompareTo(TypologyItem typologyItem)
         {
-            if (typologyPath == null)
+            if (typologyItem is null)
             {
-                return int.MinValue;
+                return 1; // non-null > null
             }
 
-            if (typologyItem?.typologyPath == null)
+            if (typologyPath is null)
+            {
+                return typologyItem.typologyPath is null ? 0 : -1;
+            }
+
+            if (typologyItem.typologyPath is null)
             {
                 return 1; // non-null > null
             }

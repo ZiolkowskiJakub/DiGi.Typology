@@ -880,6 +880,11 @@ public System.Collections.Generic.List<string> References { get; }
 
 Gets or sets the list of sub\-typologies associated with this typology\.
 
+Each sub-typology is stored under the last index of its own path. A sub-typology
+            carrying no path, or one whose index is already taken, is filed under the next free
+            index rather than being discarded, so the assigned key may differ from the path the
+            sub-typology reports.
+
 ```csharp
 public System.Collections.Generic.List<DiGi.Typology.Classes.Typology>? SubTypologies { get; private set; }
 ```
@@ -950,7 +955,7 @@ A signed integer that indicates the relative order of the objects being compared
 Determines whether the typology contains a specific reference, optionally including references from nested typologies\.
 
 ```csharp
-public bool Contains(string reference, bool includeNested=false);
+public bool Contains(string? reference, bool includeNested=false);
 ```
 #### Parameters
 
@@ -1040,7 +1045,7 @@ The [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Ty
 Retrieves a list of typology paths for all sub\-typologies, optionally including nested ones\.
 
 ```csharp
-public System.Collections.Generic.List<DiGi.Typology.Classes.TypologyPath>? GetTypologyPaths(bool includeNested=false);
+public System.Collections.Generic.List<DiGi.Typology.Classes.TypologyPath> GetTypologyPaths(bool includeNested=false);
 ```
 #### Parameters
 
@@ -1052,7 +1057,7 @@ A value indicating whether to recursively retrieve paths from nested typologies\
 
 #### Returns
 [System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')  
-A [System\.Collections\.Generic\.List&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1') of [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.TypologyPath 'DiGi\.Typology\.Classes\.Typology\.TypologyPath') objects, or null if no sub\-typologies exist\.
+A [System\.Collections\.Generic\.List&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1') of [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.TypologyPath 'DiGi\.Typology\.Classes\.Typology\.TypologyPath') objects, empty when no sub\-typologies exist\.
 
 <a name='DiGi.Typology.Classes.Typology.ToString()'></a>
 
@@ -1187,6 +1192,11 @@ True if one or more matching typologies were found; otherwise, false\.
 ## Typology\.Update\(TypologyItem\) Method
 
 Updates the typology based on the provided typology item\.
+            
+
+The path carried by the item is relative to this instance. Missing intermediate
+            nodes are created; an existing node is updated in place, keeping its sub-typologies and
+            its references. When the item carries no path, it is filed under a new index.
 
 ```csharp
 public DiGi.Typology.Classes.Typology? Update(DiGi.Typology.Classes.TypologyItem? typologyItem);
@@ -2517,7 +2527,7 @@ A value indicating whether this instance precedes, follows, or is equal to the s
 Determines whether the specified object is equal to the current typology path based on sequence equality\.
 
 ```csharp
-public override bool Equals(object obj);
+public override bool Equals(object? obj);
 ```
 #### Parameters
 
@@ -2607,7 +2617,7 @@ The number of elements to include in the segment\.
 
 #### Returns
 [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')  
-A new [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath') containing the extracted range\.
+A new [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath') containing the extracted range, or null if the range falls outside the path\.
 
 <a name='DiGi.Typology.Classes.TypologyPath.GetTypologyPaths()'></a>
 

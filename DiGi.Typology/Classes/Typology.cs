@@ -36,7 +36,15 @@ namespace DiGi.Typology.Classes
 
                 references = [.. typology.references];
 
-                SubTypologies = typology.SubTypologies;
+                foreach (KeyValuePair<int, Typology> keyValuePair in typology.subTypologies)
+                {
+                    if (Core.Query.Clone(keyValuePair.Value) is not Typology typology_SubTypology)
+                    {
+                        continue;
+                    }
+
+                    subTypologies[keyValuePair.Key] = typology_SubTypology;
+                }
             }
         }
 
@@ -69,7 +77,19 @@ namespace DiGi.Typology.Classes
 
             if (subTypologies != null)
             {
-                SubTypologies = [.. subTypologies];
+                List<Typology> typologies = [];
+
+                foreach (Typology typology in subTypologies)
+                {
+                    if (Core.Query.Clone(typology) is not Typology typology_SubTypology)
+                    {
+                        continue;
+                    }
+
+                    typologies.Add(typology_SubTypology);
+                }
+
+                SubTypologies = typologies;
             }
         }
 
@@ -86,6 +106,7 @@ namespace DiGi.Typology.Classes
         /// <summary>
         /// Gets or sets the description of the typology.
         /// </summary>
+        [JsonIgnore]
         public string? Description
         {
             get
@@ -104,6 +125,7 @@ namespace DiGi.Typology.Classes
         /// <summary>
         /// Gets or sets the name of the typology.
         /// </summary>
+        [JsonIgnore]
         public string? Name
         {
             get
@@ -133,6 +155,10 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Gets or sets the list of sub-typologies associated with this typology.
+        /// <para>Each sub-typology is stored under the last index of its own path. A sub-typology
+        /// carrying no path, or one whose index is already taken, is filed under the next free
+        /// index rather than being discarded, so the assigned key may differ from the path the
+        /// sub-typology reports.</para>
         /// </summary>
         [JsonInclude, JsonPropertyName("SubTypologies")]
         public List<Typology>? SubTypologies
@@ -144,16 +170,28 @@ namespace DiGi.Typology.Classes
 
             private set
             {
-                subTypologies?.Clear();
-                if (value != null)
+                subTypologies.Clear();
+
+                if (value is null)
                 {
-                    foreach (Typology typology in value)
+                    return;
+                }
+
+                foreach (Typology typology in value)
+                {
+                    if (typology is null)
                     {
-                        if (typology?.typologyItem?.TypologyPath?.Index is int index)
-                        {
-                            subTypologies![index] = typology;
-                        }
+                        continue;
                     }
+
+                    int index = typology.typologyItem?.TypologyPath?.Index ?? -1;
+
+                    if (index < 0 || subTypologies.ContainsKey(index))
+                    {
+                        index = subTypologies.Count == 0 ? 0 : subTypologies.Keys.Max() + 1;
+                    }
+
+                    subTypologies[index] = typology;
                 }
             }
         }
@@ -192,12 +230,17 @@ namespace DiGi.Typology.Classes
         /// <returns>A signed integer that indicates the relative order of the objects being compared.</returns>
         public int CompareTo(Typology typology)
         {
-            if (typologyItem == null)
+            if (typology is null)
             {
-                return int.MinValue;
+                return 1; // non-null > null
             }
 
-            if (typology?.typologyItem == null)
+            if (typologyItem is null)
+            {
+                return typology.typologyItem is null ? 0 : -1;
+            }
+
+            if (typology.typologyItem is null)
             {
                 return 1; // non-null > null
             }
@@ -211,19 +254,16 @@ namespace DiGi.Typology.Classes
         /// <param name="reference">The reference string to search for.</param>
         /// <param name="includeNested">A value indicating whether to include nested typologies in the search.</param>
         /// <returns>True if the reference is found; otherwise, false.</returns>
-        public bool Contains(string reference, bool includeNested = false)
+        public bool Contains(string? reference, bool includeNested = false)
         {
             if (reference is null)
             {
                 return false;
             }
 
-            if (references is not null)
+            if (references.Contains(reference))
             {
-                if (references.Contains(reference))
-                {
-                    return true;
-                }
+                return true;
             }
 
             if (!includeNested)
@@ -251,7 +291,7 @@ namespace DiGi.Typology.Classes
         {
             HashSet<string> result = [.. references];
 
-            if (!includeNested || subTypologies is null || subTypologies.Count == 0)
+            if (!includeNested || subTypologies.Count == 0)
             {
                 return result;
             }
@@ -328,14 +368,9 @@ namespace DiGi.Typology.Classes
         /// Retrieves a list of typology paths for all sub-typologies, optionally including nested ones.
         /// </summary>
         /// <param name="includeNested">A value indicating whether to recursively retrieve paths from nested typologies.</param>
-        /// <returns>A <see cref="List{T}"/> of <see cref="TypologyPath"/> objects, or null if no sub-typologies exist.</returns>
-        public List<TypologyPath>? GetTypologyPaths(bool includeNested = false)
+        /// <returns>A <see cref="List{T}"/> of <see cref="TypologyPath"/> objects, empty when no sub-typologies exist.</returns>
+        public List<TypologyPath> GetTypologyPaths(bool includeNested = false)
         {
-            if (SubTypologies == null)
-            {
-                return null;
-            }
-
             List<TypologyPath> result = [];
             foreach (Typology subTypology in subTypologies.Values)
             {
@@ -348,11 +383,7 @@ namespace DiGi.Typology.Classes
 
                 if (includeNested)
                 {
-                    List<TypologyPath>? typologyPaths = subTypology.GetTypologyPaths(includeNested);
-                    if (typologyPaths != null)
-                    {
-                        result.AddRange(typologyPaths);
-                    }
+                    result.AddRange(subTypology.GetTypologyPaths(includeNested));
                 }
             }
 
@@ -372,7 +403,7 @@ namespace DiGi.Typology.Classes
         public bool TryGetLastIndex(out int index)
         {
             index = -1;
-            if (subTypologies is null || subTypologies.Count == 0)
+            if (subTypologies.Count == 0)
             {
                 return false;
             }
@@ -396,7 +427,7 @@ namespace DiGi.Typology.Classes
             }
 
             Typology? typology = GetTypology(typologyPath);
-            if (typology?.subTypologies is null)
+            if (typology is null)
             {
                 return false;
             }
@@ -413,7 +444,13 @@ namespace DiGi.Typology.Classes
                 typologies.Add(subTypology);
             }
 
-            return typologies is not null && typologies.Count > 0;
+            if (typologies.Count == 0)
+            {
+                typologies = null;
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>Attempts to retrieve a list of typologies that match the specified index values and name.</summary>
@@ -442,7 +479,11 @@ namespace DiGi.Typology.Classes
             return TryGetTypologies(new TypologyPath((IEnumerable<int>)[]), name, out typologies);
         }
 
-        /// <summary>Updates the typology based on the provided typology item.</summary>
+        /// <summary>Updates the typology based on the provided typology item.
+        /// <para>The path carried by the item is relative to this instance. Missing intermediate
+        /// nodes are created; an existing node is updated in place, keeping its sub-typologies and
+        /// its references. When the item carries no path, it is filed under a new index.</para>
+        /// </summary>
         /// <param name="typologyItem">The typology item containing updated information.</param>
         /// <returns>The updated Typology instance, or null if the input was null.</returns>
         public Typology? Update(TypologyItem? typologyItem)
@@ -452,7 +493,7 @@ namespace DiGi.Typology.Classes
                 return null;
             }
 
-            if (typologyItem.TypologyPath is not TypologyPath typologyPath)
+            if (typologyItem.TypologyPath is not TypologyPath typologyPath || typologyPath.Count == 0)
             {
                 if (!TryGetLastIndex(out int index))
                 {
@@ -462,16 +503,12 @@ namespace DiGi.Typology.Classes
                 typologyPath = new TypologyPath([index + 1]);
             }
 
-            Typology? result;
-
-            if (typologyPath.Parent is not TypologyPath typologyPath_Parent)
+            if (typologyPath.Count == 1)
             {
-                typologyPath_Parent = (this.typologyItem?.TypologyPath + typologyPath)!;
-
-                result = GetTypology(typologyPath_Parent);
+                Typology? result = GetTypology(typologyPath);
                 if (result is null)
                 {
-                    result = new Typology(new TypologyItem(typologyPath_Parent, typologyItem));
+                    result = new Typology(new TypologyItem(this.typologyItem?.TypologyPath + typologyPath, typologyItem));
                 }
                 else
                 {
@@ -483,14 +520,19 @@ namespace DiGi.Typology.Classes
                 return result;
             }
 
-            Typology? typology_Parent = GetTypology(typologyPath_Parent);
-            if (typology_Parent is null)
+            if (typologyPath.GetTypologyPath(0, 1) is not TypologyPath typologyPath_Child)
             {
-                typology_Parent = new Typology(new TypologyItem(this.typologyItem?.TypologyPath + typologyPath_Parent, null, null));
-                subTypologies[typologyPath_Parent.Index] = typology_Parent;
+                return null;
             }
 
-            return typology_Parent.Update(new TypologyItem(typologyPath.GetTypologyPath(1, typologyPath.Count - 1), typologyItem));
+            Typology? typology_Child = GetTypology(typologyPath_Child);
+            if (typology_Child is null)
+            {
+                typology_Child = new Typology(new TypologyItem(this.typologyItem?.TypologyPath + typologyPath_Child, null, null));
+                subTypologies[typologyPath_Child.Index] = typology_Child;
+            }
+
+            return typology_Child.Update(new TypologyItem(typologyPath.GetTypologyPath(1, typologyPath.Count - 1), typologyItem));
         }
 
         /// <summary>Updates or creates a typology using specified path values, name, and description.</summary>

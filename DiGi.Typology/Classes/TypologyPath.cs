@@ -53,6 +53,7 @@ namespace DiGi.Typology.Classes
         /// <summary>
         /// Gets the total number of elements in the typology path.
         /// </summary>
+        [JsonIgnore]
         public int Count
         {
             get
@@ -64,6 +65,7 @@ namespace DiGi.Typology.Classes
         /// <summary>
         /// Gets the value of the last element in the path, or -1 if the path is empty.
         /// </summary>
+        [JsonIgnore]
         public int Index
         {
             get
@@ -75,6 +77,7 @@ namespace DiGi.Typology.Classes
         /// <summary>
         /// Gets the immediate parent of the current typology path.
         /// </summary>
+        [JsonIgnore]
         public TypologyPath? Parent
         {
             get
@@ -92,6 +95,7 @@ namespace DiGi.Typology.Classes
         /// <summary>
         /// Gets the number of ancestor levels above the current path.
         /// </summary>
+        [JsonIgnore]
         public int ParentCount
         {
             get
@@ -206,7 +210,7 @@ namespace DiGi.Typology.Classes
         /// </summary>
         /// <param name="obj">The object to compare with the current instance.</param>
         /// <returns>True if the objects are equal; otherwise, false.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is not TypologyPath typologyPath)
             {
@@ -269,9 +273,14 @@ namespace DiGi.Typology.Classes
         /// </summary>
         /// <param name="index">The starting zero-based index of the segment.</param>
         /// <param name="count">The number of elements to include in the segment.</param>
-        /// <returns>A new <see cref="TypologyPath"/> containing the extracted range.</returns>
+        /// <returns>A new <see cref="TypologyPath"/> containing the extracted range, or null if the range falls outside the path.</returns>
         public TypologyPath? GetTypologyPath(int index, int count)
         {
+            if (index < 0 || count < 0 || index + count > values.Count)
+            {
+                return null;
+            }
+
             return new TypologyPath(values.GetRange(index, count));
         }
 
