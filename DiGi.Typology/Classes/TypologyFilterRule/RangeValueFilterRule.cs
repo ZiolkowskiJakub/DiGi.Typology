@@ -9,12 +9,14 @@ namespace DiGi.Typology.Classes
 {
     /// <summary>
     /// Represents a generic base class for range value filter rules.
+    /// <para>Ranges are held keyed on <c>Range.Min</c> and enumerated in ascending <c>Min</c> order, so the order they were declared in does not affect which bucket a value resolves to.</para>
+    /// <para>Matching is a closed interval on both ends, so ranges that touch at a boundary both contain it and the lower one wins.</para>
     /// </summary>
     /// <typeparam name="TValueType">The type of the range values, which must implement <see cref="IComparable{T}"/>.</typeparam>
     public abstract class RangeValueFilterRule<TValueType> : TypologyFilterRule, ITypologyFilterRule<RangeValueRuleData<TValueType>> where TValueType : IComparable<TValueType>
     {
         [JsonIgnore]
-        private readonly Dictionary<TValueType, Range<TValueType>> dictionary = [];
+        private readonly SortedDictionary<TValueType, Range<TValueType>> dictionary = [];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeValueFilterRule{TValueType}"/> class with a JSON object.
@@ -55,6 +57,7 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Resolves the filter rule data for the specified value.
+        /// <para>Returns null for a null value, a value that cannot be converted to the range type, and a value outside every declared range. A solver consuming this rule drops such an object rather than bucketing it, so there is no catch-all bucket.</para>
         /// </summary>
         /// <param name="object_Value">The value to test against the ranges.</param>
         /// <returns>The matching range rule data, or null if no range matches.</returns>
@@ -83,6 +86,7 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Adds a range to the filter rule.
+        /// <para>Ranges are keyed on <c>Range.Min</c>, so adding a range whose <c>Min</c> is already present replaces the existing one rather than joining it.</para>
         /// </summary>
         /// <param name="range">The range to add.</param>
         /// <returns>True if the range was successfully added; otherwise, false.</returns>

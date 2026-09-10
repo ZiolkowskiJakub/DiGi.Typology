@@ -425,6 +425,10 @@ The JSON object containing the double range filter rule data\.
 
 Represents a generic base class for range value filter rules\.
 
+Ranges are held keyed on `Range.Min` and enumerated in ascending `Min` order, so the order they were declared in does not affect which bucket a value resolves to.
+
+Matching is a closed interval on both ends, so ranges that touch at a boundary both contain it and the lower one wins.
+
 ```csharp
 public abstract class RangeValueFilterRule<TValueType> : DiGi.Typology.Classes.TypologyFilterRule, DiGi.Typology.Interfaces.ITypologyFilterRule<DiGi.Typology.Classes.RangeValueRuleData<TValueType>>, DiGi.Typology.Interfaces.ITypologyFilterRule, DiGi.Typology.Interfaces.ITypologySerializableObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject
     where TValueType : System.IComparable<TValueType>
@@ -528,6 +532,8 @@ public System.Collections.Generic.IEnumerable<DiGi.Core.Classes.Range<TValueType
 
 Adds a range to the filter rule\.
 
+Ranges are keyed on `Range.Min`, so adding a range whose `Min` is already present replaces the existing one rather than joining it.
+
 ```csharp
 public bool Add(DiGi.Core.Classes.Range<TValueType>? range);
 ```
@@ -548,6 +554,8 @@ True if the range was successfully added; otherwise, false\.
 ## RangeValueFilterRule\<TValueType\>\.RuleData\(object\) Method
 
 Resolves the filter rule data for the specified value\.
+
+Returns null for a null value, a value that cannot be converted to the range type, and a value outside every declared range. A solver consuming this rule drops such an object rather than bucketing it, so there is no catch-all bucket.
 
 ```csharp
 public DiGi.Typology.Classes.RangeValueRuleData<TValueType>? RuleData(object? object_Value);
@@ -1661,6 +1669,23 @@ The input typology filter\.
 
 The collection of source objects to evaluate\.
 ### Properties
+
+<a name='DiGi.Typology.Classes.TypologyFilterSolver_TTypologyFilter,TObject_.IncludeReferences'></a>
+
+## TypologyFilterSolver\<TTypologyFilter,TObject\>\.IncludeReferences Property
+
+Gets or sets a value indicating whether the references of the solved objects are stored on the typology nodes\.
+
+Set to false to solve structure and node metadata only, leaving every node's reference set empty. The tree is identical either way, because objects are grouped by their filter rule data rather than by their references.
+
+References are otherwise stored on every node from the matched one up to the root, so a chain of N levels stores each reference N times. Where the node to object association is held outside the tree, solving without references is what keeps a stored tree proportional to its structure rather than to the data.
+
+```csharp
+public bool IncludeReferences { get; set; }
+```
+
+#### Property Value
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')
 
 <a name='DiGi.Typology.Classes.TypologyFilterSolver_TTypologyFilter,TObject_.Input'></a>
 

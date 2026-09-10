@@ -57,6 +57,37 @@ public static class Modify
 Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → Modify
 ### Methods
 
+<a name='DiGi.Typology.Modify.RemoveReferences(thisDiGi.Typology.Classes.Typology,bool)'></a>
+
+## Modify\.RemoveReferences\(this Typology, bool\) Method
+
+Removes every reference held by the given typology, optionally descending into its nested typologies\.
+
+Structure and node metadata are left untouched, so what remains is the metadata-only form of the same tree. Use it to strip a solved tree whose node to object association is held elsewhere, rather than re-solving one.
+
+Applied to a sub-typology this strips that branch alone, because Query.SubTypology returns the instance the tree holds rather than a clone of it.
+
+```csharp
+public static bool RemoveReferences(this DiGi.Typology.Classes.Typology? typology, bool includeNested=true);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Modify.RemoveReferences(thisDiGi.Typology.Classes.Typology,bool).typology'></a>
+
+`typology` [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
+
+The typology to strip\.
+
+<a name='DiGi.Typology.Modify.RemoveReferences(thisDiGi.Typology.Classes.Typology,bool).includeNested'></a>
+
+`includeNested` [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')
+
+A value indicating whether nested typologies are stripped as well\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True when at least one reference was removed; otherwise, false\.
+
 <a name='DiGi.Typology.Modify.TryUpdateByName(thisDiGi.Typology.Classes.Typology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Classes.Typology)'></a>
 
 ## Modify\.TryUpdateByName\(this Typology, IEnumerable\<int\>, string, string, Typology\) Method

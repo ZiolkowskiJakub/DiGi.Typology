@@ -13,6 +13,13 @@ namespace DiGi.Typology.Classes
     public abstract class TypologyFilterSolver<TTypologyFilter, TObject> : IOneToOneSolver<TTypologyFilter, Typology> where TTypologyFilter : ITypologyFilter<TTypologyFilter>
     {
         /// <summary>
+        /// Gets or sets a value indicating whether the references of the solved objects are stored on the typology nodes.
+        /// <para>Set to false to solve structure and node metadata only, leaving every node's reference set empty. The tree is identical either way, because objects are grouped by their filter rule data rather than by their references.</para>
+        /// <para>References are otherwise stored on every node from the matched one up to the root, so a chain of N levels stores each reference N times. Where the node to object association is held outside the tree, solving without references is what keeps a stored tree proportional to its structure rather than to the data.</para>
+        /// </summary>
+        public bool IncludeReferences { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the input typology filter used for solving.
         /// </summary>
         public TTypologyFilter? Input { get; set; }
@@ -151,15 +158,18 @@ namespace DiGi.Typology.Classes
                     continue;
                 }
 
-                foreach (TObject @object in keyValuePair.Value)
+                if (IncludeReferences)
                 {
-                    string? string_Reference = GetReference(@object);
-                    if (string_Reference is null)
+                    foreach (TObject @object in keyValuePair.Value)
                     {
-                        continue;
-                    }
+                        string? string_Reference = GetReference(@object);
+                        if (string_Reference is null)
+                        {
+                            continue;
+                        }
 
-                    typology_Temp.AddReference(string_Reference);
+                        typology_Temp.AddReference(string_Reference);
+                    }
                 }
 
                 if (typologyFilter.Filter is TTypologyFilter typologyFilter_Temp)
