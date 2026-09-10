@@ -224,6 +224,21 @@ namespace DiGi.Typology.Classes
         }
 
         /// <summary>
+        /// Removes a reference from the typology.
+        /// </summary>
+        /// <param name="reference">The reference string to remove.</param>
+        /// <returns>True if the reference was removed; otherwise, false (absent or null).</returns>
+        public bool RemoveReference(string? reference)
+        {
+            if (reference == null)
+            {
+                return false;
+            }
+
+            return references.Remove(reference);
+        }
+
+        /// <summary>
         /// Compares the current typology instance with another typology instance.
         /// </summary>
         /// <param name="typology">The typology instance to compare against.</param>
@@ -287,7 +302,7 @@ namespace DiGi.Typology.Classes
         /// </summary>
         /// <param name="includeNested">A value indicating whether to include references from nested typologies.</param>
         /// <returns>A <see cref="HashSet{T}"/> containing the references.</returns>
-        public HashSet<string> GetReferences(bool includeNested)
+        public HashSet<string> GetReferences(bool includeNested = false)
         {
             HashSet<string> result = [.. references];
 

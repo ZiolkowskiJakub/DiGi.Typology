@@ -996,7 +996,7 @@ True if the reference is found; otherwise, false\.
 Retrieves a set of all references associated with this typology, optionally including those from nested typologies\.
 
 ```csharp
-public System.Collections.Generic.HashSet<string> GetReferences(bool includeNested);
+public System.Collections.Generic.HashSet<string> GetReferences(bool includeNested=false);
 ```
 #### Parameters
 
@@ -1072,6 +1072,27 @@ A value indicating whether to recursively retrieve paths from nested typologies\
 #### Returns
 [System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')  
 A [System\.Collections\.Generic\.List&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1') of [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.TypologyPath 'DiGi\.Typology\.Classes\.Typology\.TypologyPath') objects, empty when no sub\-typologies exist\.
+
+<a name='DiGi.Typology.Classes.Typology.RemoveReference(string)'></a>
+
+## Typology\.RemoveReference\(string\) Method
+
+Removes a reference from the typology\.
+
+```csharp
+public bool RemoveReference(string? reference);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.Typology.RemoveReference(string).reference'></a>
+
+`reference` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The reference string to remove\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if the reference was removed; otherwise, false \(absent or null\)\.
 
 <a name='DiGi.Typology.Classes.Typology.ToString()'></a>
 
@@ -2380,12 +2401,12 @@ public DiGi.Typology.Classes.Typology? Typology { get; set; }
 Represents a path within a typology hierarchy as a sequence of integer values\.
 
 ```csharp
-public class TypologyPath : DiGi.Core.Classes.SerializableObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, System.Collections.Generic.IEnumerable<int>, System.Collections.IEnumerable, System.IComparable<DiGi.Typology.Classes.TypologyPath>
+public class TypologyPath : DiGi.Core.Classes.SerializableObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, System.Collections.Generic.IEnumerable<int>, System.Collections.IEnumerable, System.IComparable<DiGi.Typology.Classes.TypologyPath>, System.IEquatable<DiGi.Typology.Classes.TypologyPath>
 ```
 
 Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → TypologyPath
 
-Implements [DiGi\.Typology\.Interfaces\.ITypologyObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyobject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1'), [System\.Collections\.IEnumerable](https://learn.microsoft.com/en-us/dotnet/api/system.collections.ienumerable 'System\.Collections\.IEnumerable'), [System\.IComparable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1 'System\.IComparable\`1')[TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1 'System\.IComparable\`1')
+Implements [DiGi\.Typology\.Interfaces\.ITypologyObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyobject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1'), [System\.Collections\.IEnumerable](https://learn.microsoft.com/en-us/dotnet/api/system.collections.ienumerable 'System\.Collections\.IEnumerable'), [System\.IComparable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1 'System\.IComparable\`1')[TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1 'System\.IComparable\`1'), [System\.IEquatable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1 'System\.IEquatable\`1')[TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1 'System\.IEquatable\`1')
 ### Constructors
 
 <a name='DiGi.Typology.Classes.TypologyPath.TypologyPath(DiGi.Typology.Classes.TypologyPath)'></a>
@@ -2547,6 +2568,27 @@ The path to compare against\.
 [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')  
 A value indicating whether this instance precedes, follows, or is equal to the specified path\.
 
+<a name='DiGi.Typology.Classes.TypologyPath.Equals(DiGi.Typology.Classes.TypologyPath)'></a>
+
+## TypologyPath\.Equals\(TypologyPath\) Method
+
+Determines whether the specified path is equal to the current typology path based on sequence equality\.
+
+```csharp
+public bool Equals(DiGi.Typology.Classes.TypologyPath? typologyPath);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.TypologyPath.Equals(DiGi.Typology.Classes.TypologyPath).typologyPath'></a>
+
+`typologyPath` [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
+
+The path to compare with the current instance\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if the paths are equal; otherwise, false\.
+
 <a name='DiGi.Typology.Classes.TypologyPath.Equals(object)'></a>
 
 ## TypologyPath\.Equals\(object\) Method
@@ -2702,6 +2744,33 @@ The second path segment to append\.
 [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')  
 A new [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath') representing the combined sequence, or null if both inputs are null\.
 
+<a name='DiGi.Typology.Classes.TypologyPath.op_Equality(DiGi.Typology.Classes.TypologyPath,DiGi.Typology.Classes.TypologyPath)'></a>
+
+## TypologyPath\.operator ==\(TypologyPath, TypologyPath\) Operator
+
+Determines whether two typology paths are value\-equal \(null\-safe\)\.
+
+```csharp
+public static bool operator ==(DiGi.Typology.Classes.TypologyPath? typologyPath_1, DiGi.Typology.Classes.TypologyPath? typologyPath_2);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.TypologyPath.op_Equality(DiGi.Typology.Classes.TypologyPath,DiGi.Typology.Classes.TypologyPath).typologyPath_1'></a>
+
+`typologyPath_1` [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
+
+The first path, or null\.
+
+<a name='DiGi.Typology.Classes.TypologyPath.op_Equality(DiGi.Typology.Classes.TypologyPath,DiGi.Typology.Classes.TypologyPath).typologyPath_2'></a>
+
+`typologyPath_2` [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
+
+The second path, or null\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if both are null or value\-equal; otherwise, false\.
+
 <a name='DiGi.Typology.Classes.TypologyPath.op_ExplicitDiGi.Typology.Classes.TypologyPath(System.Collections.Generic.List_int_)'></a>
 
 ## TypologyPath\.explicit operator TypologyPath\(List\<int\>\) Operator
@@ -2743,6 +2812,33 @@ The typology path to convert\.
 #### Returns
 [System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')  
 A new list containing the values of the path, or null if the input is null\.
+
+<a name='DiGi.Typology.Classes.TypologyPath.op_Inequality(DiGi.Typology.Classes.TypologyPath,DiGi.Typology.Classes.TypologyPath)'></a>
+
+## TypologyPath\.operator \!=\(TypologyPath, TypologyPath\) Operator
+
+Determines whether two typology paths are not value\-equal \(null\-safe\)\.
+
+```csharp
+public static bool operator !=(DiGi.Typology.Classes.TypologyPath? typologyPath_1, DiGi.Typology.Classes.TypologyPath? typologyPath_2);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.TypologyPath.op_Inequality(DiGi.Typology.Classes.TypologyPath,DiGi.Typology.Classes.TypologyPath).typologyPath_1'></a>
+
+`typologyPath_1` [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
+
+The first path, or null\.
+
+<a name='DiGi.Typology.Classes.TypologyPath.op_Inequality(DiGi.Typology.Classes.TypologyPath,DiGi.Typology.Classes.TypologyPath).typologyPath_2'></a>
+
+`typologyPath_2` [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
+
+The second path, or null\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if the paths differ in value; otherwise, false\.
 
 <a name='DiGi.Typology.Classes.UniqueValueFilterRule'></a>
 

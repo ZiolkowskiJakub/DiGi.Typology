@@ -12,7 +12,7 @@ namespace DiGi.Typology.Classes
     /// <summary>
     /// Represents a path within a typology hierarchy as a sequence of integer values.
     /// </summary>
-    public class TypologyPath : SerializableObject, ITypologyObject, IEnumerable<int>, IComparable<TypologyPath>
+    public class TypologyPath : SerializableObject, ITypologyObject, IEnumerable<int>, IComparable<TypologyPath>, IEquatable<TypologyPath>
     {
         [JsonInclude, JsonPropertyName(nameof(Values))]
         private readonly List<int> values = [];
@@ -218,18 +218,28 @@ namespace DiGi.Typology.Classes
         }
 
         /// <summary>
+        /// Determines whether the specified path is equal to the current typology path based on sequence equality.
+        /// </summary>
+        /// <param name="typologyPath">The path to compare with the current instance.</param>
+        /// <returns>True if the paths are equal; otherwise, false.</returns>
+        public bool Equals(TypologyPath? typologyPath)
+        {
+            if (typologyPath is null)
+            {
+                return false;
+            }
+
+            return values.SequenceEqual(typologyPath.values);
+        }
+
+        /// <summary>
         /// Determines whether the specified object is equal to the current typology path based on sequence equality.
         /// </summary>
         /// <param name="obj">The object to compare with the current instance.</param>
         /// <returns>True if the objects are equal; otherwise, false.</returns>
         public override bool Equals(object? obj)
         {
-            if (obj is not TypologyPath typologyPath)
-            {
-                return false;
-            }
-
-            return values.SequenceEqual(typologyPath.values);
+            return obj is TypologyPath typologyPath && Equals(typologyPath);
         }
 
         /// <summary>
@@ -262,6 +272,33 @@ namespace DiGi.Typology.Classes
 
                 return hash;
             }
+        }
+
+        /// <summary>
+        /// Determines whether two typology paths are value-equal (null-safe).
+        /// </summary>
+        /// <param name="typologyPath_1">The first path, or null.</param>
+        /// <param name="typologyPath_2">The second path, or null.</param>
+        /// <returns>True if both are null or value-equal; otherwise, false.</returns>
+        public static bool operator ==(TypologyPath? typologyPath_1, TypologyPath? typologyPath_2)
+        {
+            if (typologyPath_1 is null)
+            {
+                return typologyPath_2 is null;
+            }
+
+            return typologyPath_1.Equals(typologyPath_2);
+        }
+
+        /// <summary>
+        /// Determines whether two typology paths are not value-equal (null-safe).
+        /// </summary>
+        /// <param name="typologyPath_1">The first path, or null.</param>
+        /// <param name="typologyPath_2">The second path, or null.</param>
+        /// <returns>True if the paths differ in value; otherwise, false.</returns>
+        public static bool operator !=(TypologyPath? typologyPath_1, TypologyPath? typologyPath_2)
+        {
+            return !(typologyPath_1 == typologyPath_2);
         }
 
         /// <summary>
