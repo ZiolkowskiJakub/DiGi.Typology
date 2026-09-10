@@ -10,7 +10,7 @@ namespace DiGi.Typology.Classes
     /// <summary>
     /// Represents an item within a typology system, providing identification via a path and descriptive metadata.
     /// </summary>
-    public class TypologyItem : Core.Classes.SerializableObject, ITypologySerializableObject, INamedObject, IDescribableObject, IComparable<TypologyItem>
+    public class TypologyItem : Core.Classes.SerializableObject, ITypologySerializableObject, INamedObject, IDescribableObject, IComparable<TypologyItem>, IEquatable<TypologyItem>
     {
         [JsonInclude, JsonPropertyName(nameof(TypologyPath))]
         private readonly TypologyPath? typologyPath;
@@ -160,6 +160,9 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Compares the current instance with another <see cref="TypologyItem"/> based on their paths.
+        /// <para>The path is the primary ordering; items sharing a path are ordered by name and then by
+        /// description, compared ordinally, so this method returns zero exactly when
+        /// <see cref="Equals(TypologyItem)"/> returns true.</para>
         /// </summary>
         /// <param name="typologyItem">The item to compare with this instance.</param>
         /// <returns>A value indicating the relative order of the objects being compared.</returns>
@@ -170,17 +173,119 @@ namespace DiGi.Typology.Classes
                 return 1; // non-null > null
             }
 
+            int compare;
+
             if (typologyPath is null)
             {
-                return typologyItem.typologyPath is null ? 0 : -1;
+                compare = typologyItem.typologyPath is null ? 0 : -1;
             }
-
-            if (typologyItem.typologyPath is null)
+            else if (typologyItem.typologyPath is null)
             {
-                return 1; // non-null > null
+                compare = 1; // non-null > null
+            }
+            else
+            {
+                compare = typologyPath.CompareTo(typologyItem.typologyPath);
             }
 
-            return typologyPath.CompareTo(typologyItem.typologyPath);
+            if (compare != 0)
+            {
+                return compare;
+            }
+
+            compare = string.CompareOrdinal(name, typologyItem.name);
+            if (compare != 0)
+            {
+                return compare;
+            }
+
+            return string.CompareOrdinal(description, typologyItem.description);
+        }
+
+        /// <summary>
+        /// Determines whether the specified item is value-equal to the current item.
+        /// </summary>
+        /// <param name="typologyItem">The item to compare with the current instance.</param>
+        /// <returns>True if the path, the name and the description are all equal; otherwise, false.</returns>
+        public bool Equals(TypologyItem? typologyItem)
+        {
+            if (typologyItem is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, typologyItem))
+            {
+                return true;
+            }
+
+            if (typologyPath != typologyItem.typologyPath)
+            {
+                return false;
+            }
+
+            if (!string.Equals(name, typologyItem.name, StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            return string.Equals(description, typologyItem.description, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is value-equal to the current item.
+        /// </summary>
+        /// <param name="object">The object to compare with the current instance.</param>
+        /// <returns>True if the object is a <see cref="TypologyItem"/> of equal value; otherwise, false.</returns>
+        public override bool Equals(object? @object)
+        {
+            return @object is TypologyItem typologyItem && Equals(typologyItem);
+        }
+
+        /// <summary>
+        /// Returns a hash code for the current item based on its path, name and description.
+        /// <para>The name and the description are mutable, so the hash follows them - an item must not be
+        /// mutated while it is held as a key of a dictionary or a set.</para>
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        public override int GetHashCode()
+        {
+            unchecked // allow arithmetic overflow
+            {
+                int hash = 17;
+                hash = hash * 31 + (typologyPath?.GetHashCode() ?? 0);
+                hash = hash * 31 + (name?.GetHashCode() ?? 0);
+                hash = hash * 31 + (description?.GetHashCode() ?? 0);
+
+                return hash;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether two items are value-equal (null-safe).
+        /// </summary>
+        /// <param name="typologyItem_1">The first item, or null.</param>
+        /// <param name="typologyItem_2">The second item, or null.</param>
+        /// <returns>True if both are null or value-equal; otherwise, false.</returns>
+        public static bool operator ==(TypologyItem? typologyItem_1, TypologyItem? typologyItem_2)
+        {
+            if (typologyItem_1 is null)
+            {
+                return typologyItem_2 is null;
+            }
+
+            return typologyItem_1.Equals(typologyItem_2);
+        }
+
+        /// <summary>
+        /// Determines whether two items are not value-equal (null-safe).
+        /// </summary>
+        /// <param name="typologyItem_1">The first item, or null.</param>
+        /// <param name="typologyItem_2">The second item, or null.</param>
+        /// <returns>True if the items differ in value; otherwise, false.</returns>
+        public static bool operator !=(TypologyItem? typologyItem_1, TypologyItem? typologyItem_2)
+        {
+            return !(typologyItem_1 == typologyItem_2);
         }
 
         /// <summary>

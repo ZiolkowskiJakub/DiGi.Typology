@@ -12,7 +12,7 @@ namespace DiGi.Typology.Classes
     /// <summary>
     /// Represents a typology object that can be serialized and compared.
     /// </summary>
-    public class Typology : SerializableObject, ITypologySerializableObject, INamedObject, IDescribableObject, IComparable<Typology>
+    public class Typology : SerializableObject, ITypologySerializableObject, INamedObject, IDescribableObject, IComparable<Typology>, IEquatable<Typology>
     {
         [JsonInclude, JsonPropertyName(nameof(References))]
         private readonly HashSet<string> references = [];
@@ -240,6 +240,10 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Compares the current typology instance with another typology instance.
+        /// <para>The typology item is the primary ordering; instances sharing one are ordered by their
+        /// reference sets and then, recursively, by their sub-typologies, so this method returns zero
+        /// exactly when <see cref="Equals(Typology)"/> returns true. Like equality it therefore costs
+        /// O(n) over the sub-typology tree whenever the items tie.</para>
         /// </summary>
         /// <param name="typology">The typology instance to compare against.</param>
         /// <returns>A signed integer that indicates the relative order of the objects being compared.</returns>
@@ -250,17 +254,193 @@ namespace DiGi.Typology.Classes
                 return 1; // non-null > null
             }
 
+            int compare;
+
             if (typologyItem is null)
             {
-                return typology.typologyItem is null ? 0 : -1;
+                compare = typology.typologyItem is null ? 0 : -1;
             }
-
-            if (typology.typologyItem is null)
+            else if (typology.typologyItem is null)
             {
-                return 1; // non-null > null
+                compare = 1; // non-null > null
+            }
+            else
+            {
+                compare = typologyItem.CompareTo(typology.typologyItem);
             }
 
-            return typologyItem.CompareTo(typology.typologyItem);
+            if (compare != 0)
+            {
+                return compare;
+            }
+
+            compare = references.Count.CompareTo(typology.references.Count);
+            if (compare != 0)
+            {
+                return compare;
+            }
+
+            List<string> references_This = [.. references];
+            List<string> references_Other = [.. typology.references];
+
+            references_This.Sort(StringComparer.Ordinal);
+            references_Other.Sort(StringComparer.Ordinal);
+
+            for (int i = 0; i < references_This.Count; i++)
+            {
+                compare = string.CompareOrdinal(references_This[i], references_Other[i]);
+                if (compare != 0)
+                {
+                    return compare;
+                }
+            }
+
+            compare = subTypologies.Count.CompareTo(typology.subTypologies.Count);
+            if (compare != 0)
+            {
+                return compare;
+            }
+
+            List<int> indexes_This = [.. subTypologies.Keys];
+            List<int> indexes_Other = [.. typology.subTypologies.Keys];
+
+            indexes_This.Sort();
+            indexes_Other.Sort();
+
+            for (int i = 0; i < indexes_This.Count; i++)
+            {
+                compare = indexes_This[i].CompareTo(indexes_Other[i]);
+                if (compare != 0)
+                {
+                    return compare;
+                }
+
+                compare = subTypologies[indexes_This[i]].CompareTo(typology.subTypologies[indexes_Other[i]]);
+                if (compare != 0)
+                {
+                    return compare;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Determines whether the specified typology is value-equal to the current typology.
+        /// <para>Equality is deep: the typology item, the reference set and the whole sub-typology tree,
+        /// sub-typologies matched by the index they are filed under. The call therefore costs O(n) over
+        /// that tree.</para>
+        /// </summary>
+        /// <param name="typology">The typology to compare with the current instance.</param>
+        /// <returns>True if the typologies are value-equal; otherwise, false.</returns>
+        public bool Equals(Typology? typology)
+        {
+            if (typology is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, typology))
+            {
+                return true;
+            }
+
+            if (typologyItem != typology.typologyItem)
+            {
+                return false;
+            }
+
+            if (!references.SetEquals(typology.references))
+            {
+                return false;
+            }
+
+            if (subTypologies.Count != typology.subTypologies.Count)
+            {
+                return false;
+            }
+
+            foreach (KeyValuePair<int, Typology> keyValuePair in subTypologies)
+            {
+                if (!typology.subTypologies.TryGetValue(keyValuePair.Key, out Typology? typology_SubTypology) || !keyValuePair.Value.Equals(typology_SubTypology))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is value-equal to the current typology.
+        /// </summary>
+        /// <param name="object">The object to compare with the current instance.</param>
+        /// <returns>True if the object is a <see cref="Typology"/> of equal value; otherwise, false.</returns>
+        public override bool Equals(object? @object)
+        {
+            return @object is Typology typology && Equals(typology);
+        }
+
+        /// <summary>
+        /// Returns a hash code for the current typology based on its item, its references and its
+        /// sub-typology tree.
+        /// <para>The references and the sub-typologies are combined order-independently, matching the
+        /// unordered semantics of equality. The whole instance is mutable, so the hash follows every
+        /// change made through the setters, AddReference, RemoveReference and Update - a typology must
+        /// not be mutated while it is held as a key of a dictionary or a set. Computing it costs O(n)
+        /// over the sub-typology tree.</para>
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        public override int GetHashCode()
+        {
+            unchecked // allow arithmetic overflow
+            {
+                int hash_References = 0;
+                foreach (string reference in references)
+                {
+                    hash_References ^= reference.GetHashCode();
+                }
+
+                int hash_SubTypologies = 0;
+                foreach (KeyValuePair<int, Typology> keyValuePair in subTypologies)
+                {
+                    hash_SubTypologies ^= (keyValuePair.Key * 397) ^ keyValuePair.Value.GetHashCode();
+                }
+
+                int hash = 17;
+                hash = hash * 31 + (typologyItem?.GetHashCode() ?? 0);
+                hash = hash * 31 + hash_References;
+                hash = hash * 31 + hash_SubTypologies;
+
+                return hash;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether two typologies are value-equal (null-safe).
+        /// </summary>
+        /// <param name="typology_1">The first typology, or null.</param>
+        /// <param name="typology_2">The second typology, or null.</param>
+        /// <returns>True if both are null or value-equal; otherwise, false.</returns>
+        public static bool operator ==(Typology? typology_1, Typology? typology_2)
+        {
+            if (typology_1 is null)
+            {
+                return typology_2 is null;
+            }
+
+            return typology_1.Equals(typology_2);
+        }
+
+        /// <summary>
+        /// Determines whether two typologies are not value-equal (null-safe).
+        /// </summary>
+        /// <param name="typology_1">The first typology, or null.</param>
+        /// <param name="typology_2">The second typology, or null.</param>
+        /// <returns>True if the typologies differ in value; otherwise, false.</returns>
+        public static bool operator !=(Typology? typology_1, Typology? typology_2)
+        {
+            return !(typology_1 == typology_2);
         }
 
         /// <summary>
