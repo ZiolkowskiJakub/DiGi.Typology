@@ -286,65 +286,6 @@ public DoubleRangeFilterRule(System.Text.Json.Nodes.JsonObject jsonObject);
 
 The JSON object containing the double range filter rule data\.
 
-<a name='DiGi.Typology.Classes.GroupValueFilterRule'></a>
-
-## GroupValueFilterRule Class
-
-Represents a group value filter rule\.
-
-```csharp
-public abstract class GroupValueFilterRule : DiGi.Typology.Classes.TypologyFilterRule, DiGi.Typology.Interfaces.ITypologyFilterRule, DiGi.Typology.Interfaces.ITypologySerializableObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject
-```
-
-Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [TypologyFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFilterRule 'DiGi\.Typology\.Classes\.TypologyFilterRule') → GroupValueFilterRule
-
-Implements [ITypologyFilterRule](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologyFilterRule 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule'), [ITypologySerializableObject](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologySerializableObject 'DiGi\.Typology\.Interfaces\.ITypologySerializableObject'), [ITypologyObject](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologyObject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject')
-### Constructors
-
-<a name='DiGi.Typology.Classes.GroupValueFilterRule.GroupValueFilterRule()'></a>
-
-## GroupValueFilterRule\(\) Constructor
-
-Initializes a new instance of the [GroupValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.GroupValueFilterRule 'DiGi\.Typology\.Classes\.GroupValueFilterRule') class\.
-
-```csharp
-public GroupValueFilterRule();
-```
-
-<a name='DiGi.Typology.Classes.GroupValueFilterRule.GroupValueFilterRule(DiGi.Typology.Classes.GroupValueFilterRule)'></a>
-
-## GroupValueFilterRule\(GroupValueFilterRule\) Constructor
-
-Initializes a new instance of the [GroupValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.GroupValueFilterRule 'DiGi\.Typology\.Classes\.GroupValueFilterRule') class by copying another instance\.
-
-```csharp
-public GroupValueFilterRule(DiGi.Typology.Classes.GroupValueFilterRule groupValueFilterRule);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.GroupValueFilterRule.GroupValueFilterRule(DiGi.Typology.Classes.GroupValueFilterRule).groupValueFilterRule'></a>
-
-`groupValueFilterRule` [GroupValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.GroupValueFilterRule 'DiGi\.Typology\.Classes\.GroupValueFilterRule')
-
-The source filter rule to copy\.
-
-<a name='DiGi.Typology.Classes.GroupValueFilterRule.GroupValueFilterRule(System.Text.Json.Nodes.JsonObject)'></a>
-
-## GroupValueFilterRule\(JsonObject\) Constructor
-
-Initializes a new instance of the [GroupValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.GroupValueFilterRule 'DiGi\.Typology\.Classes\.GroupValueFilterRule') class with a JSON object\.
-
-```csharp
-public GroupValueFilterRule(System.Text.Json.Nodes.JsonObject jsonObject);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.GroupValueFilterRule.GroupValueFilterRule(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
-
-`jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
-
-The JSON object containing the filter rule data\.
-
 <a name='DiGi.Typology.Classes.IntegerRangeFilterRule'></a>
 
 ## IntegerRangeFilterRule Class
@@ -1458,7 +1399,6 @@ public abstract class TypologyFilterRule : DiGi.Core.Classes.SerializableObject,
 Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → TypologyFilterRule
 
 Derived  
-↳ [GroupValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.GroupValueFilterRule 'DiGi\.Typology\.Classes\.GroupValueFilterRule')  
 ↳ [RangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Classes\.RangeValueFilterRule\<TValueType\>')  
 ↳ [UniqueValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.UniqueValueFilterRule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule')
 

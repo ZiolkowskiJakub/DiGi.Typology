@@ -128,7 +128,6 @@ public interface ITypologyFilterRule : DiGi.Typology.Interfaces.ITypologySeriali
 ```
 
 Derived  
-↳ [GroupValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.GroupValueFilterRule 'DiGi\.Typology\.Classes\.GroupValueFilterRule')  
 ↳ [RangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Classes\.RangeValueFilterRule\<TValueType\>')  
 ↳ [TypologyFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFilterRule 'DiGi\.Typology\.Classes\.TypologyFilterRule')  
 ↳ [UniqueValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.UniqueValueFilterRule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule')  
@@ -232,7 +231,6 @@ public interface ITypologyObject : DiGi.Core.Interfaces.IObject
 ```
 
 Derived  
-↳ [GroupValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.GroupValueFilterRule 'DiGi\.Typology\.Classes\.GroupValueFilterRule')  
 ↳ [RangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Classes\.RangeValueFilterRule\<TValueType\>')  
 ↳ [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
 ↳ [TypologyFile](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFile 'DiGi\.Typology\.Classes\.TypologyFile')  
@@ -266,7 +264,6 @@ public interface ITypologySerializableObject : DiGi.Typology.Interfaces.ITypolog
 ```
 
 Derived  
-↳ [GroupValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.GroupValueFilterRule 'DiGi\.Typology\.Classes\.GroupValueFilterRule')  
 ↳ [RangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Classes\.RangeValueFilterRule\<TValueType\>')  
 ↳ [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
 ↳ [TypologyFile](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFile 'DiGi\.Typology\.Classes\.TypologyFile')  
