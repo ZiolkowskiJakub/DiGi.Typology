@@ -12,7 +12,7 @@ namespace DiGi.Typology.Classes
     /// <summary>
     /// Represents a typology object that can be serialized and compared.
     /// </summary>
-    public class Typology : SerializableObject, ITypologyObject, INamedObject, IDescribableObject, IComparable<Typology>
+    public class Typology : SerializableObject, ITypologySerializableObject, INamedObject, IDescribableObject, IComparable<Typology>
     {
         [JsonInclude, JsonPropertyName(nameof(References))]
         private readonly HashSet<string> references = [];

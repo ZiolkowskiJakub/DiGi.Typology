@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 namespace DiGi.Typology.Classes
 {
     /// <summary>Represents a typology file containing typology data.</summary>
-    public class TypologyFile : Core.IO.File.Classes.ValueFile<Typology>, ITypologyObject
+    public class TypologyFile : Core.IO.File.Classes.ValueFile<Typology>, ITypologySerializableObject
     {
         /// <summary>Initializes a new instance of the <see cref="TypologyFile"/> class based on an existing <see cref="TypologyFile"/> instance.</summary>
         /// <param name="typologyFile">The source typology file to copy from.</param>

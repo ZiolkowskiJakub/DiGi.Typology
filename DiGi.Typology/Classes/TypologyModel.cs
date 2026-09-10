@@ -8,9 +8,9 @@ using System.Text.Json.Serialization;
 namespace DiGi.Typology.Classes
 {
     /// <summary>
-    /// Represents a model for typology data, inheriting from GuidModel and implementing ITypologyObject and INamedObject.
+    /// Represents a model for typology data, inheriting from GuidModel and implementing ITypologySerializableObject and INamedObject.
     /// </summary>
-    public class TypologyModel : GuidModel, ITypologyObject, INamedObject
+    public class TypologyModel : GuidModel, ITypologySerializableObject, INamedObject
     {
         [JsonInclude, JsonPropertyName(nameof(Name))]
         private string? name = null;

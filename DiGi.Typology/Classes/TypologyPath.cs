@@ -12,7 +12,7 @@ namespace DiGi.Typology.Classes
     /// <summary>
     /// Represents a path within a typology hierarchy as a sequence of integer values.
     /// </summary>
-    public class TypologyPath : SerializableObject, ITypologyObject, IEnumerable<int>, IComparable<TypologyPath>, IEquatable<TypologyPath>
+    public class TypologyPath : SerializableObject, ITypologySerializableObject, IEnumerable<int>, IComparable<TypologyPath>, IEquatable<TypologyPath>
     {
         [JsonInclude, JsonPropertyName(nameof(Values))]
         private readonly List<int> values = [];

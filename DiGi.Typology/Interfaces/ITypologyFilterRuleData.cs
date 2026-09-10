@@ -1,4 +1,3 @@
-using DiGi.Core.Interfaces;
 using System;
 
 namespace DiGi.Typology.Interfaces
@@ -6,7 +5,7 @@ namespace DiGi.Typology.Interfaces
     /// <summary>
     /// Defines the base contract for typology filter rule data.
     /// </summary>
-    public interface ITypologyFilterRuleData : ISerializableObject, ITypologyObject
+    public interface ITypologyFilterRuleData : ITypologySerializableObject
     {
     }
 

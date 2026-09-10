@@ -1,11 +1,9 @@
-using DiGi.Core.Interfaces;
-
 namespace DiGi.Typology.Interfaces
 {
     /// <summary>
     /// Defines the contract for a typology filter that can be serialized and is a typology object.
     /// </summary>
-    public interface ITypologyFilter : ISerializableObject, ITypologyObject
+    public interface ITypologyFilter : ITypologySerializableObject
     {
         /// <summary>
         /// Gets or sets the rule associated with this typology filter.

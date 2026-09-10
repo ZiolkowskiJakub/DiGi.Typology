@@ -10,7 +10,7 @@ namespace DiGi.Typology.Classes
     /// <summary>
     /// Represents an item within a typology system, providing identification via a path and descriptive metadata.
     /// </summary>
-    public class TypologyItem : Core.Classes.SerializableObject, ITypologyObject, INamedObject, IDescribableObject, IComparable<TypologyItem>
+    public class TypologyItem : Core.Classes.SerializableObject, ITypologySerializableObject, INamedObject, IDescribableObject, IComparable<TypologyItem>
     {
         [JsonInclude, JsonPropertyName(nameof(TypologyPath))]
         private readonly TypologyPath? typologyPath;
