@@ -59,38 +59,14 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Typology"/> class with a specified typology item.
+        /// <para>Use <see cref="Create.Typology(TypologyItem, IEnumerable{Typology})"/> to build an instance
+        /// that also carries sub-typologies: filing each one resolves an index against the indexes already
+        /// taken, which does not belong in a constructor.</para>
         /// </summary>
         /// <param name="typologyItem">The typology item to assign.</param>
         public Typology(TypologyItem? typologyItem)
         {
             this.typologyItem = Core.Query.Clone(typologyItem);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Typology"/> class with a specified typology item and sub-typologies.
-        /// </summary>
-        /// <param name="typologyItem">The typology item to assign.</param>
-        /// <param name="subTypologies">A collection of sub-typologies to associate with this instance.</param>
-        public Typology(TypologyItem? typologyItem, IEnumerable<Typology>? subTypologies)
-        {
-            this.typologyItem = Core.Query.Clone(typologyItem);
-
-            if (subTypologies != null)
-            {
-                List<Typology> typologies = [];
-
-                foreach (Typology typology in subTypologies)
-                {
-                    if (Core.Query.Clone(typology) is not Typology typology_SubTypology)
-                    {
-                        continue;
-                    }
-
-                    typologies.Add(typology_SubTypology);
-                }
-
-                SubTypologies = typologies;
-            }
         }
 
         /// <summary>
@@ -123,6 +99,21 @@ namespace DiGi.Typology.Classes
         }
 
         /// <summary>
+        /// Gets the indexes the sub-typologies of this typology are filed under.
+        /// <para>An index is the filing key of <see cref="this[int]"/> and may differ from the index the
+        /// sub-typology reports through its own path - see <see cref="SubTypologies"/>. A new list is built
+        /// on every call.</para>
+        /// </summary>
+        [JsonIgnore]
+        public List<int> Indexes
+        {
+            get
+            {
+                return [.. subTypologies.Keys];
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the name of the typology.
         /// </summary>
         [JsonIgnore]
@@ -143,6 +134,8 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Gets the list of references associated with this typology.
+        /// <para>A new list is built on every call, so adding to it does not affect the typology - use
+        /// <see cref="AddReference(string)"/> for that.</para>
         /// </summary>
         [JsonIgnore]
         public List<string> References
@@ -159,6 +152,8 @@ namespace DiGi.Typology.Classes
         /// carrying no path, or one whose index is already taken, is filed under the next free
         /// index rather than being discarded, so the assigned key may differ from the path the
         /// sub-typology reports.</para>
+        /// <para>The getter builds a new list on every call, but the sub-typologies in it are the
+        /// instances this typology holds rather than clones of them.</para>
         /// </summary>
         [JsonInclude, JsonPropertyName(nameof(SubTypologies))]
         public List<Typology>? SubTypologies
@@ -209,6 +204,38 @@ namespace DiGi.Typology.Classes
         }
 
         /// <summary>
+        /// Gets or sets the sub-typology filed under the specified index.
+        /// <para>The index is this typology's filing key, which may differ from the index the sub-typology
+        /// reports through its own path - see <see cref="SubTypologies"/>. The getter returns null when
+        /// nothing is filed under the index; assigning null removes the entry.</para>
+        /// </summary>
+        /// <param name="index">The index the sub-typology is filed under.</param>
+        /// <returns>The sub-typology filed under the index, or null when there is none.</returns>
+        public Typology? this[int index]
+        {
+            get
+            {
+                if (!subTypologies.TryGetValue(index, out Typology? result))
+                {
+                    return null;
+                }
+
+                return result;
+            }
+
+            set
+            {
+                if (value is null)
+                {
+                    subTypologies.Remove(index);
+                    return;
+                }
+
+                subTypologies[index] = value;
+            }
+        }
+
+        /// <summary>
         /// Adds a reference to the typology.
         /// </summary>
         /// <param name="reference">The reference string to add.</param>
@@ -221,6 +248,25 @@ namespace DiGi.Typology.Classes
             }
 
             return references.Add(reference);
+        }
+
+        /// <summary>
+        /// Determines whether the typology carries a specific reference.
+        /// <para>This tests the reference set directly. Reading <see cref="References"/> and searching the
+        /// returned list costs a copy and a linear scan instead, which matters on a typology holding many
+        /// references. Use <see cref="Query.Contains(Typology, string, bool)"/> to search the nested
+        /// typologies as well.</para>
+        /// </summary>
+        /// <param name="reference">The reference string to search for.</param>
+        /// <returns>True if the typology carries the reference; otherwise, false (absent or null).</returns>
+        public bool ContainsReference(string? reference)
+        {
+            if (reference == null)
+            {
+                return false;
+            }
+
+            return references.Contains(reference);
         }
 
         /// <summary>
@@ -386,9 +432,9 @@ namespace DiGi.Typology.Classes
         /// sub-typology tree.
         /// <para>The references and the sub-typologies are combined order-independently, matching the
         /// unordered semantics of equality. The whole instance is mutable, so the hash follows every
-        /// change made through the setters, AddReference, RemoveReference and Update - a typology must
-        /// not be mutated while it is held as a key of a dictionary or a set. Computing it costs O(n)
-        /// over the sub-typology tree.</para>
+        /// change made through the setters, AddReference, RemoveReference and Modify.Update - a typology
+        /// must not be mutated while it is held as a key of a dictionary or a set. Computing it costs
+        /// O(n) over the sub-typology tree.</para>
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
@@ -443,329 +489,11 @@ namespace DiGi.Typology.Classes
             return !(typology_1 == typology_2);
         }
 
-        /// <summary>
-        /// Determines whether the typology contains a specific reference, optionally including references from nested typologies.
-        /// </summary>
-        /// <param name="reference">The reference string to search for.</param>
-        /// <param name="includeNested">A value indicating whether to include nested typologies in the search.</param>
-        /// <returns>True if the reference is found; otherwise, false.</returns>
-        public bool Contains(string? reference, bool includeNested = false)
-        {
-            if (reference is null)
-            {
-                return false;
-            }
-
-            if (references.Contains(reference))
-            {
-                return true;
-            }
-
-            if (!includeNested)
-            {
-                return false;
-            }
-
-            foreach (Typology subTypology in subTypologies.Values)
-            {
-                if (subTypology.Contains(reference, includeNested))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Retrieves a set of all references associated with this typology, optionally including those from nested typologies.
-        /// </summary>
-        /// <param name="includeNested">A value indicating whether to include references from nested typologies.</param>
-        /// <returns>A <see cref="HashSet{T}"/> containing the references.</returns>
-        public HashSet<string> GetReferences(bool includeNested = false)
-        {
-            HashSet<string> result = [.. references];
-
-            if (!includeNested || subTypologies.Count == 0)
-            {
-                return result;
-            }
-
-            foreach (Typology subTypology in subTypologies.Values)
-            {
-                if (subTypology.GetReferences(includeNested) is not HashSet<string> subReferences)
-                {
-                    continue;
-                }
-
-                result.UnionWith(subReferences);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Retrieves a typology instance based on the provided typology path.
-        /// </summary>
-        /// <param name="typologyPath">The path used to locate the typology.</param>
-        /// <returns>The <see cref="Typology"/> instance if found; otherwise, null.</returns>
-        public Typology? GetTypology(TypologyPath? typologyPath)
-        {
-            if (typologyPath is null)
-            {
-                return null;
-            }
-
-            if (typologyPath.Count == 0)
-            {
-                return this;
-            }
-
-            if (typologyPath.ParentCount <= 0)
-            {
-                if (!subTypologies.TryGetValue(typologyPath.Index, out Typology? result))
-                {
-                    result = null;
-                }
-
-                return result;
-            }
-
-            if (typologyPath.GetParent(0) is not TypologyPath typologyPath_Parent)
-            {
-                return null;
-            }
-
-            if (!subTypologies.TryGetValue(typologyPath_Parent.Index, out Typology? typology_Parent))
-            {
-                return null;
-            }
-
-            return typology_Parent.GetTypology(typologyPath.GetTypologyPath(1, typologyPath.Count - 1));
-        }
-
-        /// <summary>
-        /// Retrieves a typology instance based on a sequence of integer identifiers representing the path.
-        /// </summary>
-        /// <param name="values">An enumerable collection of integers representing the typology path.</param>
-        /// <returns>The <see cref="Typology"/> instance if found; otherwise, null.</returns>
-        public Typology? GetTypology(IEnumerable<int>? values)
-        {
-            if (values is null)
-            {
-                return null;
-            }
-
-            return GetTypology(new TypologyPath(values));
-        }
-
-        /// <summary>
-        /// Retrieves a list of typology paths for all sub-typologies, optionally including nested ones.
-        /// </summary>
-        /// <param name="includeNested">A value indicating whether to recursively retrieve paths from nested typologies.</param>
-        /// <returns>A <see cref="List{T}"/> of <see cref="TypologyPath"/> objects, empty when no sub-typologies exist.</returns>
-        public List<TypologyPath> GetTypologyPaths(bool includeNested = false)
-        {
-            List<TypologyPath> result = [];
-            foreach (Typology subTypology in subTypologies.Values)
-            {
-                if (subTypology?.typologyItem?.TypologyPath is not TypologyPath typologyPath)
-                {
-                    continue;
-                }
-
-                result.Add(typologyPath);
-
-                if (includeNested)
-                {
-                    result.AddRange(subTypology.GetTypologyPaths(includeNested));
-                }
-            }
-
-            return result;
-        }
-
         /// <summary>Returns a string representation of the current typology.</summary>
         /// <returns>A string representing the typology item or the base object string.</returns>
         public override string ToString()
         {
             return typologyItem?.ToString() ?? base.ToString();
-        }
-
-        /// <summary>Attempts to retrieve the last index from the sub-typologies collection.</summary>
-        /// <param name="index">When this method returns, contains the maximum index if successful; otherwise, -1.</param>
-        /// <returns>True if the last index was successfully retrieved; otherwise, false.</returns>
-        public bool TryGetLastIndex(out int index)
-        {
-            index = -1;
-            if (subTypologies.Count == 0)
-            {
-                return false;
-            }
-
-            index = subTypologies.Keys.Max();
-            return true;
-        }
-
-        /// <summary>Attempts to retrieve a list of typologies that match the specified path and name.</summary>
-        /// <param name="typologyPath">The path to search within.</param>
-        /// <param name="name">The name of the typologies to find.</param>
-        /// <param name="typologies">When this method returns, contains a list of matching typologies if successful; otherwise, null.</param>
-        /// <returns>True if one or more matching typologies were found; otherwise, false.</returns>
-        public bool TryGetTypologies(TypologyPath? typologyPath, string name, out List<Typology>? typologies)
-        {
-            typologies = null;
-
-            if (typologyPath is null)
-            {
-                return false;
-            }
-
-            Typology? typology = GetTypology(typologyPath);
-            if (typology is null)
-            {
-                return false;
-            }
-
-            typologies = [];
-
-            foreach (Typology subTypology in typology.subTypologies.Values)
-            {
-                if (subTypology.Name != name)
-                {
-                    continue;
-                }
-
-                typologies.Add(subTypology);
-            }
-
-            if (typologies.Count == 0)
-            {
-                typologies = null;
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>Attempts to retrieve a list of typologies that match the specified index values and name.</summary>
-        /// <param name="values">The sequence of indices representing the typology path.</param>
-        /// <param name="name">The name of the typologies to find.</param>
-        /// <param name="typologies">When this method returns, contains a list of matching typologies if successful; otherwise, null.</param>
-        /// <returns>True if one or more matching typologies were found; otherwise, false.</returns>
-        public bool TryGetTypologies(IEnumerable<int> values, string name, out List<Typology>? typologies)
-        {
-            typologies = null;
-
-            if (values == null)
-            {
-                return false;
-            }
-
-            return TryGetTypologies(new TypologyPath(values), name, out typologies);
-        }
-
-        /// <summary>Attempts to retrieve a list of typologies that match the specified name at the root level.</summary>
-        /// <param name="name">The name of the typologies to find.</param>
-        /// <param name="typologies">When this method returns, contains a list of matching typologies if successful; otherwise, null.</param>
-        /// <returns>True if one or more matching typologies were found; otherwise, false.</returns>
-        public bool TryGetTypologies(string name, out List<Typology>? typologies)
-        {
-            return TryGetTypologies(new TypologyPath((IEnumerable<int>)[]), name, out typologies);
-        }
-
-        /// <summary>Updates the typology based on the provided typology item.
-        /// <para>The path carried by the item is relative to this instance. Missing intermediate
-        /// nodes are created; an existing node is updated in place, keeping its sub-typologies and
-        /// its references. When the item carries no path, it is filed under a new index.</para>
-        /// </summary>
-        /// <param name="typologyItem">The typology item containing updated information.</param>
-        /// <returns>The updated Typology instance, or null if the input was null.</returns>
-        public Typology? Update(TypologyItem? typologyItem)
-        {
-            if (typologyItem is null)
-            {
-                return null;
-            }
-
-            if (typologyItem.TypologyPath is not TypologyPath typologyPath || typologyPath.Count == 0)
-            {
-                if (!TryGetLastIndex(out int index))
-                {
-                    // Seed -1 so the first generated child lands at index [0], consistent
-                    // with the SubTypologies setter and the -1 "no path" sentinel in TypologyPath.Index.
-                    index = -1;
-                }
-
-                typologyPath = new TypologyPath([index + 1]);
-            }
-
-            if (typologyPath.Count == 1)
-            {
-                Typology? result = GetTypology(typologyPath);
-                if (result is null)
-                {
-                    result = new Typology(new TypologyItem(this.typologyItem?.TypologyPath + typologyPath, typologyItem));
-                }
-                else
-                {
-                    result.Name = typologyItem.Name;
-                    result.Description = typologyItem.Description;
-                }
-
-                subTypologies[typologyPath.Index] = result;
-                return result;
-            }
-
-            if (typologyPath.GetTypologyPath(0, 1) is not TypologyPath typologyPath_Child)
-            {
-                return null;
-            }
-
-            Typology? typology_Child = GetTypology(typologyPath_Child);
-            if (typology_Child is null)
-            {
-                typology_Child = new Typology(new TypologyItem(this.typologyItem?.TypologyPath + typologyPath_Child, null, null));
-                subTypologies[typologyPath_Child.Index] = typology_Child;
-            }
-
-            return typology_Child.Update(new TypologyItem(typologyPath.GetTypologyPath(1, typologyPath.Count - 1), typologyItem));
-        }
-
-        /// <summary>Updates or creates a typology using specified path values, name, and description.</summary>
-        /// <param name="values">The sequence of indices representing the typology path.</param>
-        /// <param name="name">The name of the typology.</param>
-        /// <param name="description">The description of the typology.</param>
-        /// <returns>The updated or created Typology instance, or null if update failed.</returns>
-        public Typology? Update(IEnumerable<int>? values, string? name, string? description)
-        {
-            return Update(new TypologyItem(values == null ? null : new TypologyPath(values), name, description));
-        }
-
-        /// <summary>Updates or creates a typology using specified name and description at the current level.</summary>
-        /// <param name="name">The name of the typology.</param>
-        /// <param name="description">The description of the typology.</param>
-        /// <returns>The updated or created Typology instance, or null if update failed.</returns>
-        public Typology? Update(string? name, string? description)
-        {
-            return Update(new TypologyItem(null, name, description));
-        }
-
-        /// <summary>Updates or creates a typology using specified name at the current level.</summary>
-        /// <param name="name">The name of the typology.</param>
-        /// <returns>The updated or created Typology instance, or null if update failed.</returns>
-        public Typology? Update(string? name)
-        {
-            return Update(new TypologyItem(null, name));
-        }
-
-        /// <summary>Updates or creates a typology using specified path values and name.</summary>
-        /// <param name="values">The sequence of indices representing the typology path.</param>
-        /// <param name="name">The name of the typology.</param>
-        /// <returns>The updated or created Typology instance, or null if update failed.</returns>
-        public Typology? Update(IEnumerable<int>? values, string? name)
-        {
-            return Update(new TypologyItem(values, name));
         }
     }
 }

@@ -770,6 +770,10 @@ The source typology object to clone\.
 
 Initializes a new instance of the [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology') class with a specified typology item\.
 
+Use [Typology\(this TypologyItem, IEnumerable&lt;Typology&gt;\)](DiGi.Typology.md#DiGi.Typology.Create.Typology(thisDiGi.Typology.Classes.TypologyItem,System.Collections.Generic.IEnumerable_DiGi.Typology.Classes.Typology_) 'DiGi\.Typology\.Create\.Typology\(this DiGi\.Typology\.Classes\.TypologyItem, System\.Collections\.Generic\.IEnumerable\<DiGi\.Typology\.Classes\.Typology\>\)') to build an instance
+            that also carries sub-typologies: filing each one resolves an index against the indexes already
+            taken, which does not belong in a constructor.
+
 ```csharp
 public Typology(DiGi.Typology.Classes.TypologyItem? typologyItem);
 ```
@@ -780,29 +784,6 @@ public Typology(DiGi.Typology.Classes.TypologyItem? typologyItem);
 `typologyItem` [TypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem 'DiGi\.Typology\.Classes\.TypologyItem')
 
 The typology item to assign\.
-
-<a name='DiGi.Typology.Classes.Typology.Typology(DiGi.Typology.Classes.TypologyItem,System.Collections.Generic.IEnumerable_DiGi.Typology.Classes.Typology_)'></a>
-
-## Typology\(TypologyItem, IEnumerable\<Typology\>\) Constructor
-
-Initializes a new instance of the [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology') class with a specified typology item and sub\-typologies\.
-
-```csharp
-public Typology(DiGi.Typology.Classes.TypologyItem? typologyItem, System.Collections.Generic.IEnumerable<DiGi.Typology.Classes.Typology>? subTypologies);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.Typology(DiGi.Typology.Classes.TypologyItem,System.Collections.Generic.IEnumerable_DiGi.Typology.Classes.Typology_).typologyItem'></a>
-
-`typologyItem` [TypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem 'DiGi\.Typology\.Classes\.TypologyItem')
-
-The typology item to assign\.
-
-<a name='DiGi.Typology.Classes.Typology.Typology(DiGi.Typology.Classes.TypologyItem,System.Collections.Generic.IEnumerable_DiGi.Typology.Classes.Typology_).subTypologies'></a>
-
-`subTypologies` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
-
-A collection of sub\-typologies to associate with this instance\.
 
 <a name='DiGi.Typology.Classes.Typology.Typology(string,string)'></a>
 
@@ -860,6 +841,23 @@ Implements [Description](https://learn.microsoft.com/en-us/dotnet/api/digi.core.
 #### Property Value
 [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
 
+<a name='DiGi.Typology.Classes.Typology.Indexes'></a>
+
+## Typology\.Indexes Property
+
+Gets the indexes the sub\-typologies of this typology are filed under\.
+
+An index is the filing key of [this\[int\]](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.this[int] 'DiGi\.Typology\.Classes\.Typology\.this\[int\]') and may differ from the index the
+            sub-typology reports through its own path - see [SubTypologies](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.SubTypologies 'DiGi\.Typology\.Classes\.Typology\.SubTypologies'). A new list is built
+            on every call.
+
+```csharp
+public System.Collections.Generic.List<int> Indexes { get; }
+```
+
+#### Property Value
+[System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
+
 <a name='DiGi.Typology.Classes.Typology.Name'></a>
 
 ## Typology\.Name Property
@@ -881,6 +879,9 @@ Implements [Name](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfa
 
 Gets the list of references associated with this typology\.
 
+A new list is built on every call, so adding to it does not affect the typology - use
+            [AddReference\(string\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.AddReference(string) 'DiGi\.Typology\.Classes\.Typology\.AddReference\(string\)') for that.
+
 ```csharp
 public System.Collections.Generic.List<string> References { get; }
 ```
@@ -899,12 +900,39 @@ Each sub-typology is stored under the last index of its own path. A sub-typology
             index rather than being discarded, so the assigned key may differ from the path the
             sub-typology reports.
 
+The getter builds a new list on every call, but the sub-typologies in it are the
+            instances this typology holds rather than clones of them.
+
 ```csharp
 public System.Collections.Generic.List<DiGi.Typology.Classes.Typology>? SubTypologies { get; private set; }
 ```
 
 #### Property Value
 [System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
+
+<a name='DiGi.Typology.Classes.Typology.this[int]'></a>
+
+## Typology\.this\[int\] Property
+
+Gets or sets the sub\-typology filed under the specified index\.
+
+The index is this typology's filing key, which may differ from the index the sub-typology
+            reports through its own path - see [SubTypologies](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.SubTypologies 'DiGi\.Typology\.Classes\.Typology\.SubTypologies'). The getter returns null when
+            nothing is filed under the index; assigning null removes the entry.
+
+```csharp
+public DiGi.Typology.Classes.Typology? this[int index] { get; set; }
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.Typology.this[int].index'></a>
+
+`index` [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')
+
+The index the sub\-typology is filed under\.
+
+#### Property Value
+[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
 
 <a name='DiGi.Typology.Classes.Typology.TypologyPath'></a>
 
@@ -967,32 +995,31 @@ The typology instance to compare against\.
 [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')  
 A signed integer that indicates the relative order of the objects being compared\.
 
-<a name='DiGi.Typology.Classes.Typology.Contains(string,bool)'></a>
+<a name='DiGi.Typology.Classes.Typology.ContainsReference(string)'></a>
 
-## Typology\.Contains\(string, bool\) Method
+## Typology\.ContainsReference\(string\) Method
 
-Determines whether the typology contains a specific reference, optionally including references from nested typologies\.
+Determines whether the typology carries a specific reference\.
+
+This tests the reference set directly. Reading [References](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.References 'DiGi\.Typology\.Classes\.Typology\.References') and searching the
+            returned list costs a copy and a linear scan instead, which matters on a typology holding many
+            references. Use [Contains\(this Typology, string, bool\)](DiGi.Typology.md#DiGi.Typology.Query.Contains(thisDiGi.Typology.Classes.Typology,string,bool) 'DiGi\.Typology\.Query\.Contains\(this DiGi\.Typology\.Classes\.Typology, string, bool\)') to search the nested
+            typologies as well.
 
 ```csharp
-public bool Contains(string? reference, bool includeNested=false);
+public bool ContainsReference(string? reference);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.Typology.Contains(string,bool).reference'></a>
+<a name='DiGi.Typology.Classes.Typology.ContainsReference(string).reference'></a>
 
 `reference` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
 
 The reference string to search for\.
 
-<a name='DiGi.Typology.Classes.Typology.Contains(string,bool).includeNested'></a>
-
-`includeNested` [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')
-
-A value indicating whether to include nested typologies in the search\.
-
 #### Returns
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
-True if the reference is found; otherwise, false\.
+True if the typology carries the reference; otherwise, false \(absent or null\)\.
 
 <a name='DiGi.Typology.Classes.Typology.Equals(DiGi.Typology.Classes.Typology)'></a>
 
@@ -1049,9 +1076,9 @@ sub\-typology tree\.
 
 The references and the sub-typologies are combined order-independently, matching the
             unordered semantics of equality. The whole instance is mutable, so the hash follows every
-            change made through the setters, AddReference, RemoveReference and Update - a typology must
-            not be mutated while it is held as a key of a dictionary or a set. Computing it costs O(n)
-            over the sub-typology tree.
+            change made through the setters, AddReference, RemoveReference and Modify.Update - a typology
+            must not be mutated while it is held as a key of a dictionary or a set. Computing it costs
+            O(n) over the sub-typology tree.
 
 ```csharp
 public override int GetHashCode();
@@ -1060,90 +1087,6 @@ public override int GetHashCode();
 #### Returns
 [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')  
 A 32\-bit signed integer hash code\.
-
-<a name='DiGi.Typology.Classes.Typology.GetReferences(bool)'></a>
-
-## Typology\.GetReferences\(bool\) Method
-
-Retrieves a set of all references associated with this typology, optionally including those from nested typologies\.
-
-```csharp
-public System.Collections.Generic.HashSet<string> GetReferences(bool includeNested=false);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.GetReferences(bool).includeNested'></a>
-
-`includeNested` [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')
-
-A value indicating whether to include references from nested typologies\.
-
-#### Returns
-[System\.Collections\.Generic\.HashSet&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.hashset-1 'System\.Collections\.Generic\.HashSet\`1')[System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.hashset-1 'System\.Collections\.Generic\.HashSet\`1')  
-A [System\.Collections\.Generic\.HashSet&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.hashset-1 'System\.Collections\.Generic\.HashSet\`1') containing the references\.
-
-<a name='DiGi.Typology.Classes.Typology.GetTypology(DiGi.Typology.Classes.TypologyPath)'></a>
-
-## Typology\.GetTypology\(TypologyPath\) Method
-
-Retrieves a typology instance based on the provided typology path\.
-
-```csharp
-public DiGi.Typology.Classes.Typology? GetTypology(DiGi.Typology.Classes.TypologyPath? typologyPath);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.GetTypology(DiGi.Typology.Classes.TypologyPath).typologyPath'></a>
-
-`typologyPath` [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
-
-The path used to locate the typology\.
-
-#### Returns
-[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
-The [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology') instance if found; otherwise, null\.
-
-<a name='DiGi.Typology.Classes.Typology.GetTypology(System.Collections.Generic.IEnumerable_int_)'></a>
-
-## Typology\.GetTypology\(IEnumerable\<int\>\) Method
-
-Retrieves a typology instance based on a sequence of integer identifiers representing the path\.
-
-```csharp
-public DiGi.Typology.Classes.Typology? GetTypology(System.Collections.Generic.IEnumerable<int>? values);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.GetTypology(System.Collections.Generic.IEnumerable_int_).values'></a>
-
-`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
-
-An enumerable collection of integers representing the typology path\.
-
-#### Returns
-[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
-The [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology') instance if found; otherwise, null\.
-
-<a name='DiGi.Typology.Classes.Typology.GetTypologyPaths(bool)'></a>
-
-## Typology\.GetTypologyPaths\(bool\) Method
-
-Retrieves a list of typology paths for all sub\-typologies, optionally including nested ones\.
-
-```csharp
-public System.Collections.Generic.List<DiGi.Typology.Classes.TypologyPath> GetTypologyPaths(bool includeNested=false);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.GetTypologyPaths(bool).includeNested'></a>
-
-`includeNested` [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')
-
-A value indicating whether to recursively retrieve paths from nested typologies\.
-
-#### Returns
-[System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')  
-A [System\.Collections\.Generic\.List&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1') of [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.TypologyPath 'DiGi\.Typology\.Classes\.Typology\.TypologyPath') objects, empty when no sub\-typologies exist\.
 
 <a name='DiGi.Typology.Classes.Typology.RemoveReference(string)'></a>
 
@@ -1179,254 +1122,6 @@ public override string ToString();
 #### Returns
 [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')  
 A string representing the typology item or the base object string\.
-
-<a name='DiGi.Typology.Classes.Typology.TryGetLastIndex(int)'></a>
-
-## Typology\.TryGetLastIndex\(int\) Method
-
-Attempts to retrieve the last index from the sub\-typologies collection\.
-
-```csharp
-public bool TryGetLastIndex(out int index);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.TryGetLastIndex(int).index'></a>
-
-`index` [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')
-
-When this method returns, contains the maximum index if successful; otherwise, \-1\.
-
-#### Returns
-[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
-True if the last index was successfully retrieved; otherwise, false\.
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(DiGi.Typology.Classes.TypologyPath,string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_)'></a>
-
-## Typology\.TryGetTypologies\(TypologyPath, string, List\<Typology\>\) Method
-
-Attempts to retrieve a list of typologies that match the specified path and name\.
-
-```csharp
-public bool TryGetTypologies(DiGi.Typology.Classes.TypologyPath? typologyPath, string name, out System.Collections.Generic.List<DiGi.Typology.Classes.Typology>? typologies);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(DiGi.Typology.Classes.TypologyPath,string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_).typologyPath'></a>
-
-`typologyPath` [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
-
-The path to search within\.
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(DiGi.Typology.Classes.TypologyPath,string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_).name'></a>
-
-`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
-
-The name of the typologies to find\.
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(DiGi.Typology.Classes.TypologyPath,string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_).typologies'></a>
-
-`typologies` [System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
-
-When this method returns, contains a list of matching typologies if successful; otherwise, null\.
-
-#### Returns
-[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
-True if one or more matching typologies were found; otherwise, false\.
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_)'></a>
-
-## Typology\.TryGetTypologies\(string, List\<Typology\>\) Method
-
-Attempts to retrieve a list of typologies that match the specified name at the root level\.
-
-```csharp
-public bool TryGetTypologies(string name, out System.Collections.Generic.List<DiGi.Typology.Classes.Typology>? typologies);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_).name'></a>
-
-`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
-
-The name of the typologies to find\.
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_).typologies'></a>
-
-`typologies` [System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
-
-When this method returns, contains a list of matching typologies if successful; otherwise, null\.
-
-#### Returns
-[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
-True if one or more matching typologies were found; otherwise, false\.
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(System.Collections.Generic.IEnumerable_int_,string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_)'></a>
-
-## Typology\.TryGetTypologies\(IEnumerable\<int\>, string, List\<Typology\>\) Method
-
-Attempts to retrieve a list of typologies that match the specified index values and name\.
-
-```csharp
-public bool TryGetTypologies(System.Collections.Generic.IEnumerable<int> values, string name, out System.Collections.Generic.List<DiGi.Typology.Classes.Typology>? typologies);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(System.Collections.Generic.IEnumerable_int_,string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_).values'></a>
-
-`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
-
-The sequence of indices representing the typology path\.
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(System.Collections.Generic.IEnumerable_int_,string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_).name'></a>
-
-`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
-
-The name of the typologies to find\.
-
-<a name='DiGi.Typology.Classes.Typology.TryGetTypologies(System.Collections.Generic.IEnumerable_int_,string,System.Collections.Generic.List_DiGi.Typology.Classes.Typology_).typologies'></a>
-
-`typologies` [System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
-
-When this method returns, contains a list of matching typologies if successful; otherwise, null\.
-
-#### Returns
-[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
-True if one or more matching typologies were found; otherwise, false\.
-
-<a name='DiGi.Typology.Classes.Typology.Update(DiGi.Typology.Classes.TypologyItem)'></a>
-
-## Typology\.Update\(TypologyItem\) Method
-
-Updates the typology based on the provided typology item\.
-            
-
-The path carried by the item is relative to this instance. Missing intermediate
-            nodes are created; an existing node is updated in place, keeping its sub-typologies and
-            its references. When the item carries no path, it is filed under a new index.
-
-```csharp
-public DiGi.Typology.Classes.Typology? Update(DiGi.Typology.Classes.TypologyItem? typologyItem);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.Update(DiGi.Typology.Classes.TypologyItem).typologyItem'></a>
-
-`typologyItem` [TypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem 'DiGi\.Typology\.Classes\.TypologyItem')
-
-The typology item containing updated information\.
-
-#### Returns
-[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
-The updated Typology instance, or null if the input was null\.
-
-<a name='DiGi.Typology.Classes.Typology.Update(string)'></a>
-
-## Typology\.Update\(string\) Method
-
-Updates or creates a typology using specified name at the current level\.
-
-```csharp
-public DiGi.Typology.Classes.Typology? Update(string? name);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.Update(string).name'></a>
-
-`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
-
-The name of the typology\.
-
-#### Returns
-[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
-The updated or created Typology instance, or null if update failed\.
-
-<a name='DiGi.Typology.Classes.Typology.Update(string,string)'></a>
-
-## Typology\.Update\(string, string\) Method
-
-Updates or creates a typology using specified name and description at the current level\.
-
-```csharp
-public DiGi.Typology.Classes.Typology? Update(string? name, string? description);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.Update(string,string).name'></a>
-
-`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
-
-The name of the typology\.
-
-<a name='DiGi.Typology.Classes.Typology.Update(string,string).description'></a>
-
-`description` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
-
-The description of the typology\.
-
-#### Returns
-[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
-The updated or created Typology instance, or null if update failed\.
-
-<a name='DiGi.Typology.Classes.Typology.Update(System.Collections.Generic.IEnumerable_int_,string)'></a>
-
-## Typology\.Update\(IEnumerable\<int\>, string\) Method
-
-Updates or creates a typology using specified path values and name\.
-
-```csharp
-public DiGi.Typology.Classes.Typology? Update(System.Collections.Generic.IEnumerable<int>? values, string? name);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.Update(System.Collections.Generic.IEnumerable_int_,string).values'></a>
-
-`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
-
-The sequence of indices representing the typology path\.
-
-<a name='DiGi.Typology.Classes.Typology.Update(System.Collections.Generic.IEnumerable_int_,string).name'></a>
-
-`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
-
-The name of the typology\.
-
-#### Returns
-[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
-The updated or created Typology instance, or null if update failed\.
-
-<a name='DiGi.Typology.Classes.Typology.Update(System.Collections.Generic.IEnumerable_int_,string,string)'></a>
-
-## Typology\.Update\(IEnumerable\<int\>, string, string\) Method
-
-Updates or creates a typology using specified path values, name, and description\.
-
-```csharp
-public DiGi.Typology.Classes.Typology? Update(System.Collections.Generic.IEnumerable<int>? values, string? name, string? description);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.Update(System.Collections.Generic.IEnumerable_int_,string,string).values'></a>
-
-`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
-
-The sequence of indices representing the typology path\.
-
-<a name='DiGi.Typology.Classes.Typology.Update(System.Collections.Generic.IEnumerable_int_,string,string).name'></a>
-
-`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
-
-The name of the typology\.
-
-<a name='DiGi.Typology.Classes.Typology.Update(System.Collections.Generic.IEnumerable_int_,string,string).description'></a>
-
-`description` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
-
-The description of the typology\.
-
-#### Returns
-[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
-The updated or created Typology instance, or null if update failed\.
 ### Operators
 
 <a name='DiGi.Typology.Classes.Typology.op_Equality(DiGi.Typology.Classes.Typology,DiGi.Typology.Classes.Typology)'></a>

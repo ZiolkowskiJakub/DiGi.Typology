@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <Major>0</Major>
-    <Minor>8</Minor>
-	<Build>8</Build>
+    <Minor>9</Minor>
+	<Build>0</Build>
 
     <!-- Assembly binding version (keep stable for compatibility) -->
     <AssemblyVersion>$(Major).$(Minor).$(Build)</AssemblyVersion>
