@@ -41,6 +41,13 @@ namespace DiGi.Typology.Classes
         public RangeValueFilterRule(RangeValueFilterRule<TValueType> rangeValueFilterRule)
             : base(rangeValueFilterRule)
         {
+            foreach (Range<TValueType> range in rangeValueFilterRule.Ranges)
+            {
+                if (Core.Query.Clone(range) is Range<TValueType> range_Temp)
+                {
+                    Add(range_Temp);
+                }
+            }
         }
 
         /// <summary>

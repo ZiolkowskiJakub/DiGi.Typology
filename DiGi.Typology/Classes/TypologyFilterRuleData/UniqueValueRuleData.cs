@@ -55,6 +55,7 @@ namespace DiGi.Typology.Classes
         public UniqueValueRuleData(UniqueValueRuleData uniqueValueRuleData)
             : base(uniqueValueRuleData)
         {
+            value = uniqueValueRuleData.value;
         }
 
         /// <summary>

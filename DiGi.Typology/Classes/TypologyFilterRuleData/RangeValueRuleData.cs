@@ -57,6 +57,7 @@ namespace DiGi.Typology.Classes
         public RangeValueRuleData(RangeValueRuleData<TValueType> rangeValueRuleData)
             : base(rangeValueRuleData)
         {
+            range = Core.Query.Clone(rangeValueRuleData.range);
         }
 
         /// <summary>
