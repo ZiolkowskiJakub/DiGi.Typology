@@ -82,7 +82,7 @@ namespace DiGi.Typology.Classes
                     return null;
                 }
 
-                if (keyValuePair.Value.In(tValueType_Converted) || keyValuePair.Value.Max.CompareTo(tValueType_Converted) == 0)
+                if (keyValuePair.Value.In(tValueType_Converted))
                 {
                     return new RangeValueRuleData<TValueType>(keyValuePair.Value);
                 }

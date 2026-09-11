@@ -673,6 +673,8 @@ A 32\-bit signed integer hash code\.
 
 Returns a string representation of the range rule data\.
 
+The range is rendered as a closed interval, `[min, max]`, matching the rule's closed-interval matching semantics on both ends.
+
 ```csharp
 public override string ToString();
 ```

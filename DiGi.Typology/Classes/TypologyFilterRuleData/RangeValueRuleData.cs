@@ -110,6 +110,7 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Returns a string representation of the range rule data.
+        /// <para>The range is rendered as a closed interval, <c>[min, max]</c>, matching the rule's closed-interval matching semantics on both ends.</para>
         /// </summary>
         /// <returns>A string representation of the range.</returns>
         public override string ToString()
@@ -119,7 +120,7 @@ namespace DiGi.Typology.Classes
                 return "null";
             }
 
-            return $"({range.Min},{range.Max}>";
+            return $"[{range.Min}, {range.Max}]";
         }
     }
 }
