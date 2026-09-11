@@ -376,10 +376,10 @@ The form is culture-invariant and agrees with [System\.Object\.Equals\(System\.O
             [System\.Decimal](https://learn.microsoft.com/en-us/dotnet/api/system.decimal 'System\.Decimal') with its scale stripped (`1.10m` and `1.1m` are equal); a [System\.Double](https://learn.microsoft.com/en-us/dotnet/api/system.double 'System\.Double') or
             [System\.Single](https://learn.microsoft.com/en-us/dotnet/api/system.single 'System\.Single') as its shortest round-trip form with negative zero folded to zero; a [System\.DateTime](https://learn.microsoft.com/en-us/dotnet/api/system.datetime 'System\.DateTime') to
             the tick with its kind ignored, as its equality ignores it; a [System\.DateTimeOffset](https://learn.microsoft.com/en-us/dotnet/api/system.datetimeoffset 'System\.DateTimeOffset') as the UTC instant its
-            equality compares; any other [System\.IFormattable](https://learn.microsoft.com/en-us/dotnet/api/system.iformattable 'System\.IFormattable') in the invariant culture; and anything else -
-            [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean'), [System\.Guid](https://learn.microsoft.com/en-us/dotnet/api/system.guid 'System\.Guid'), enums - through [System\.Object\.ToString](https://learn.microsoft.com/en-us/dotnet/api/system.object.tostring 'System\.Object\.ToString'), which is culture-free for
-            those. For the categorical types a unique value rule is meant for, the key equals
-            [DiGi\.Typology\.Classes\.UniqueValueRuleData\.ToString](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata.tostring 'DiGi\.Typology\.Classes\.UniqueValueRuleData\.ToString').
+            equality compares; any other [System\.IFormattable](https://learn.microsoft.com/en-us/dotnet/api/system.iformattable 'System\.IFormattable') - integers of any width, [System\.TimeSpan](https://learn.microsoft.com/en-us/dotnet/api/system.timespan 'System\.TimeSpan'),
+            [System\.Guid](https://learn.microsoft.com/en-us/dotnet/api/system.guid 'System\.Guid'), enums - in the invariant culture; and anything else through [System\.Object\.ToString](https://learn.microsoft.com/en-us/dotnet/api/system.object.tostring 'System\.Object\.ToString').
+            A [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean') renders as `True` or `False` whichever branch its runtime takes. For the
+            categorical types a unique value rule is meant for, the key equals [DiGi\.Typology\.Classes\.UniqueValueRuleData\.ToString](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata.tostring 'DiGi\.Typology\.Classes\.UniqueValueRuleData\.ToString').
 
 ```csharp
 public static string Key(object? @object);

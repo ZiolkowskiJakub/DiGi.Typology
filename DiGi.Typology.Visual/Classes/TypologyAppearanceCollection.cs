@@ -158,47 +158,28 @@ namespace DiGi.Typology.Visual.Classes
         /// <see cref="decimal"/> with its scale stripped (<c>1.10m</c> and <c>1.1m</c> are equal); a <see cref="double"/> or
         /// <see cref="float"/> as its shortest round-trip form with negative zero folded to zero; a <see cref="DateTime"/> to
         /// the tick with its kind ignored, as its equality ignores it; a <see cref="DateTimeOffset"/> as the UTC instant its
-        /// equality compares; any other <see cref="IFormattable"/> in the invariant culture; and anything else -
-        /// <see cref="bool"/>, <see cref="Guid"/>, enums - through <see cref="object.ToString()"/>, which is culture-free for
-        /// those. For the categorical types a unique value rule is meant for, the key equals
-        /// <see cref="UniqueValueRuleData.ToString()"/>.</para>
+        /// equality compares; any other <see cref="IFormattable"/> - integers of any width, <see cref="TimeSpan"/>,
+        /// <see cref="Guid"/>, enums - in the invariant culture; and anything else through <see cref="object.ToString()"/>.
+        /// A <see cref="bool"/> renders as <c>True</c> or <c>False</c> whichever branch its runtime takes. For the
+        /// categorical types a unique value rule is meant for, the key equals <see cref="UniqueValueRuleData.ToString()"/>.</para>
         /// </summary>
         /// <param name="object">The value, or the rule data produced for it.</param>
         /// <returns>The key.</returns>
         public static string Key(object? @object)
         {
-            switch (@object)
+            return @object switch
             {
-                case null:
-                    return Core.Constants.UniqueId.Null;
-
-                case UniqueValueRuleData uniqueValueRuleData:
-                    return Key(uniqueValueRuleData.Value);
-
-                case string @string:
-                    return @string;
-
-                case decimal @decimal:
-                    return @decimal.ToString("G29", CultureInfo.InvariantCulture);
-
-                case double @double:
-                    return (@double == 0 ? 0d : @double).ToString("R", CultureInfo.InvariantCulture);
-
-                case float @float:
-                    return (@float == 0 ? 0f : @float).ToString("R", CultureInfo.InvariantCulture);
-
-                case DateTime dateTime:
-                    return dateTime.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
-
-                case DateTimeOffset dateTimeOffset:
-                    return dateTimeOffset.UtcDateTime.ToString(DateTimeFormat, CultureInfo.InvariantCulture) + "Z";
-
-                case IFormattable formattable:
-                    return formattable.ToString(null, CultureInfo.InvariantCulture);
-
-                default:
-                    return @object.ToString() ?? Core.Constants.UniqueId.Null;
-            }
+                null => Core.Constants.UniqueId.Null,
+                UniqueValueRuleData uniqueValueRuleData => Key(uniqueValueRuleData.Value),
+                string @string => @string,
+                decimal @decimal => @decimal.ToString("G29", CultureInfo.InvariantCulture),
+                double @double => (@double == 0 ? 0d : @double).ToString("R", CultureInfo.InvariantCulture),
+                float @float => (@float == 0 ? 0f : @float).ToString("R", CultureInfo.InvariantCulture),
+                DateTime dateTime => dateTime.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
+                DateTimeOffset dateTimeOffset => dateTimeOffset.UtcDateTime.ToString(DateTimeFormat, CultureInfo.InvariantCulture) + "Z",
+                IFormattable formattable => formattable.ToString(null, CultureInfo.InvariantCulture),
+                _ => @object.ToString() ?? Core.Constants.UniqueId.Null,
+            };
         }
     }
 }
