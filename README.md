@@ -8,7 +8,7 @@
 
 The repository contains the following core components and assemblies:
 * **[DiGi.Typology](DiGi.Typology)** (Path: `DiGi.Typology\DiGi.Typology`)
-* **[DiGi.Typology.Visual](DiGi.Typology.Visual)** (Path: `DiGi.Typology\DiGi.Typology.Visual`) - appearance for typology definitions (`VisualRange<T>`, `VisualUniqueValueFilterRule`, `VisualColumnTypologyFilter`) and results (`VisualTypology`, `VisualTypologyItem`), built on `DiGi.Geometry.Visual`. Kept as a sibling assembly so that `DiGi.Typology` itself references only `DiGi.Core` and `DiGi.Core.IO`.
+* **[DiGi.Typology.Visual](DiGi.Typology.Visual)** (Path: `DiGi.Typology\DiGi.Typology.Visual`) - appearance for typology definitions (`VisualUniqueValueFilterRule`, `VisualRangeValueFilterRule<T>` with `VisualIntegerRangeFilterRule` / `VisualDoubleRangeFilterRule`, `VisualColumnTypologyFilter`) and results (`VisualTypology`, `VisualTypologyItem`), built on `DiGi.Geometry.Visual`. Kept as a sibling assembly so that `DiGi.Typology` itself references only `DiGi.Core` and `DiGi.Core.IO`.
 
 ---
 

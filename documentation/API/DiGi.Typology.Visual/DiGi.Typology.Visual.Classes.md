@@ -208,8 +208,8 @@ True if an appearance was removed; otherwise, false \(absent or null\)\.
 
 ## TypologyAppearanceCollection Class
 
-A collection of [TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance'), one per value, filed under the key [Key\(object\)](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearanceCollection.Key(object) 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearanceCollection\.Key\(object\)')
-renders for the value\.
+A collection of [TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance'), one per bucket, filed under the key [Key\(this object\)](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Query.Key(thisobject) 'DiGi\.Typology\.Visual\.Query\.Key\(this object\)')
+renders for the bucket's value or range\.
 
 The indexer performs that normalisation, so `[2010]`, `["2010"]`, `[2010L]` and
             `[uniqueValueRuleData]` address the same entry. Keys are not kept as [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object'): a JSON round trip
@@ -217,10 +217,10 @@ The indexer performs that normalisation, so `[2010]`, `["2010"]`, `[2010L]` and
             of another width.
 
 Two values get the same key exactly when they are [System\.Object\.Equals\(System\.Object\)](https://learn.microsoft.com/en-us/dotnet/api/system.object.equals#system-object-equals(system-object) 'System\.Object\.Equals\(System\.Object\)')-equal, which is how
-            [DiGi\.Typology\.Classes\.UniqueValueRuleData](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata 'DiGi\.Typology\.Classes\.UniqueValueRuleData') buckets them; see [Key\(object\)](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearanceCollection.Key(object) 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearanceCollection\.Key\(object\)') for the forms. Two limitations are
-            inherent: a text value that is literally `"null"` shares the key of the NULL bucket, and floating-point keys
-            are not guaranteed across a .NET Framework host, whose `double.ToString` differs - use a range rule for
-            floating-point columns.
+            [DiGi\.Typology\.Classes\.UniqueValueRuleData](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata 'DiGi\.Typology\.Classes\.UniqueValueRuleData') buckets them; see [Key\(this object\)](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Query.Key(thisobject) 'DiGi\.Typology\.Visual\.Query\.Key\(this object\)') for the forms, the range
+            form included. Two limitations are inherent: a text value that is literally `"null"` shares the key of the
+            NULL bucket, and floating-point keys are not guaranteed across a .NET Framework host, whose
+            `double.ToString` differs - use a range rule for floating-point columns.
 
 ```csharp
 public class TypologyAppearanceCollection : DiGi.Core.Classes.SerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject
@@ -282,7 +282,7 @@ The JSON object containing the collection data\.
 
 ## TypologyAppearanceCollection\.Appearances Property
 
-Gets the appearances held, in key order\. A new list is built on every call\.
+Gets the appearances held, in no guaranteed order\. A new list is built on every call\.
 
 ```csharp
 public System.Collections.Generic.List<DiGi.Typology.Visual.Classes.TypologyAppearance> Appearances { get; }
@@ -308,7 +308,7 @@ public int Count { get; }
 
 ## TypologyAppearanceCollection\.Keys Property
 
-Gets the keys that carry an appearance\. A new list is built on every call\.
+Gets the keys that carry an appearance, in no guaranteed order\. A new list is built on every call\.
 
 ```csharp
 public System.Collections.Generic.List<string> Keys { get; }
@@ -323,9 +323,9 @@ public System.Collections.Generic.List<string> Keys { get; }
 
 Gets or sets the appearance of the bucket the given value falls into\.
 
-The value is normalised through [Key\(object\)](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearanceCollection.Key(object) 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearanceCollection\.Key\(object\)'), so any value type is accepted: `null`
-            addresses the NULL bucket, a number its invariant text form whatever its width, and a
-            [DiGi\.Typology\.Classes\.UniqueValueRuleData](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata 'DiGi\.Typology\.Classes\.UniqueValueRuleData') its own bucket. The getter returns null when no appearance is filed for the
+The value is normalised through [Key\(this object\)](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Query.Key(thisobject) 'DiGi\.Typology\.Visual\.Query\.Key\(this object\)'), so any value type is accepted: `null`
+            addresses the NULL bucket, a number its invariant text form whatever its width, a range its bounds, and rule
+            data the bucket it was produced for. The getter returns null when no appearance is filed for the
             value; assigning null removes the entry.
 
 ```csharp
@@ -337,7 +337,7 @@ public DiGi.Typology.Visual.Classes.TypologyAppearance? this[object? @object] { 
 
 `object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
 
-The value, its string form, or the rule data produced for it\.
+The value or range, its string form, or the rule data produced for it\.
 
 #### Property Value
 [TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance')
@@ -358,65 +358,23 @@ public bool Contains(object? @object);
 
 `object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
 
-The value, its string form, or the rule data produced for it\.
+The value or range, its string form, or the rule data produced for it\.
 
 #### Returns
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
 True if an appearance is filed for the value; otherwise, false\.
 
-<a name='DiGi.Typology.Visual.Classes.TypologyAppearanceCollection.Key(object)'></a>
-
-## TypologyAppearanceCollection\.Key\(object\) Method
-
-Renders a value as the key its appearance is filed under\.
-
-The form is culture-invariant and agrees with [System\.Object\.Equals\(System\.Object\)](https://learn.microsoft.com/en-us/dotnet/api/system.object.equals#system-object-equals(system-object) 'System\.Object\.Equals\(System\.Object\)'): two values get the
-            same key exactly when a [DiGi\.Typology\.Classes\.UniqueValueRuleData](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata 'DiGi\.Typology\.Classes\.UniqueValueRuleData') would bucket them together. `null` renders as
-            `"null"`; a [DiGi\.Typology\.Classes\.UniqueValueRuleData](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata 'DiGi\.Typology\.Classes\.UniqueValueRuleData') as the key of its value; a string as itself; a
-            [System\.Decimal](https://learn.microsoft.com/en-us/dotnet/api/system.decimal 'System\.Decimal') with its scale stripped (`1.10m` and `1.1m` are equal); a [System\.Double](https://learn.microsoft.com/en-us/dotnet/api/system.double 'System\.Double') or
-            [System\.Single](https://learn.microsoft.com/en-us/dotnet/api/system.single 'System\.Single') as its shortest round-trip form with negative zero folded to zero; a [System\.DateTime](https://learn.microsoft.com/en-us/dotnet/api/system.datetime 'System\.DateTime') to
-            the tick with its kind ignored, as its equality ignores it; a [System\.DateTimeOffset](https://learn.microsoft.com/en-us/dotnet/api/system.datetimeoffset 'System\.DateTimeOffset') as the UTC instant its
-            equality compares; any other [System\.IFormattable](https://learn.microsoft.com/en-us/dotnet/api/system.iformattable 'System\.IFormattable') - integers of any width, [System\.TimeSpan](https://learn.microsoft.com/en-us/dotnet/api/system.timespan 'System\.TimeSpan'),
-            [System\.Guid](https://learn.microsoft.com/en-us/dotnet/api/system.guid 'System\.Guid'), enums - in the invariant culture; and anything else through [System\.Object\.ToString](https://learn.microsoft.com/en-us/dotnet/api/system.object.tostring 'System\.Object\.ToString').
-            A [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean') renders as `True` or `False` whichever branch its runtime takes. For the
-            categorical types a unique value rule is meant for, the key equals [DiGi\.Typology\.Classes\.UniqueValueRuleData\.ToString](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata.tostring 'DiGi\.Typology\.Classes\.UniqueValueRuleData\.ToString').
-
-```csharp
-public static string Key(object? @object);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Visual.Classes.TypologyAppearanceCollection.Key(object).object'></a>
-
-`object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
-
-The value, or the rule data produced for it\.
-
-#### Returns
-[System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')  
-The key\.
-
 <a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter'></a>
 
 ## VisualColumnTypologyFilter Class
 
-A [DiGi\.Typology\.Classes\.ColumnTypologyFilter&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.columntypologyfilter-1 'DiGi\.Typology\.Classes\.ColumnTypologyFilter\`1') level carrying a fallback appearance for the buckets its rule
-produces\.
-
-The appearance of a bucket is normally carried by the rule - a [VisualRange&lt;T&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_ 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>') inside a range
-            rule, an entry of a [VisualUniqueValueFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueFilterRule') - and this level appearance stands in where the rule
-            carries none. It is definition metadata for the editing client only today: a solver rebuilding the chain keeps the
-            [DiGi\.Typology\.Classes\.TypologyFilter&lt;&gt;\.Rule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-1.rule 'DiGi\.Typology\.Classes\.TypologyFilter\`1\.Rule') instance and drops the node, so nothing in a solved tree reflects
-            it. The nested [DiGi\.Typology\.Classes\.TypologyFilter&lt;&gt;\.Filter](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-1.filter 'DiGi\.Typology\.Classes\.TypologyFilter\`1\.Filter') stays typed as the base level; a nested Visual
-            level is Visual by its `_type` discriminator only.
+A concrete column\-based Visual typology filter using the standard [DiGi\.Core\.IO\.Table\.Classes\.Column](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.classes.column 'DiGi\.Core\.IO\.Table\.Classes\.Column') type\.
 
 ```csharp
-public class VisualColumnTypologyFilter : DiGi.Typology.Classes.ColumnTypologyFilter<DiGi.Core.IO.Table.Classes.Column>, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject
+public class VisualColumnTypologyFilter : DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter<DiGi.Core.IO.Table.Classes.Column>
 ```
 
-Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilter&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-1 'DiGi\.Typology\.Classes\.TypologyFilter\`1')[DiGi\.Typology\.Classes\.ColumnTypologyFilter&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.columntypologyfilter-1 'DiGi\.Typology\.Classes\.ColumnTypologyFilter\`1')[DiGi\.Core\.IO\.Table\.Classes\.Column](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.classes.column 'DiGi\.Core\.IO\.Table\.Classes\.Column')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.columntypologyfilter-1 'DiGi\.Typology\.Classes\.ColumnTypologyFilter\`1')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-1 'DiGi\.Typology\.Classes\.TypologyFilter\`1') → [DiGi\.Typology\.Classes\.TypologyFilter&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-2 'DiGi\.Typology\.Classes\.TypologyFilter\`2')[DiGi\.Typology\.Classes\.ColumnTypologyFilter&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.columntypologyfilter-1 'DiGi\.Typology\.Classes\.ColumnTypologyFilter\`1')[DiGi\.Core\.IO\.Table\.Classes\.Column](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.classes.column 'DiGi\.Core\.IO\.Table\.Classes\.Column')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.columntypologyfilter-1 'DiGi\.Typology\.Classes\.ColumnTypologyFilter\`1')[,](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-2 'DiGi\.Typology\.Classes\.TypologyFilter\`2')[DiGi\.Core\.IO\.Table\.Classes\.Column](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.classes.column 'DiGi\.Core\.IO\.Table\.Classes\.Column')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-2 'DiGi\.Typology\.Classes\.TypologyFilter\`2') → [DiGi\.Typology\.Classes\.ColumnTypologyFilter&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.columntypologyfilter-1 'DiGi\.Typology\.Classes\.ColumnTypologyFilter\`1')[DiGi\.Core\.IO\.Table\.Classes\.Column](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.classes.column 'DiGi\.Core\.IO\.Table\.Classes\.Column')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.columntypologyfilter-1 'DiGi\.Typology\.Classes\.ColumnTypologyFilter\`1') → VisualColumnTypologyFilter
-
-Implements [ITypologyVisualSerializableObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualSerializableObject'), [ITypologyVisualObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualObject'), [DiGi\.Typology\.Interfaces\.ITypologyObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyobject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject')
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilter&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-1 'DiGi\.Typology\.Classes\.TypologyFilter\`1')[DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[DiGi\.Core\.IO\.Table\.Classes\.Column](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.classes.column 'DiGi\.Core\.IO\.Table\.Classes\.Column')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-1 'DiGi\.Typology\.Classes\.TypologyFilter\`1') → [DiGi\.Typology\.Classes\.TypologyFilter&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-2 'DiGi\.Typology\.Classes\.TypologyFilter\`2')[DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[DiGi\.Core\.IO\.Table\.Classes\.Column](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.classes.column 'DiGi\.Core\.IO\.Table\.Classes\.Column')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[,](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-2 'DiGi\.Typology\.Classes\.TypologyFilter\`2')[DiGi\.Core\.IO\.Table\.Classes\.Column](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.classes.column 'DiGi\.Core\.IO\.Table\.Classes\.Column')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-2 'DiGi\.Typology\.Classes\.TypologyFilter\`2') → [DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[DiGi\.Core\.IO\.Table\.Classes\.Column](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.classes.column 'DiGi\.Core\.IO\.Table\.Classes\.Column')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>') → VisualColumnTypologyFilter
 ### Constructors
 
 <a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter.VisualColumnTypologyFilter()'></a>
@@ -433,8 +391,7 @@ public VisualColumnTypologyFilter();
 
 ## VisualColumnTypologyFilter\(VisualColumnTypologyFilter\) Constructor
 
-Initializes a new instance of the [VisualColumnTypologyFilter](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter') class by copying another instance,
-its appearance included\.
+Initializes a new instance of the [VisualColumnTypologyFilter](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter') class by copying another instance\.
 
 ```csharp
 public VisualColumnTypologyFilter(DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter? visualColumnTypologyFilter);
@@ -445,7 +402,7 @@ public VisualColumnTypologyFilter(DiGi.Typology.Visual.Classes.VisualColumnTypol
 
 `visualColumnTypologyFilter` [VisualColumnTypologyFilter](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter')
 
-The filter to copy\.
+The column typology filter to copy\.
 
 <a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter.VisualColumnTypologyFilter(System.Text.Json.Nodes.JsonObject)'></a>
 
@@ -463,150 +420,624 @@ public VisualColumnTypologyFilter(System.Text.Json.Nodes.JsonObject? jsonObject)
 `jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
 
 The JSON object containing the filter data\.
-### Properties
 
-<a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter.Appearance'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_'></a>
 
-## VisualColumnTypologyFilter\.Appearance Property
+## VisualColumnTypologyFilter\<UColumn\> Class
 
-Gets or sets the fallback appearance of the buckets this level produces, or null when it has none\.
+The Visual counterpart of [DiGi\.Typology\.Classes\.ColumnTypologyFilter&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.columntypologyfilter-1 'DiGi\.Typology\.Classes\.ColumnTypologyFilter\`1'): a filter level over a single column, held
+in a typology so a client can render it\.
 
-```csharp
-public DiGi.Typology.Visual.Classes.TypologyAppearance? Appearance { get; set; }
-```
-
-#### Property Value
-[TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance')
-
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_'></a>
-
-## VisualRange\<T\> Class
-
-A [DiGi\.Core\.Classes\.Range&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1') carrying the appearance of the bucket it defines\.
-
-Rides inside the existing [DiGi\.Typology\.Classes\.IntegerRangeFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.integerrangefilterrule 'DiGi\.Typology\.Classes\.IntegerRangeFilterRule') and [DiGi\.Typology\.Classes\.DoubleRangeFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.doublerangefilterrule 'DiGi\.Typology\.Classes\.DoubleRangeFilterRule')
-            unchanged: the rule keys on [DiGi\.Core\.Classes\.Range&lt;&gt;\.Min](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1.min 'DiGi\.Core\.Classes\.Range\`1\.Min') and stores whatever [DiGi\.Core\.Classes\.Range&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1') subtype it is
-            given, so there is no Visual rule class. [DiGi\.Typology\.Classes\.RangeValueFilterRule&lt;&gt;\.RuleData\(System\.Object\)](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.rangevaluefilterrule-1.ruledata#digi-typology-classes-rangevaluefilterrule-1-ruledata(system-object) 'DiGi\.Typology\.Classes\.RangeValueFilterRule\`1\.RuleData\(System\.Object\)') wraps the
-            matched instance itself, so a consumer reads the appearance back as `ruleData.Range as VisualRange<T>`.
-
-The appearance is metadata and takes no part in equality or hashing: two ranges with the same bounds are
-            equal whatever they look like, which keeps bucket identity a property of the range alone.
+All behaviour is inherited from its base; this type only exposes the constructors and pins the level to the
+            Visual family, so it is recognised by its `_type` discriminator in a serialized tree.
 
 ```csharp
-public class VisualRange<T> : DiGi.Core.Classes.Range<T>, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject
+public class VisualColumnTypologyFilter<UColumn> : DiGi.Typology.Classes.TypologyFilter<DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter<UColumn>, UColumn>, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject
+    where UColumn : DiGi.Core.IO.Table.Interfaces.IColumn
 ```
 #### Type parameters
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.T'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.UColumn'></a>
 
-`T`
+`UColumn`
 
-The type of the values in the range\.
+The column type implementing [DiGi\.Core\.IO\.Table\.Interfaces\.IColumn](https://learn.microsoft.com/en-us/dotnet/api/digi.core.io.table.interfaces.icolumn 'DiGi\.Core\.IO\.Table\.Interfaces\.IColumn')\.
 
-Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[T](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_.T 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>\.T')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1') → VisualRange\<T\>
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilter&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-1 'DiGi\.Typology\.Classes\.TypologyFilter\`1')[DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[UColumn](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.UColumn 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>\.UColumn')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-1 'DiGi\.Typology\.Classes\.TypologyFilter\`1') → [DiGi\.Typology\.Classes\.TypologyFilter&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-2 'DiGi\.Typology\.Classes\.TypologyFilter\`2')[DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[UColumn](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.UColumn 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>\.UColumn')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[,](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-2 'DiGi\.Typology\.Classes\.TypologyFilter\`2')[UColumn](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.UColumn 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>\.UColumn')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilter-2 'DiGi\.Typology\.Classes\.TypologyFilter\`2') → VisualColumnTypologyFilter\<UColumn\>
+
+Derived  
+↳ [VisualColumnTypologyFilter](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter')
 
 Implements [ITypologyVisualSerializableObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualSerializableObject'), [ITypologyVisualObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualObject'), [DiGi\.Typology\.Interfaces\.ITypologyObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyobject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject')
 ### Constructors
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(DiGi.Core.Classes.Range_T_,DiGi.Typology.Visual.Classes.TypologyAppearance)'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.VisualColumnTypologyFilter()'></a>
 
-## VisualRange\(Range\<T\>, TypologyAppearance\) Constructor
+## VisualColumnTypologyFilter\(\) Constructor
 
-Initializes a new instance of the [VisualRange&lt;T&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_ 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>') class from a plain range and an appearance\.
+Initializes a new instance of the [VisualColumnTypologyFilter&lt;UColumn&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>') class\.
 
 ```csharp
-public VisualRange(DiGi.Core.Classes.Range<T>? range, DiGi.Typology.Visual.Classes.TypologyAppearance? appearance);
+public VisualColumnTypologyFilter();
+```
+
+<a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.VisualColumnTypologyFilter(DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_)'></a>
+
+## VisualColumnTypologyFilter\(VisualColumnTypologyFilter\<UColumn\>\) Constructor
+
+Initializes a new instance of the [VisualColumnTypologyFilter&lt;UColumn&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>') class by copying another
+instance\.
+
+```csharp
+public VisualColumnTypologyFilter(DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter<UColumn>? visualColumnTypologyFilter);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(DiGi.Core.Classes.Range_T_,DiGi.Typology.Visual.Classes.TypologyAppearance).range'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.VisualColumnTypologyFilter(DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_).visualColumnTypologyFilter'></a>
 
-`range` [DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[T](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_.T 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>\.T')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')
+`visualColumnTypologyFilter` [DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')[UColumn](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.UColumn 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>\.UColumn')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>')
 
-The range whose bounds are copied\.
+The column typology filter to copy\.
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(DiGi.Core.Classes.Range_T_,DiGi.Typology.Visual.Classes.TypologyAppearance).appearance'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.VisualColumnTypologyFilter(System.Text.Json.Nodes.JsonObject)'></a>
 
-`appearance` [TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance')
+## VisualColumnTypologyFilter\(JsonObject\) Constructor
 
-The appearance of the bucket; it is cloned\.
-
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(DiGi.Typology.Visual.Classes.VisualRange_T_)'></a>
-
-## VisualRange\(VisualRange\<T\>\) Constructor
-
-Initializes a new instance of the [VisualRange&lt;T&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_ 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>') class by copying an existing visual range\.
+Initializes a new instance of the [VisualColumnTypologyFilter&lt;UColumn&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_ 'DiGi\.Typology\.Visual\.Classes\.VisualColumnTypologyFilter\<UColumn\>') class from a JSON object\.
 
 ```csharp
-public VisualRange(DiGi.Typology.Visual.Classes.VisualRange<T>? visualRange);
+public VisualColumnTypologyFilter(System.Text.Json.Nodes.JsonObject? jsonObject);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(DiGi.Typology.Visual.Classes.VisualRange_T_).visualRange'></a>
-
-`visualRange` [DiGi\.Typology\.Visual\.Classes\.VisualRange&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_ 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>')[T](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_.T 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>\.T')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_ 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>')
-
-The visual range to copy\.
-
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(System.Text.Json.Nodes.JsonObject)'></a>
-
-## VisualRange\(JsonObject\) Constructor
-
-Initializes a new instance of the [VisualRange&lt;T&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_ 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>') class from a JSON object\.
-
-```csharp
-public VisualRange(System.Text.Json.Nodes.JsonObject? jsonObject);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualColumnTypologyFilter_UColumn_.VisualColumnTypologyFilter(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
 
 `jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
 
-The JSON object to initialize the range from\.
+The JSON object containing the filter data\.
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(T,T,DiGi.Typology.Visual.Classes.TypologyAppearance)'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule'></a>
 
-## VisualRange\(T, T, TypologyAppearance\) Constructor
+## VisualDoubleRangeFilterRule Class
 
-Initializes a new instance of the [VisualRange&lt;T&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_ 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>') class with specified boundary values and appearance\.
+A [VisualRangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>') for [System\.Double](https://learn.microsoft.com/en-us/dotnet/api/system.double 'System\.Double') ranges, carrying an appearance per
+bucket\.
 
 ```csharp
-public VisualRange(T? value_1, T? value_2, DiGi.Typology.Visual.Classes.TypologyAppearance? appearance);
+public class VisualDoubleRangeFilterRule : DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule<double>
+```
+
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilterrule 'DiGi\.Typology\.Classes\.TypologyFilterRule') → [DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>')[System\.Double](https://learn.microsoft.com/en-us/dotnet/api/system.double 'System\.Double')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>') → VisualDoubleRangeFilterRule
+### Constructors
+
+<a name='DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule.VisualDoubleRangeFilterRule()'></a>
+
+## VisualDoubleRangeFilterRule\(\) Constructor
+
+Initializes a new, empty instance of the [VisualDoubleRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualDoubleRangeFilterRule') class; ranges and
+appearances are filed afterwards\.
+
+```csharp
+public VisualDoubleRangeFilterRule();
+```
+
+<a name='DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule.VisualDoubleRangeFilterRule(DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule)'></a>
+
+## VisualDoubleRangeFilterRule\(VisualDoubleRangeFilterRule\) Constructor
+
+Initializes a new instance of the [VisualDoubleRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualDoubleRangeFilterRule') class by copying another instance,
+its ranges included\.
+
+```csharp
+public VisualDoubleRangeFilterRule(DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule visualDoubleRangeFilterRule);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(T,T,DiGi.Typology.Visual.Classes.TypologyAppearance).value_1'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule.VisualDoubleRangeFilterRule(DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule).visualDoubleRangeFilterRule'></a>
 
-`value_1` [T](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_.T 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>\.T')
+`visualDoubleRangeFilterRule` [VisualDoubleRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualDoubleRangeFilterRule')
 
-The first boundary value\.
+The source rule to copy\.
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(T,T,DiGi.Typology.Visual.Classes.TypologyAppearance).value_2'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule.VisualDoubleRangeFilterRule(System.Collections.Generic.IEnumerable_DiGi.Core.Classes.Range_double__)'></a>
 
-`value_2` [T](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRange_T_.T 'DiGi\.Typology\.Visual\.Classes\.VisualRange\<T\>\.T')
+## VisualDoubleRangeFilterRule\(IEnumerable\<Range\<double\>\>\) Constructor
 
-The second boundary value\.
+Initializes a new instance of the [VisualDoubleRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualDoubleRangeFilterRule') class with a collection of ranges\.
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.VisualRange(T,T,DiGi.Typology.Visual.Classes.TypologyAppearance).appearance'></a>
+```csharp
+public VisualDoubleRangeFilterRule(System.Collections.Generic.IEnumerable<DiGi.Core.Classes.Range<double>>? ranges);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule.VisualDoubleRangeFilterRule(System.Collections.Generic.IEnumerable_DiGi.Core.Classes.Range_double__).ranges'></a>
+
+`ranges` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[System\.Double](https://learn.microsoft.com/en-us/dotnet/api/system.double 'System\.Double')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+The collection of double ranges to assign\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule.VisualDoubleRangeFilterRule(System.Text.Json.Nodes.JsonObject)'></a>
+
+## VisualDoubleRangeFilterRule\(JsonObject\) Constructor
+
+Initializes a new instance of the [VisualDoubleRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualDoubleRangeFilterRule') class from a JSON object\.
+
+```csharp
+public VisualDoubleRangeFilterRule(System.Text.Json.Nodes.JsonObject jsonObject);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule.VisualDoubleRangeFilterRule(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
+
+`jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
+
+The JSON object containing the rule data\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule'></a>
+
+## VisualIntegerRangeFilterRule Class
+
+A [VisualRangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>') for [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32') ranges, carrying an appearance per
+bucket\.
+
+```csharp
+public class VisualIntegerRangeFilterRule : DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule<int>
+```
+
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilterrule 'DiGi\.Typology\.Classes\.TypologyFilterRule') → [DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>') → VisualIntegerRangeFilterRule
+### Constructors
+
+<a name='DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule.VisualIntegerRangeFilterRule()'></a>
+
+## VisualIntegerRangeFilterRule\(\) Constructor
+
+Initializes a new, empty instance of the [VisualIntegerRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualIntegerRangeFilterRule') class; ranges and
+appearances are filed afterwards\.
+
+```csharp
+public VisualIntegerRangeFilterRule();
+```
+
+<a name='DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule.VisualIntegerRangeFilterRule(DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule)'></a>
+
+## VisualIntegerRangeFilterRule\(VisualIntegerRangeFilterRule\) Constructor
+
+Initializes a new instance of the [VisualIntegerRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualIntegerRangeFilterRule') class by copying another instance,
+its ranges included\.
+
+```csharp
+public VisualIntegerRangeFilterRule(DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule visualIntegerRangeFilterRule);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule.VisualIntegerRangeFilterRule(DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule).visualIntegerRangeFilterRule'></a>
+
+`visualIntegerRangeFilterRule` [VisualIntegerRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualIntegerRangeFilterRule')
+
+The source rule to copy\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule.VisualIntegerRangeFilterRule(System.Collections.Generic.IEnumerable_DiGi.Core.Classes.Range_int__)'></a>
+
+## VisualIntegerRangeFilterRule\(IEnumerable\<Range\<int\>\>\) Constructor
+
+Initializes a new instance of the [VisualIntegerRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualIntegerRangeFilterRule') class with a collection of ranges\.
+
+```csharp
+public VisualIntegerRangeFilterRule(System.Collections.Generic.IEnumerable<DiGi.Core.Classes.Range<int>>? ranges);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule.VisualIntegerRangeFilterRule(System.Collections.Generic.IEnumerable_DiGi.Core.Classes.Range_int__).ranges'></a>
+
+`ranges` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+The collection of integer ranges to assign\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule.VisualIntegerRangeFilterRule(System.Text.Json.Nodes.JsonObject)'></a>
+
+## VisualIntegerRangeFilterRule\(JsonObject\) Constructor
+
+Initializes a new instance of the [VisualIntegerRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualIntegerRangeFilterRule') class from a JSON object\.
+
+```csharp
+public VisualIntegerRangeFilterRule(System.Text.Json.Nodes.JsonObject jsonObject);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule.VisualIntegerRangeFilterRule(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
+
+`jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
+
+The JSON object containing the rule data\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_'></a>
+
+## VisualRangeValueFilterRule\<TValueType\> Class
+
+A [DiGi\.Typology\.Classes\.RangeValueFilterRule&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.rangevaluefilterrule-1 'DiGi\.Typology\.Classes\.RangeValueFilterRule\`1') that also carries the appearance of each of its buckets\.
+
+Like its base it files its ranges keyed on [DiGi\.Core\.Classes\.Range&lt;&gt;\.Min](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1.min 'DiGi\.Core\.Classes\.Range\`1\.Min') and enumerates them in ascending
+            `Min` order, so the order they were declared in does not affect which bucket a value resolves to; matching is
+            a closed interval on both ends, so ranges that touch at a boundary both contain it and the lower one wins. The
+            difference is the appearance: the base rule is stateless and a consumer reads it back off the matched range,
+            whereas here each bucket's appearance is filed on the rule itself, in a [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TypologyAppearanceCollection')
+            keyed by the range (see [Key\(this object\)](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Query.Key(thisobject) 'DiGi\.Typology\.Visual\.Query\.Key\(this object\)')), so it survives a round trip, and
+            [RuleData\(object\)](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.RuleData(object) 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.RuleData\(object\)') hands it to the rule data it produces.
+
+This rule does not derive from [DiGi\.Typology\.Classes\.RangeValueFilterRule&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.rangevaluefilterrule-1 'DiGi\.Typology\.Classes\.RangeValueFilterRule\`1'):
+            [DiGi\.Typology\.Query\.RuleData\(DiGi\.Typology\.Interfaces\.ITypologyFilterRule,System\.Object\)](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.query.ruledata#digi-typology-query-ruledata(digi-typology-interfaces-itypologyfilterrule-system-object) 'DiGi\.Typology\.Query\.RuleData\(DiGi\.Typology\.Interfaces\.ITypologyFilterRule,System\.Object\)') binds `RuleData` by name through
+            reflection, so hiding the base method to change its return type is not an option.
+
+```csharp
+public abstract class VisualRangeValueFilterRule<TValueType> : DiGi.Typology.Classes.TypologyFilterRule, DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRule, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject, DiGi.Typology.Interfaces.ITypologyFilterRule, DiGi.Typology.Interfaces.ITypologySerializableObject, DiGi.Typology.Interfaces.ITypologyFilterRule<DiGi.Typology.Visual.Classes.VisualRangeValueRuleData<TValueType>>
+    where TValueType : System.IComparable<TValueType>
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType'></a>
+
+`TValueType`
+
+The type of the range values, which must implement [System\.IComparable&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1 'System\.IComparable\`1')\.
+
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilterrule 'DiGi\.Typology\.Classes\.TypologyFilterRule') → VisualRangeValueFilterRule\<TValueType\>
+
+Derived  
+↳ [VisualDoubleRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualDoubleRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualDoubleRangeFilterRule')  
+↳ [VisualIntegerRangeFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualIntegerRangeFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualIntegerRangeFilterRule')
+
+Implements [IVisualTypologyFilterRule](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRule 'DiGi\.Typology\.Visual\.Interfaces\.IVisualTypologyFilterRule'), [ITypologyVisualSerializableObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualSerializableObject'), [ITypologyVisualObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualObject'), [DiGi\.Typology\.Interfaces\.ITypologyObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyobject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject'), [DiGi\.Typology\.Interfaces\.ITypologyFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterrule 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule'), [DiGi\.Typology\.Interfaces\.ITypologySerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyserializableobject 'DiGi\.Typology\.Interfaces\.ITypologySerializableObject'), [DiGi\.Typology\.Interfaces\.ITypologyFilterRule&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterrule-1 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule\`1')[DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterrule-1 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule\`1')
+### Constructors
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.VisualRangeValueFilterRule()'></a>
+
+## VisualRangeValueFilterRule\(\) Constructor
+
+Initializes a new, empty instance of the [VisualRangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>') class; ranges
+and appearances are filed through [Ranges](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.Ranges 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.Ranges') and [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TypologyAppearanceCollection')\.
+
+```csharp
+public VisualRangeValueFilterRule();
+```
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.VisualRangeValueFilterRule(DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_)'></a>
+
+## VisualRangeValueFilterRule\(VisualRangeValueFilterRule\<TValueType\>\) Constructor
+
+Initializes a new instance of the [VisualRangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>') class by copying another
+instance: every range is cloned under its minimum and the appearances are cloned under their keys\.
+
+```csharp
+public VisualRangeValueFilterRule(DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule<TValueType> visualRangeValueFilterRule);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.VisualRangeValueFilterRule(DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_).visualRangeValueFilterRule'></a>
+
+`visualRangeValueFilterRule` [DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>')
+
+The source rule to copy\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.VisualRangeValueFilterRule(System.Collections.Generic.IEnumerable_DiGi.Core.Classes.Range_TValueType__)'></a>
+
+## VisualRangeValueFilterRule\(IEnumerable\<Range\<TValueType\>\>\) Constructor
+
+Initializes a new instance of the [VisualRangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>') class with a collection
+of ranges\.
+
+```csharp
+public VisualRangeValueFilterRule(System.Collections.Generic.IEnumerable<DiGi.Core.Classes.Range<TValueType>>? ranges);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.VisualRangeValueFilterRule(System.Collections.Generic.IEnumerable_DiGi.Core.Classes.Range_TValueType__).ranges'></a>
+
+`ranges` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+The ranges to file; null entries are skipped\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.VisualRangeValueFilterRule(System.Text.Json.Nodes.JsonObject)'></a>
+
+## VisualRangeValueFilterRule\(JsonObject\) Constructor
+
+Initializes a new instance of the [VisualRangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>') class from a JSON object\.
+
+```csharp
+public VisualRangeValueFilterRule(System.Text.Json.Nodes.JsonObject jsonObject);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.VisualRangeValueFilterRule(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
+
+`jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
+
+The JSON object containing the rule data\.
+### Properties
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.Ranges'></a>
+
+## VisualRangeValueFilterRule\<TValueType\>\.Ranges Property
+
+Gets or sets the ranges of this rule, enumerated in ascending [DiGi\.Core\.Classes\.Range&lt;&gt;\.Min](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1.min 'DiGi\.Core\.Classes\.Range\`1\.Min') order\. Assigning a
+sequence replaces the current ranges; null clears them\.
+
+```csharp
+public System.Collections.Generic.IEnumerable<DiGi.Core.Classes.Range<TValueType>> Ranges { get; set; }
+```
+
+#### Property Value
+[System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TypologyAppearanceCollection'></a>
+
+## VisualRangeValueFilterRule\<TValueType\>\.TypologyAppearanceCollection Property
+
+Gets the appearances of the buckets of this rule, keyed by range: file an entry as
+`rule.TypologyAppearanceCollection[range] = appearance`\. Never null\.
+
+```csharp
+public DiGi.Typology.Visual.Classes.TypologyAppearanceCollection TypologyAppearanceCollection { get; }
+```
+
+Implements [TypologyAppearanceCollection](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRule.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Interfaces\.IVisualTypologyFilterRule\.TypologyAppearanceCollection')
+
+#### Property Value
+[TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearanceCollection')
+### Methods
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.Add(DiGi.Core.Classes.Range_TValueType_)'></a>
+
+## VisualRangeValueFilterRule\<TValueType\>\.Add\(Range\<TValueType\>\) Method
+
+Files a range under its [DiGi\.Core\.Classes\.Range&lt;&gt;\.Min](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1.min 'DiGi\.Core\.Classes\.Range\`1\.Min'), replacing any range already filed under that minimum\.
+
+```csharp
+public bool Add(DiGi.Core.Classes.Range<TValueType>? range);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.Add(DiGi.Core.Classes.Range_TValueType_).range'></a>
+
+`range` [DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')
+
+The range to file\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if the range was filed; otherwise, false \(null\)\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.RuleData(object)'></a>
+
+## VisualRangeValueFilterRule\<TValueType\>\.RuleData\(object\) Method
+
+Resolves the value to the bucket it falls into and returns the rule data for that bucket\.
+
+The value is converted to [TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType') and matched against the ranges in ascending
+            [DiGi\.Core\.Classes\.Range&lt;&gt;\.Min](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1.min 'DiGi\.Core\.Classes\.Range\`1\.Min') order; the first range that contains it wins. The rule data carries the appearance
+            filed for that range in [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TypologyAppearanceCollection'), by reference, or null when none is filed.
+
+```csharp
+public DiGi.Typology.Visual.Classes.VisualRangeValueRuleData<TValueType>? RuleData(object? object_Value);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.RuleData(object).object_Value'></a>
+
+`object_Value` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
+
+The value to match against the ranges\.
+
+Implements [RuleData\(object\)](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterrule-1.ruledata#digi-typology-interfaces-itypologyfilterrule-1-ruledata(system-object) 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule\`1\.RuleData\(System\.Object\)')
+
+#### Returns
+[DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')  
+The rule data wrapping the matched range and its appearance, or null when the value is not convertible or no range contains it\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_'></a>
+
+## VisualRangeValueRuleData\<TValueType\> Class
+
+The resulting data for a [VisualRangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>'): the [DiGi\.Core\.Classes\.Range&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1') a value
+fell into, together with the appearance of that bucket\.
+
+The appearance is metadata, not identity: equality, ordering and the hash consider the
+            [DiGi\.Core\.Classes\.Range&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1') alone (as in the base [DiGi\.Typology\.Classes\.RangeValueRuleData&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.rangevalueruledata-1 'DiGi\.Typology\.Classes\.RangeValueRuleData\`1')), so two rule data
+            instances are equal when they wrap equal ranges whatever they look like.
+
+```csharp
+public class VisualRangeValueRuleData<TValueType> : DiGi.Typology.Classes.TypologyFilterRuleData<DiGi.Typology.Visual.Classes.VisualRangeValueRuleData<TValueType>>, DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRuleData, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject, DiGi.Typology.Interfaces.ITypologyFilterRuleData, DiGi.Typology.Interfaces.ITypologySerializableObject
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.TValueType'></a>
+
+`TValueType`
+
+The underlying type of the range values\.
+
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilterRuleData&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilterruledata-1 'DiGi\.Typology\.Classes\.TypologyFilterRuleData\`1')[DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>\.TValueType')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilterruledata-1 'DiGi\.Typology\.Classes\.TypologyFilterRuleData\`1') → VisualRangeValueRuleData\<TValueType\>
+
+Implements [IVisualTypologyFilterRuleData](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRuleData 'DiGi\.Typology\.Visual\.Interfaces\.IVisualTypologyFilterRuleData'), [ITypologyVisualSerializableObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualSerializableObject'), [ITypologyVisualObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualObject'), [DiGi\.Typology\.Interfaces\.ITypologyObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyobject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject'), [DiGi\.Typology\.Interfaces\.ITypologyFilterRuleData](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterruledata 'DiGi\.Typology\.Interfaces\.ITypologyFilterRuleData'), [DiGi\.Typology\.Interfaces\.ITypologySerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyserializableobject 'DiGi\.Typology\.Interfaces\.ITypologySerializableObject')
+### Constructors
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData()'></a>
+
+## VisualRangeValueRuleData\(\) Constructor
+
+Initializes a new, empty instance of the [VisualRangeValueRuleData&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>') class; the range
+and the appearance are set afterwards\.
+
+```csharp
+public VisualRangeValueRuleData();
+```
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance)'></a>
+
+## VisualRangeValueRuleData\(Range\<TValueType\>, TypologyAppearance\) Constructor
+
+Initializes a new instance of the [VisualRangeValueRuleData&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>') class wrapping a range and
+an appearance\.
+
+Both are stored as given, not cloned, so the caller retains ownership of the instances it passes.
+
+```csharp
+public VisualRangeValueRuleData(DiGi.Core.Classes.Range<TValueType>? range, DiGi.Typology.Visual.Classes.TypologyAppearance? appearance);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance).range'></a>
+
+`range` [DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')
+
+The range the value fell into\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance).appearance'></a>
 
 `appearance` [TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance')
 
-The appearance of the bucket; it is cloned\.
+The appearance of the bucket; may be null\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_)'></a>
+
+## VisualRangeValueRuleData\(VisualRangeValueRuleData\<TValueType\>\) Constructor
+
+Initializes a new instance of the [VisualRangeValueRuleData&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>') class by copying another
+instance: the range and the appearance are cloned\.
+
+```csharp
+public VisualRangeValueRuleData(DiGi.Typology.Visual.Classes.VisualRangeValueRuleData<TValueType> visualRangeValueRuleData);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_).visualRangeValueRuleData'></a>
+
+`visualRangeValueRuleData` [DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>\.TValueType')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')
+
+The source rule data to copy\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(System.Text.Json.Nodes.JsonObject)'></a>
+
+## VisualRangeValueRuleData\(JsonObject\) Constructor
+
+Initializes a new instance of the [VisualRangeValueRuleData&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>') class from a JSON object\.
+
+```csharp
+public VisualRangeValueRuleData(System.Text.Json.Nodes.JsonObject jsonObject);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
+
+`jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
+
+The JSON object containing the rule data\.
 ### Properties
 
-<a name='DiGi.Typology.Visual.Classes.VisualRange_T_.Appearance'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.Appearance'></a>
 
-## VisualRange\<T\>\.Appearance Property
+## VisualRangeValueRuleData\<TValueType\>\.Appearance Property
 
-Gets or sets the appearance of the bucket this range defines, or null when it has none\.
+Gets or sets the appearance of the bucket this rule data describes, or null when it has none\.
+
+Rule data produced by a [VisualRangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>') shares the instance filed on
+            the rule, so mutating it mutates the rule's entry.
 
 ```csharp
 public DiGi.Typology.Visual.Classes.TypologyAppearance? Appearance { get; set; }
 ```
 
+Implements [Appearance](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRuleData.Appearance 'DiGi\.Typology\.Visual\.Interfaces\.IVisualTypologyFilterRuleData\.Appearance')
+
 #### Property Value
 [TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance')
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.Range'></a>
+
+## VisualRangeValueRuleData\<TValueType\>\.Range Property
+
+Gets the range the value fell into, or null when this instance wraps none\.
+
+```csharp
+public DiGi.Core.Classes.Range<TValueType>? Range { get; }
+```
+
+#### Property Value
+[DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')
+### Methods
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.Equals(DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_)'></a>
+
+## VisualRangeValueRuleData\<TValueType\>\.Equals\(VisualRangeValueRuleData\<TValueType\>\) Method
+
+Determines whether this instance and another range rule data wrap the same range; the appearance is not
+considered\.
+
+```csharp
+public override bool Equals(DiGi.Typology.Visual.Classes.VisualRangeValueRuleData<TValueType> visualRangeValueRuleData);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.Equals(DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_).visualRangeValueRuleData'></a>
+
+`visualRangeValueRuleData` [DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData&lt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>\.TValueType')[&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>')
+
+The rule data to compare with this instance\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if both wrap equal ranges; otherwise, false\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.Equals(object)'></a>
+
+## VisualRangeValueRuleData\<TValueType\>\.Equals\(object\) Method
+
+Determines whether this instance and a specified object wrap the same range\.
+
+```csharp
+public override bool Equals(object? @object);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.Equals(object).object'></a>
+
+`object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
+
+The object to compare with this instance\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if the object is a [VisualRangeValueRuleData&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>') of equal range; otherwise, false\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.GetHashCode()'></a>
+
+## VisualRangeValueRuleData\<TValueType\>\.GetHashCode\(\) Method
+
+Returns the hash code for this instance, based on the range alone\.
+
+```csharp
+public override int GetHashCode();
+```
+
+#### Returns
+[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')  
+A 32\-bit signed integer hash code\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.ToString()'></a>
+
+## VisualRangeValueRuleData\<TValueType\>\.ToString\(\) Method
+
+Returns a string representation of the range rule data\.
+
+The range is rendered as a closed interval, `[min, max]`, matching the rule's closed-interval matching
+            semantics on both ends.
+
+```csharp
+public override string ToString();
+```
+
+#### Returns
+[System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')  
+A string representation of the range\.
 
 <a name='DiGi.Typology.Visual.Classes.VisualTypology'></a>
 
@@ -944,23 +1375,26 @@ A 32\-bit signed integer hash code\.
 
 ## VisualUniqueValueFilterRule Class
 
-A [DiGi\.Typology\.Classes\.UniqueValueFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevaluefilterrule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule') carrying an appearance per value\.
+The Visual counterpart of [DiGi\.Typology\.Classes\.UniqueValueFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevaluefilterrule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule'): buckets a value by equality and carries an
+appearance per value\.
 
-The rule itself is stateless and its rule data is created at solve time, so the appearances live here, in a
-            [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearanceCollection') keyed by the value - see
-            [Key\(object\)](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearanceCollection.Key(object) 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearanceCollection\.Key\(object\)') for the key a value resolves to. A consumer holding a
-            [DiGi\.Typology\.Classes\.UniqueValueRuleData](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata 'DiGi\.Typology\.Classes\.UniqueValueRuleData') reads `rule.TypologyAppearanceCollection[uniqueValueRuleData]`.
+The rule data is created at solve time, so the appearances live here, in a
+            [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearanceCollection') keyed by the value - see [Key\(this object\)](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Query.Key(thisobject) 'DiGi\.Typology\.Visual\.Query\.Key\(this object\)') for
+            the key a value resolves to - and [RuleData\(object\)](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule.RuleData(object) 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueFilterRule\.RuleData\(object\)') hands the value's appearance to the
+            [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData') it produces. A consumer holding rule data of either kind can also read
+            `rule.TypologyAppearanceCollection[ruleData]`.
 
-This type adds no `RuleData` member: [DiGi\.Typology\.Query\.RuleData\(DiGi\.Typology\.Interfaces\.ITypologyFilterRule,System\.Object\)](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.query.ruledata#digi-typology-query-ruledata(digi-typology-interfaces-itypologyfilterrule-system-object) 'DiGi\.Typology\.Query\.RuleData\(DiGi\.Typology\.Interfaces\.ITypologyFilterRule,System\.Object\)')
-            resolves that method by name, and a hiding overload would make the lookup ambiguous.
+This rule does not derive from [DiGi\.Typology\.Classes\.UniqueValueFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevaluefilterrule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule'):
+            [DiGi\.Typology\.Query\.RuleData\(DiGi\.Typology\.Interfaces\.ITypologyFilterRule,System\.Object\)](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.query.ruledata#digi-typology-query-ruledata(digi-typology-interfaces-itypologyfilterrule-system-object) 'DiGi\.Typology\.Query\.RuleData\(DiGi\.Typology\.Interfaces\.ITypologyFilterRule,System\.Object\)') binds `RuleData` by name through
+            reflection, so hiding the base method to change its return type is not an option.
 
 ```csharp
-public class VisualUniqueValueFilterRule : DiGi.Typology.Classes.UniqueValueFilterRule, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject
+public class VisualUniqueValueFilterRule : DiGi.Typology.Classes.TypologyFilterRule, DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRule, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject, DiGi.Typology.Interfaces.ITypologyFilterRule, DiGi.Typology.Interfaces.ITypologySerializableObject, DiGi.Typology.Interfaces.ITypologyFilterRule<DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData>
 ```
 
-Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilterrule 'DiGi\.Typology\.Classes\.TypologyFilterRule') → [DiGi\.Typology\.Classes\.UniqueValueFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevaluefilterrule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule') → VisualUniqueValueFilterRule
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilterrule 'DiGi\.Typology\.Classes\.TypologyFilterRule') → VisualUniqueValueFilterRule
 
-Implements [ITypologyVisualSerializableObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualSerializableObject'), [ITypologyVisualObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualObject'), [DiGi\.Typology\.Interfaces\.ITypologyObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyobject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject')
+Implements [IVisualTypologyFilterRule](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRule 'DiGi\.Typology\.Visual\.Interfaces\.IVisualTypologyFilterRule'), [ITypologyVisualSerializableObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualSerializableObject'), [ITypologyVisualObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualObject'), [DiGi\.Typology\.Interfaces\.ITypologyObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyobject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject'), [DiGi\.Typology\.Interfaces\.ITypologyFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterrule 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule'), [DiGi\.Typology\.Interfaces\.ITypologySerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyserializableobject 'DiGi\.Typology\.Interfaces\.ITypologySerializableObject'), [DiGi\.Typology\.Interfaces\.ITypologyFilterRule&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterrule-1 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule\`1')[VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterrule-1 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule\`1')
 ### Constructors
 
 <a name='DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule.VisualUniqueValueFilterRule()'></a>
@@ -1013,11 +1447,257 @@ The JSON object containing the rule data\.
 
 ## VisualUniqueValueFilterRule\.TypologyAppearanceCollection Property
 
-Gets the appearances of the buckets of this rule, keyed by value\. Never null; file entries through its indexer\.
+Gets the appearances of the buckets of this rule, keyed by value: file an entry as
+`rule.TypologyAppearanceCollection[value] = appearance`\. Never null\.
 
 ```csharp
 public DiGi.Typology.Visual.Classes.TypologyAppearanceCollection TypologyAppearanceCollection { get; }
 ```
 
+Implements [TypologyAppearanceCollection](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRule.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Interfaces\.IVisualTypologyFilterRule\.TypologyAppearanceCollection')
+
 #### Property Value
 [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearanceCollection')
+### Methods
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule.RuleData(object)'></a>
+
+## VisualUniqueValueFilterRule\.RuleData\(object\) Method
+
+Wraps the value in the rule data of its bucket, together with the appearance filed for the value in
+[TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueFilterRule\.TypologyAppearanceCollection'), by reference, or null when none is filed\.
+
+Every value gets a bucket, as in [DiGi\.Typology\.Classes\.UniqueValueFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevaluefilterrule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule'); `null` is the NULL bucket.
+
+```csharp
+public DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData? RuleData(object? @object);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule.RuleData(object).object'></a>
+
+`object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
+
+The value to bucket\.
+
+Implements [RuleData\(object\)](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterrule-1.ruledata#digi-typology-interfaces-itypologyfilterrule-1-ruledata(system-object) 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule\`1\.RuleData\(System\.Object\)')
+
+#### Returns
+[VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData')  
+The rule data wrapping the value and its appearance\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData'></a>
+
+## VisualUniqueValueRuleData Class
+
+The resulting data for a [VisualUniqueValueFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueFilterRule'): the value a bucket was keyed by, together with
+the appearance of that bucket\.
+
+The appearance is metadata, not identity: equality and the hash consider the [Value](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.Value 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData\.Value') alone (as
+            in the base [DiGi\.Typology\.Classes\.UniqueValueRuleData](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevalueruledata 'DiGi\.Typology\.Classes\.UniqueValueRuleData')), so two rule data instances are equal when they wrap equal values
+            whatever they look like.
+
+```csharp
+public class VisualUniqueValueRuleData : DiGi.Typology.Classes.TypologyFilterRuleData<DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData>, DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRuleData, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject, DiGi.Typology.Interfaces.ITypologyFilterRuleData, DiGi.Typology.Interfaces.ITypologySerializableObject
+```
+
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.TypologyFilterRuleData&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilterruledata-1 'DiGi\.Typology\.Classes\.TypologyFilterRuleData\`1')[VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologyfilterruledata-1 'DiGi\.Typology\.Classes\.TypologyFilterRuleData\`1') → VisualUniqueValueRuleData
+
+Implements [IVisualTypologyFilterRuleData](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRuleData 'DiGi\.Typology\.Visual\.Interfaces\.IVisualTypologyFilterRuleData'), [ITypologyVisualSerializableObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualSerializableObject'), [ITypologyVisualObject](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.ITypologyVisualObject 'DiGi\.Typology\.Visual\.Interfaces\.ITypologyVisualObject'), [DiGi\.Typology\.Interfaces\.ITypologyObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyobject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject'), [DiGi\.Typology\.Interfaces\.ITypologyFilterRuleData](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterruledata 'DiGi\.Typology\.Interfaces\.ITypologyFilterRuleData'), [DiGi\.Typology\.Interfaces\.ITypologySerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyserializableobject 'DiGi\.Typology\.Interfaces\.ITypologySerializableObject')
+### Constructors
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData()'></a>
+
+## VisualUniqueValueRuleData\(\) Constructor
+
+Initializes a new, empty instance of the [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData') class; the value and the
+appearance are set afterwards\.
+
+```csharp
+public VisualUniqueValueRuleData();
+```
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData(DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData)'></a>
+
+## VisualUniqueValueRuleData\(VisualUniqueValueRuleData\) Constructor
+
+Initializes a new instance of the [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData') class by copying another instance\.
+
+The value is shared by reference, as unique values are expected to be immutable; the appearance is cloned.
+
+```csharp
+public VisualUniqueValueRuleData(DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData visualUniqueValueRuleData);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData(DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData).visualUniqueValueRuleData'></a>
+
+`visualUniqueValueRuleData` [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData')
+
+The source rule data to copy\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData(object)'></a>
+
+## VisualUniqueValueRuleData\(object\) Constructor
+
+Initializes a new instance of the [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData') class wrapping a value\.
+
+The value is stored by reference, not cloned, so the caller retains ownership of the instance it passes.
+
+```csharp
+public VisualUniqueValueRuleData(object? @object);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData(object).object'></a>
+
+`object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
+
+The value to wrap\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData(object,DiGi.Typology.Visual.Classes.TypologyAppearance)'></a>
+
+## VisualUniqueValueRuleData\(object, TypologyAppearance\) Constructor
+
+Initializes a new instance of the [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData') class wrapping a value and an
+appearance\.
+
+Both are stored as given, not cloned, so the caller retains ownership of the instances it passes.
+
+```csharp
+public VisualUniqueValueRuleData(object? @object, DiGi.Typology.Visual.Classes.TypologyAppearance? appearance);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData(object,DiGi.Typology.Visual.Classes.TypologyAppearance).object'></a>
+
+`object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
+
+The value to wrap\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData(object,DiGi.Typology.Visual.Classes.TypologyAppearance).appearance'></a>
+
+`appearance` [TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance')
+
+The appearance of the bucket; may be null\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData(System.Text.Json.Nodes.JsonObject)'></a>
+
+## VisualUniqueValueRuleData\(JsonObject\) Constructor
+
+Initializes a new instance of the [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData') class from a JSON object\.
+
+```csharp
+public VisualUniqueValueRuleData(System.Text.Json.Nodes.JsonObject jsonObject);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.VisualUniqueValueRuleData(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
+
+`jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
+
+The JSON object containing the rule data\.
+### Properties
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.Appearance'></a>
+
+## VisualUniqueValueRuleData\.Appearance Property
+
+Gets or sets the appearance of the bucket this rule data describes, or null when it has none\.
+
+Rule data produced by a [VisualUniqueValueFilterRule](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueFilterRule') shares the instance filed on the rule,
+            so mutating it mutates the rule's entry.
+
+```csharp
+public DiGi.Typology.Visual.Classes.TypologyAppearance? Appearance { get; set; }
+```
+
+Implements [Appearance](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRuleData.Appearance 'DiGi\.Typology\.Visual\.Interfaces\.IVisualTypologyFilterRuleData\.Appearance')
+
+#### Property Value
+[TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance')
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.Value'></a>
+
+## VisualUniqueValueRuleData\.Value Property
+
+Gets the value the bucket was keyed by, or null when this instance wraps none\.
+
+```csharp
+public object? Value { get; }
+```
+
+#### Property Value
+[System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
+### Methods
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.Equals(DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData)'></a>
+
+## VisualUniqueValueRuleData\.Equals\(VisualUniqueValueRuleData\) Method
+
+Determines whether this instance and another unique value rule data wrap the same value; the appearance is not
+considered\.
+
+```csharp
+public override bool Equals(DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData visualUniqueValueRuleData);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.Equals(DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData).visualUniqueValueRuleData'></a>
+
+`visualUniqueValueRuleData` [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData')
+
+The rule data to compare with this instance\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if both wrap equal values; otherwise, false\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.Equals(object)'></a>
+
+## VisualUniqueValueRuleData\.Equals\(object\) Method
+
+Determines whether this instance and a specified object wrap the same value\.
+
+```csharp
+public override bool Equals(object? @object);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.Equals(object).object'></a>
+
+`object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
+
+The object to compare with this instance\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if the object is a [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData') of equal value; otherwise, false\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.GetHashCode()'></a>
+
+## VisualUniqueValueRuleData\.GetHashCode\(\) Method
+
+Returns the hash code for this instance, based on the value alone\.
+
+```csharp
+public override int GetHashCode();
+```
+
+#### Returns
+[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')  
+A 32\-bit signed integer hash code\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData.ToString()'></a>
+
+## VisualUniqueValueRuleData\.ToString\(\) Method
+
+Returns a string representation of the unique value rule data\.
+
+```csharp
+public override string ToString();
+```
+
+#### Returns
+[System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')  
+A string representation of the value\.
