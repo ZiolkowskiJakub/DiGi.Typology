@@ -2910,6 +2910,8 @@ True if the paths differ in value; otherwise, false\.
 
 Represents a typology filter rule that matches unique values\.
 
+The rule is stateless: its rule data is created per value at solve time and nothing is stored on the rule itself. The constructors exist so that a derived rule carrying state can chain them.
+
 ```csharp
 public class UniqueValueFilterRule : DiGi.Typology.Classes.TypologyFilterRule, DiGi.Typology.Interfaces.ITypologyFilterRule<DiGi.Typology.Classes.UniqueValueRuleData>, DiGi.Typology.Interfaces.ITypologyFilterRule, DiGi.Typology.Interfaces.ITypologySerializableObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject
 ```
@@ -2917,6 +2919,51 @@ public class UniqueValueFilterRule : DiGi.Typology.Classes.TypologyFilterRule, D
 Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [TypologyFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFilterRule 'DiGi\.Typology\.Classes\.TypologyFilterRule') → UniqueValueFilterRule
 
 Implements [DiGi\.Typology\.Interfaces\.ITypologyFilterRule&lt;](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologyFilterRule_TTypologyFilterRuleData_ 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule\<TTypologyFilterRuleData\>')[UniqueValueRuleData](DiGi.Typology.Classes.md#DiGi.Typology.Classes.UniqueValueRuleData 'DiGi\.Typology\.Classes\.UniqueValueRuleData')[&gt;](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologyFilterRule_TTypologyFilterRuleData_ 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule\<TTypologyFilterRuleData\>'), [ITypologyFilterRule](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologyFilterRule 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule'), [ITypologySerializableObject](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologySerializableObject 'DiGi\.Typology\.Interfaces\.ITypologySerializableObject'), [ITypologyObject](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologyObject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject')
+### Constructors
+
+<a name='DiGi.Typology.Classes.UniqueValueFilterRule.UniqueValueFilterRule()'></a>
+
+## UniqueValueFilterRule\(\) Constructor
+
+Initializes a new instance of the [UniqueValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.UniqueValueFilterRule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule') class\.
+
+```csharp
+public UniqueValueFilterRule();
+```
+
+<a name='DiGi.Typology.Classes.UniqueValueFilterRule.UniqueValueFilterRule(DiGi.Typology.Classes.UniqueValueFilterRule)'></a>
+
+## UniqueValueFilterRule\(UniqueValueFilterRule\) Constructor
+
+Initializes a new instance of the [UniqueValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.UniqueValueFilterRule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule') class by copying another instance\.
+
+```csharp
+public UniqueValueFilterRule(DiGi.Typology.Classes.UniqueValueFilterRule uniqueValueFilterRule);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.UniqueValueFilterRule.UniqueValueFilterRule(DiGi.Typology.Classes.UniqueValueFilterRule).uniqueValueFilterRule'></a>
+
+`uniqueValueFilterRule` [UniqueValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.UniqueValueFilterRule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule')
+
+The source filter rule to copy\.
+
+<a name='DiGi.Typology.Classes.UniqueValueFilterRule.UniqueValueFilterRule(System.Text.Json.Nodes.JsonObject)'></a>
+
+## UniqueValueFilterRule\(JsonObject\) Constructor
+
+Initializes a new instance of the [UniqueValueFilterRule](DiGi.Typology.Classes.md#DiGi.Typology.Classes.UniqueValueFilterRule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule') class with a JSON object\.
+
+```csharp
+public UniqueValueFilterRule(System.Text.Json.Nodes.JsonObject jsonObject);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.UniqueValueFilterRule.UniqueValueFilterRule(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
+
+`jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
+
+The JSON object containing the unique value filter rule data\.
 ### Methods
 
 <a name='DiGi.Typology.Classes.UniqueValueFilterRule.RuleData(object)'></a>

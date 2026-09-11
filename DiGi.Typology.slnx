@@ -6,4 +6,5 @@
     <File Path="Directory.Build.targets" />
   </Folder>
   <Project Path="DiGi.Typology/DiGi.Typology.csproj" />
+  <Project Path="DiGi.Typology.Visual/DiGi.Typology.Visual.csproj" />
 </Solution>
