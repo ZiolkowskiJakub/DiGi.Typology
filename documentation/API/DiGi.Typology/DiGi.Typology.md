@@ -354,7 +354,7 @@ Retrieves the set of references associated with the given typology, optionally i
 carried by its nested typologies\.
 
 With [includeNested](DiGi.Typology.md#DiGi.Typology.Query.ReferenceSet(thisDiGi.Typology.Classes.Typology,bool).includeNested 'DiGi\.Typology\.Query\.ReferenceSet\(this DiGi\.Typology\.Classes\.Typology, bool\)\.includeNested') false this is the content of
-            [References](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.References 'DiGi\.Typology\.Classes\.Typology\.References') as a set; the recursive form is what this method adds.
+            [References](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.References 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.References') as a set; the recursive form is what this method adds.
             It is named for the set it returns because the typology already exposes a References property.
 
 ```csharp
@@ -609,7 +609,7 @@ True if one or more matching typologies were found; otherwise, false\.
 Retrieves the paths of the sub\-typologies of the given typology, optionally including nested ones\.
 
 The paths are the ones the sub-typologies report themselves, which may differ from the keys
-            they are filed under - see [SubTypologies](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.SubTypologies 'DiGi\.Typology\.Classes\.Typology\.SubTypologies'). A sub-typology carrying
+            they are filed under - see [SubTypologies](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.SubTypologies 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.SubTypologies'). A sub-typology carrying
             no path contributes nothing.
 
 ```csharp

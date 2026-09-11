@@ -8,7 +8,7 @@ namespace DiGi.Typology
         /// <summary>
         /// Retrieves the paths of the sub-typologies of the given typology, optionally including nested ones.
         /// <para>The paths are the ones the sub-typologies report themselves, which may differ from the keys
-        /// they are filed under - see <see cref="Classes.Typology.SubTypologies"/>. A sub-typology carrying
+        /// they are filed under - see <see cref="Classes.Typology{TTypology, TTypologyItem}.SubTypologies"/>. A sub-typology carrying
         /// no path contributes nothing.</para>
         /// </summary>
         /// <param name="typology">The typology whose sub-typology paths are collected.</param>

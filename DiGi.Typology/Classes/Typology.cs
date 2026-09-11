@@ -10,24 +10,59 @@ using System.Text.Json.Serialization;
 namespace DiGi.Typology.Classes
 {
     /// <summary>
-    /// Represents a typology object that can be serialized and compared.
+    /// Base of a typology tree: a node carrying a typology item, a set of references and the sub-typologies
+    /// filed under it by index. Self-typed so that a specialised item type gets its own tree without copying
+    /// the class.
+    /// <para>Derive as <c>class X : Typology&lt;X, XItem&gt;</c> and chain the four protected constructors -
+    /// the parameterless one, the item one, the copy one and the JSON one - as the public constructors of
+    /// <typeparamref name="TTypology"/>. The JSON <c>_type</c> discriminator carries the concrete type name,
+    /// so deserialization needs the <see cref="JsonObject"/> constructor on the concrete type.</para>
+    /// <para>Every sub-typology, comparison operand and equality operand is a <typeparamref name="TTypology"/>;
+    /// the item comparison goes through the virtual <see cref="TypologyItem.Equals(TypologyItem)"/> and
+    /// <see cref="TypologyItem.CompareTo(TypologyItem)"/>, so an item type adding fields overrides those two
+    /// together with <see cref="object.GetHashCode"/>.</para>
     /// </summary>
-    public class Typology : SerializableObject, ITypologySerializableObject, INamedObject, IDescribableObject, IComparable<Typology>, IEquatable<Typology>
+    /// <typeparam name="TTypology">The concrete typology type - the type of every node of the tree.</typeparam>
+    /// <typeparam name="TTypologyItem">The typology item type. It needs a public parameterless constructor
+    /// because the <see cref="Name"/> and <see cref="Description"/> setters create an empty item when the
+    /// node has none.</typeparam>
+    public abstract class Typology<TTypology, TTypologyItem> : SerializableObject, ITypologySerializableObject, INamedObject, IDescribableObject, IComparable<TTypology>, IEquatable<TTypology> where TTypology : Typology<TTypology, TTypologyItem> where TTypologyItem : TypologyItem, new()
     {
         [JsonInclude, JsonPropertyName(nameof(References))]
         private readonly HashSet<string> references = [];
 
         [JsonIgnore]
-        private readonly Dictionary<int, Typology> subTypologies = [];
+        private readonly Dictionary<int, TTypology> subTypologies = [];
 
         [JsonInclude, JsonPropertyName(nameof(TypologyItem))]
-        private TypologyItem? typologyItem;
+        private TTypologyItem? typologyItem;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Typology"/> class by cloning an existing typology.
+        /// Initializes a new, empty instance of the <see cref="Typology{TTypology, TTypologyItem}"/> class.
         /// </summary>
-        /// <param name="typology">The source typology object to clone.</param>
-        public Typology(Typology? typology)
+        protected Typology()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Typology{TTypology, TTypologyItem}"/> class with a
+        /// specified typology item.
+        /// <para>Sub-typologies are not taken here: filing each one resolves an index against the indexes
+        /// already taken, which does not belong in a constructor - a <c>Create</c> factory does that, see
+        /// <see cref="Create.Typology(TypologyItem, IEnumerable{Typology})"/>.</para>
+        /// </summary>
+        /// <param name="typologyItem">The typology item to assign; it is cloned.</param>
+        protected Typology(TTypologyItem? typologyItem)
+        {
+            this.typologyItem = Core.Query.Clone(typologyItem);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Typology{TTypology, TTypologyItem}"/> class by cloning
+        /// an existing typology: the item, the references and every sub-typology are copied, not aliased.
+        /// </summary>
+        /// <param name="typology">The source typology to clone.</param>
+        protected Typology(Typology<TTypology, TTypologyItem>? typology)
             : base(typology)
         {
             if (typology != null)
@@ -36,9 +71,9 @@ namespace DiGi.Typology.Classes
 
                 references = [.. typology.references];
 
-                foreach (KeyValuePair<int, Typology> keyValuePair in typology.subTypologies)
+                foreach (KeyValuePair<int, TTypology> keyValuePair in typology.subTypologies)
                 {
-                    if (Core.Query.Clone(keyValuePair.Value) is not Typology typology_SubTypology)
+                    if (Core.Query.Clone(keyValuePair.Value) is not TTypology typology_SubTypology)
                     {
                         continue;
                     }
@@ -49,38 +84,19 @@ namespace DiGi.Typology.Classes
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Typology"/> class from a JSON object.
+        /// Initializes a new instance of the <see cref="Typology{TTypology, TTypologyItem}"/> class from a
+        /// JSON object.
         /// </summary>
         /// <param name="jsonObject">The JSON object containing typology data.</param>
-        public Typology(JsonObject? jsonObject)
+        protected Typology(JsonObject? jsonObject)
             : base(jsonObject)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Typology"/> class with a specified typology item.
-        /// <para>Use <see cref="Create.Typology(TypologyItem, IEnumerable{Typology})"/> to build an instance
-        /// that also carries sub-typologies: filing each one resolves an index against the indexes already
-        /// taken, which does not belong in a constructor.</para>
-        /// </summary>
-        /// <param name="typologyItem">The typology item to assign.</param>
-        public Typology(TypologyItem? typologyItem)
-        {
-            this.typologyItem = Core.Query.Clone(typologyItem);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Typology"/> class with a specified name and description.
-        /// </summary>
-        /// <param name="name">The name of the typology.</param>
-        /// <param name="description">The description of the typology.</param>
-        public Typology(string? name, string? description)
-        {
-            typologyItem = new TypologyItem(null, name, description);
-        }
-
-        /// <summary>
-        /// Gets or sets the description of the typology.
+        /// Gets or sets the description of the typology, held by its typology item.
+        /// <para>The setter creates an empty <typeparamref name="TTypologyItem"/> when the typology has
+        /// none.</para>
         /// </summary>
         [JsonIgnore]
         public string? Description
@@ -92,7 +108,7 @@ namespace DiGi.Typology.Classes
 
             set
             {
-                typologyItem ??= new TypologyItem();
+                typologyItem ??= new TTypologyItem();
 
                 typologyItem.Description = value;
             }
@@ -114,7 +130,9 @@ namespace DiGi.Typology.Classes
         }
 
         /// <summary>
-        /// Gets or sets the name of the typology.
+        /// Gets or sets the name of the typology, held by its typology item.
+        /// <para>The setter creates an empty <typeparamref name="TTypologyItem"/> when the typology has
+        /// none.</para>
         /// </summary>
         [JsonIgnore]
         public string? Name
@@ -126,7 +144,7 @@ namespace DiGi.Typology.Classes
 
             set
             {
-                typologyItem ??= new TypologyItem();
+                typologyItem ??= new TTypologyItem();
 
                 typologyItem.Name = value;
             }
@@ -154,16 +172,19 @@ namespace DiGi.Typology.Classes
         /// sub-typology reports.</para>
         /// <para>The getter builds a new list on every call, but the sub-typologies in it are the
         /// instances this typology holds rather than clones of them.</para>
+        /// <para>The setter is protected, not private, on purpose: deserialization reflects the property
+        /// through the concrete type, and reflection does not surface a private accessor declared on a base
+        /// class, so a private setter here would leave every deserialized tree empty.</para>
         /// </summary>
         [JsonInclude, JsonPropertyName(nameof(SubTypologies))]
-        public List<Typology>? SubTypologies
+        public List<TTypology>? SubTypologies
         {
             get
             {
                 return [.. subTypologies.Values];
             }
 
-            private set
+            protected set
             {
                 subTypologies.Clear();
 
@@ -172,7 +193,7 @@ namespace DiGi.Typology.Classes
                     return;
                 }
 
-                foreach (Typology typology in value)
+                foreach (TTypology typology in value)
                 {
                     if (typology is null)
                     {
@@ -192,7 +213,21 @@ namespace DiGi.Typology.Classes
         }
 
         /// <summary>
-        /// Gets the path information for this typology.
+        /// Gets the typology item of this typology, or null when it has none.
+        /// <para>The instance this typology holds is returned, not a clone of it - a derived typology reads
+        /// the fields of its own item through it.</para>
+        /// </summary>
+        [JsonIgnore]
+        public TTypologyItem? TypologyItem
+        {
+            get
+            {
+                return typologyItem;
+            }
+        }
+
+        /// <summary>
+        /// Gets the path of this typology, held by its typology item.
         /// </summary>
         [JsonIgnore]
         public TypologyPath? TypologyPath
@@ -211,11 +246,11 @@ namespace DiGi.Typology.Classes
         /// </summary>
         /// <param name="index">The index the sub-typology is filed under.</param>
         /// <returns>The sub-typology filed under the index, or null when there is none.</returns>
-        public Typology? this[int index]
+        public TTypology? this[int index]
         {
             get
             {
-                if (!subTypologies.TryGetValue(index, out Typology? result))
+                if (!subTypologies.TryGetValue(index, out TTypology? result))
                 {
                     return null;
                 }
@@ -239,7 +274,7 @@ namespace DiGi.Typology.Classes
         /// Adds a reference to the typology.
         /// </summary>
         /// <param name="reference">The reference string to add.</param>
-        /// <returns>True if the reference was added successfully; otherwise, false.</returns>
+        /// <returns>True if the reference was added; otherwise, false (already present or null).</returns>
         public bool AddReference(string? reference)
         {
             if (reference == null)
@@ -254,8 +289,8 @@ namespace DiGi.Typology.Classes
         /// Determines whether the typology carries a specific reference.
         /// <para>This tests the reference set directly. Reading <see cref="References"/> and searching the
         /// returned list costs a copy and a linear scan instead, which matters on a typology holding many
-        /// references. Use <see cref="Query.Contains(Typology, string, bool)"/> to search the nested
-        /// typologies as well.</para>
+        /// references. To search the nested typologies as well use the <c>Query.Contains</c> extension of the
+        /// concrete type - <see cref="Query.Contains(Typology, string, bool)"/> for <see cref="Typology"/>.</para>
         /// </summary>
         /// <param name="reference">The reference string to search for.</param>
         /// <returns>True if the typology carries the reference; otherwise, false (absent or null).</returns>
@@ -285,15 +320,17 @@ namespace DiGi.Typology.Classes
         }
 
         /// <summary>
-        /// Compares the current typology instance with another typology instance.
-        /// <para>The typology item is the primary ordering; instances sharing one are ordered by their
-        /// reference sets and then, recursively, by their sub-typologies, so this method returns zero
-        /// exactly when <see cref="Equals(Typology)"/> returns true. Like equality it therefore costs
+        /// Compares the current typology with another typology.
+        /// <para>The typology item is the primary ordering, compared through the virtual
+        /// <see cref="TypologyItem.CompareTo(TypologyItem)"/>, so an item type overriding it is honoured
+        /// whatever item type the typology declares. Typologies sharing an item are ordered by
+        /// their reference sets and then, recursively, by their sub-typologies, so this method returns zero
+        /// exactly when <see cref="Equals(TTypology)"/> returns true. Like equality it therefore costs
         /// O(n) over the sub-typology tree whenever the items tie.</para>
         /// </summary>
-        /// <param name="typology">The typology instance to compare against.</param>
+        /// <param name="typology">The typology to compare against.</param>
         /// <returns>A signed integer that indicates the relative order of the objects being compared.</returns>
-        public int CompareTo(Typology typology)
+        public int CompareTo(TTypology typology)
         {
             if (typology is null)
             {
@@ -374,12 +411,13 @@ namespace DiGi.Typology.Classes
         /// <summary>
         /// Determines whether the specified typology is value-equal to the current typology.
         /// <para>Equality is deep: the typology item, the reference set and the whole sub-typology tree,
-        /// sub-typologies matched by the index they are filed under. The call therefore costs O(n) over
-        /// that tree.</para>
+        /// sub-typologies matched by the index they are filed under. The items are compared through the
+        /// virtual <see cref="TypologyItem.Equals(TypologyItem)"/>, so an item type overriding it is honoured
+        /// whatever item type the typology declares. The call costs O(n) over the sub-typology tree.</para>
         /// </summary>
         /// <param name="typology">The typology to compare with the current instance.</param>
         /// <returns>True if the typologies are value-equal; otherwise, false.</returns>
-        public bool Equals(Typology? typology)
+        public bool Equals(TTypology? typology)
         {
             if (typology is null)
             {
@@ -406,9 +444,9 @@ namespace DiGi.Typology.Classes
                 return false;
             }
 
-            foreach (KeyValuePair<int, Typology> keyValuePair in subTypologies)
+            foreach (KeyValuePair<int, TTypology> keyValuePair in subTypologies)
             {
-                if (!typology.subTypologies.TryGetValue(keyValuePair.Key, out Typology? typology_SubTypology) || !keyValuePair.Value.Equals(typology_SubTypology))
+                if (!typology.subTypologies.TryGetValue(keyValuePair.Key, out TTypology? typology_SubTypology) || !keyValuePair.Value.Equals(typology_SubTypology))
                 {
                     return false;
                 }
@@ -421,10 +459,10 @@ namespace DiGi.Typology.Classes
         /// Determines whether the specified object is value-equal to the current typology.
         /// </summary>
         /// <param name="object">The object to compare with the current instance.</param>
-        /// <returns>True if the object is a <see cref="Typology"/> of equal value; otherwise, false.</returns>
+        /// <returns>True if the object is a <typeparamref name="TTypology"/> of equal value; otherwise, false.</returns>
         public override bool Equals(object? @object)
         {
-            return @object is Typology typology && Equals(typology);
+            return @object is TTypology typology && Equals(typology);
         }
 
         /// <summary>
@@ -432,9 +470,10 @@ namespace DiGi.Typology.Classes
         /// sub-typology tree.
         /// <para>The references and the sub-typologies are combined order-independently, matching the
         /// unordered semantics of equality. The whole instance is mutable, so the hash follows every
-        /// change made through the setters, AddReference, RemoveReference and Modify.Update - a typology
-        /// must not be mutated while it is held as a key of a dictionary or a set. Computing it costs
-        /// O(n) over the sub-typology tree.</para>
+        /// change made through the setters, <see cref="AddReference(string)"/>,
+        /// <see cref="RemoveReference(string)"/> and the <c>Modify</c> extensions - a typology must not be
+        /// mutated while it is held as a key of a dictionary or a set. Computing it costs O(n) over the
+        /// sub-typology tree.</para>
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
@@ -448,7 +487,7 @@ namespace DiGi.Typology.Classes
                 }
 
                 int hash_SubTypologies = 0;
-                foreach (KeyValuePair<int, Typology> keyValuePair in subTypologies)
+                foreach (KeyValuePair<int, TTypology> keyValuePair in subTypologies)
                 {
                     hash_SubTypologies ^= (keyValuePair.Key * 397) ^ keyValuePair.Value.GetHashCode();
                 }
@@ -468,14 +507,14 @@ namespace DiGi.Typology.Classes
         /// <param name="typology_1">The first typology, or null.</param>
         /// <param name="typology_2">The second typology, or null.</param>
         /// <returns>True if both are null or value-equal; otherwise, false.</returns>
-        public static bool operator ==(Typology? typology_1, Typology? typology_2)
+        public static bool operator ==(Typology<TTypology, TTypologyItem>? typology_1, Typology<TTypology, TTypologyItem>? typology_2)
         {
             if (typology_1 is null)
             {
                 return typology_2 is null;
             }
 
-            return typology_1.Equals(typology_2);
+            return typology_1.Equals(typology_2 as TTypology);
         }
 
         /// <summary>
@@ -484,16 +523,63 @@ namespace DiGi.Typology.Classes
         /// <param name="typology_1">The first typology, or null.</param>
         /// <param name="typology_2">The second typology, or null.</param>
         /// <returns>True if the typologies differ in value; otherwise, false.</returns>
-        public static bool operator !=(Typology? typology_1, Typology? typology_2)
+        public static bool operator !=(Typology<TTypology, TTypologyItem>? typology_1, Typology<TTypology, TTypologyItem>? typology_2)
         {
             return !(typology_1 == typology_2);
         }
 
         /// <summary>Returns a string representation of the current typology.</summary>
-        /// <returns>A string representing the typology item or the base object string.</returns>
+        /// <returns>The string form of the typology item, or the base object string when there is none.</returns>
         public override string ToString()
         {
             return typologyItem?.ToString() ?? base.ToString();
+        }
+    }
+
+    /// <summary>
+    /// Represents a typology node holding a plain <see cref="TypologyItem"/>. All behaviour is inherited from
+    /// <see cref="Typology{TTypology, TTypologyItem}"/>; this type only exposes the constructors.
+    /// </summary>
+    public class Typology : Typology<Typology, TypologyItem>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Typology"/> class by cloning an existing typology.
+        /// </summary>
+        /// <param name="typology">The source typology object to clone.</param>
+        public Typology(Typology? typology)
+            : base(typology)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Typology"/> class from a JSON object.
+        /// </summary>
+        /// <param name="jsonObject">The JSON object containing typology data.</param>
+        public Typology(JsonObject? jsonObject)
+            : base(jsonObject)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Typology"/> class with a specified typology item.
+        /// <para>Use <see cref="Create.Typology(TypologyItem, IEnumerable{Typology})"/> to build an instance
+        /// that also carries sub-typologies: filing each one resolves an index against the indexes already
+        /// taken, which does not belong in a constructor.</para>
+        /// </summary>
+        /// <param name="typologyItem">The typology item to assign; it is cloned.</param>
+        public Typology(TypologyItem? typologyItem)
+            : base(typologyItem)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Typology"/> class with a specified name and description.
+        /// </summary>
+        /// <param name="name">The name of the typology.</param>
+        /// <param name="description">The description of the typology.</param>
+        public Typology(string? name, string? description)
+            : base(new TypologyItem(null, name, description))
+        {
         }
     }
 }

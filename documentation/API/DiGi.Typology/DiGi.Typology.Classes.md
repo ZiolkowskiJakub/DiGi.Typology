@@ -687,15 +687,14 @@ A string representation of the range\.
 
 ## Typology Class
 
-Represents a typology object that can be serialized and compared\.
+Represents a typology node holding a plain [TypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem 'DiGi\.Typology\.Classes\.TypologyItem')\. All behaviour is inherited from
+[Typology&lt;TTypology,TTypologyItem&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>'); this type only exposes the constructors\.
 
 ```csharp
-public class Typology : DiGi.Core.Classes.SerializableObject, DiGi.Typology.Interfaces.ITypologySerializableObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject, DiGi.Core.Interfaces.INamedObject, DiGi.Core.Interfaces.IDescribableObject, System.IComparable<DiGi.Typology.Classes.Typology>, System.IEquatable<DiGi.Typology.Classes.Typology>
+public class Typology : DiGi.Typology.Classes.Typology<DiGi.Typology.Classes.Typology, DiGi.Typology.Classes.TypologyItem>
 ```
 
-Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → Typology
-
-Implements [ITypologySerializableObject](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologySerializableObject 'DiGi\.Typology\.Interfaces\.ITypologySerializableObject'), [ITypologyObject](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologyObject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject'), [DiGi\.Core\.Interfaces\.INamedObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.inamedobject 'DiGi\.Core\.Interfaces\.INamedObject'), [DiGi\.Core\.Interfaces\.IDescribableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.idescribableobject 'DiGi\.Core\.Interfaces\.IDescribableObject'), [System\.IComparable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1 'System\.IComparable\`1')[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1 'System\.IComparable\`1'), [System\.IEquatable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1 'System\.IEquatable\`1')[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1 'System\.IEquatable\`1')
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → [DiGi\.Typology\.Classes\.Typology&lt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')[,](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem 'DiGi\.Typology\.Classes\.TypologyItem')[&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>') → Typology
 ### Constructors
 
 <a name='DiGi.Typology.Classes.Typology.Typology(DiGi.Typology.Classes.Typology)'></a>
@@ -734,7 +733,7 @@ public Typology(DiGi.Typology.Classes.TypologyItem? typologyItem);
 
 `typologyItem` [TypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem 'DiGi\.Typology\.Classes\.TypologyItem')
 
-The typology item to assign\.
+The typology item to assign; it is cloned\.
 
 <a name='DiGi.Typology.Classes.Typology.Typology(string,string)'></a>
 
@@ -775,13 +774,131 @@ public Typology(System.Text.Json.Nodes.JsonObject? jsonObject);
 `jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
 
 The JSON object containing typology data\.
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_'></a>
+
+## Typology\<TTypology,TTypologyItem\> Class
+
+Base of a typology tree: a node carrying a typology item, a set of references and the sub\-typologies
+filed under it by index\. Self\-typed so that a specialised item type gets its own tree without copying
+the class\.
+
+Derive as `class X : Typology<X, XItem>` and chain the four protected constructors -
+            the parameterless one, the item one, the copy one and the JSON one - as the public constructors of
+            [TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology'). The JSON `_type` discriminator carries the concrete type name,
+            so deserialization needs the [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject') constructor on the concrete type.
+
+Every sub-typology, comparison operand and equality operand is a [TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology');
+            the item comparison goes through the virtual [Equals\(TypologyItem\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem.Equals(DiGi.Typology.Classes.TypologyItem) 'DiGi\.Typology\.Classes\.TypologyItem\.Equals\(DiGi\.Typology\.Classes\.TypologyItem\)') and
+            [CompareTo\(TypologyItem\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem.CompareTo(DiGi.Typology.Classes.TypologyItem) 'DiGi\.Typology\.Classes\.TypologyItem\.CompareTo\(DiGi\.Typology\.Classes\.TypologyItem\)'), so an item type adding fields overrides those two
+            together with [System\.Object\.GetHashCode](https://learn.microsoft.com/en-us/dotnet/api/system.object.gethashcode 'System\.Object\.GetHashCode').
+
+```csharp
+public abstract class Typology<TTypology,TTypologyItem> : DiGi.Core.Classes.SerializableObject, DiGi.Typology.Interfaces.ITypologySerializableObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject, DiGi.Core.Interfaces.INamedObject, DiGi.Core.Interfaces.IDescribableObject, System.IComparable<TTypology>, System.IEquatable<TTypology>
+    where TTypology : DiGi.Typology.Classes.Typology<TTypology, TTypologyItem>
+    where TTypologyItem : DiGi.Typology.Classes.TypologyItem, new()
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology'></a>
+
+`TTypology`
+
+The concrete typology type \- the type of every node of the tree\.
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem'></a>
+
+`TTypologyItem`
+
+The typology item type\. It needs a public parameterless constructor
+            because the [Name](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Name 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.Name') and [Description](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Description 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.Description') setters create an empty item when the
+            node has none\.
+
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → [DiGi\.Core\.Classes\.Object](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.object 'DiGi\.Core\.Classes\.Object') → [DiGi\.Core\.Classes\.SerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.serializableobject 'DiGi\.Core\.Classes\.SerializableObject') → Typology\<TTypology,TTypologyItem\>
+
+Derived  
+↳ [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
+
+Implements [ITypologySerializableObject](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologySerializableObject 'DiGi\.Typology\.Interfaces\.ITypologySerializableObject'), [ITypologyObject](DiGi.Typology.Interfaces.md#DiGi.Typology.Interfaces.ITypologyObject 'DiGi\.Typology\.Interfaces\.ITypologyObject'), [DiGi\.Core\.Interfaces\.IObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iobject 'DiGi\.Core\.Interfaces\.IObject'), [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject'), [DiGi\.Core\.Interfaces\.ICloneableObject&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1')[DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject-1 'DiGi\.Core\.Interfaces\.ICloneableObject\`1'), [DiGi\.Core\.Interfaces\.ICloneableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.icloneableobject 'DiGi\.Core\.Interfaces\.ICloneableObject'), [DiGi\.Core\.Interfaces\.INamedObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.inamedobject 'DiGi\.Core\.Interfaces\.INamedObject'), [DiGi\.Core\.Interfaces\.IDescribableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.idescribableobject 'DiGi\.Core\.Interfaces\.IDescribableObject'), [System\.IComparable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1 'System\.IComparable\`1')[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1 'System\.IComparable\`1'), [System\.IEquatable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1 'System\.IEquatable\`1')[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1 'System\.IEquatable\`1')
+### Constructors
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Typology()'></a>
+
+## Typology\(\) Constructor
+
+Initializes a new, empty instance of the [Typology&lt;TTypology,TTypologyItem&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>') class\.
+
+```csharp
+protected Typology();
+```
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Typology(DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_)'></a>
+
+## Typology\(Typology\<TTypology,TTypologyItem\>\) Constructor
+
+Initializes a new instance of the [Typology&lt;TTypology,TTypologyItem&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>') class by cloning
+an existing typology: the item, the references and every sub\-typology are copied, not aliased\.
+
+```csharp
+protected Typology(DiGi.Typology.Classes.Typology<TTypology,TTypologyItem>? typology);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Typology(DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_).typology'></a>
+
+`typology` [DiGi\.Typology\.Classes\.Typology&lt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')[,](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem')[&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')
+
+The source typology to clone\.
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Typology(System.Text.Json.Nodes.JsonObject)'></a>
+
+## Typology\(JsonObject\) Constructor
+
+Initializes a new instance of the [Typology&lt;TTypology,TTypologyItem&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>') class from a
+JSON object\.
+
+```csharp
+protected Typology(System.Text.Json.Nodes.JsonObject? jsonObject);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Typology(System.Text.Json.Nodes.JsonObject).jsonObject'></a>
+
+`jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
+
+The JSON object containing typology data\.
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Typology(TTypologyItem)'></a>
+
+## Typology\(TTypologyItem\) Constructor
+
+Initializes a new instance of the [Typology&lt;TTypology,TTypologyItem&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>') class with a
+specified typology item\.
+
+Sub-typologies are not taken here: filing each one resolves an index against the indexes
+            already taken, which does not belong in a constructor - a `Create` factory does that, see
+            [Typology\(this TypologyItem, IEnumerable&lt;Typology&gt;\)](DiGi.Typology.md#DiGi.Typology.Create.Typology(thisDiGi.Typology.Classes.TypologyItem,System.Collections.Generic.IEnumerable_DiGi.Typology.Classes.Typology_) 'DiGi\.Typology\.Create\.Typology\(this DiGi\.Typology\.Classes\.TypologyItem, System\.Collections\.Generic\.IEnumerable\<DiGi\.Typology\.Classes\.Typology\>\)').
+
+```csharp
+protected Typology(TTypologyItem? typologyItem);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Typology(TTypologyItem).typologyItem'></a>
+
+`typologyItem` [TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem')
+
+The typology item to assign; it is cloned\.
 ### Properties
 
-<a name='DiGi.Typology.Classes.Typology.Description'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Description'></a>
 
-## Typology\.Description Property
+## Typology\<TTypology,TTypologyItem\>\.Description Property
 
-Gets or sets the description of the typology\.
+Gets or sets the description of the typology, held by its typology item\.
+
+The setter creates an empty [TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem') when the typology has
+            none.
 
 ```csharp
 public string? Description { get; set; }
@@ -792,14 +909,14 @@ Implements [Description](https://learn.microsoft.com/en-us/dotnet/api/digi.core.
 #### Property Value
 [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
 
-<a name='DiGi.Typology.Classes.Typology.Indexes'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Indexes'></a>
 
-## Typology\.Indexes Property
+## Typology\<TTypology,TTypologyItem\>\.Indexes Property
 
 Gets the indexes the sub\-typologies of this typology are filed under\.
 
-An index is the filing key of [this\[int\]](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.this[int] 'DiGi\.Typology\.Classes\.Typology\.this\[int\]') and may differ from the index the
-            sub-typology reports through its own path - see [SubTypologies](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.SubTypologies 'DiGi\.Typology\.Classes\.Typology\.SubTypologies'). A new list is built
+An index is the filing key of [this\[int\]](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.this[int] 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.this\[int\]') and may differ from the index the
+            sub-typology reports through its own path - see [SubTypologies](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.SubTypologies 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.SubTypologies'). A new list is built
             on every call.
 
 ```csharp
@@ -809,11 +926,14 @@ public System.Collections.Generic.List<int> Indexes { get; }
 #### Property Value
 [System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
 
-<a name='DiGi.Typology.Classes.Typology.Name'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Name'></a>
 
-## Typology\.Name Property
+## Typology\<TTypology,TTypologyItem\>\.Name Property
 
-Gets or sets the name of the typology\.
+Gets or sets the name of the typology, held by its typology item\.
+
+The setter creates an empty [TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem') when the typology has
+            none.
 
 ```csharp
 public string? Name { get; set; }
@@ -824,14 +944,14 @@ Implements [Name](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfa
 #### Property Value
 [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
 
-<a name='DiGi.Typology.Classes.Typology.References'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.References'></a>
 
-## Typology\.References Property
+## Typology\<TTypology,TTypologyItem\>\.References Property
 
 Gets the list of references associated with this typology\.
 
 A new list is built on every call, so adding to it does not affect the typology - use
-            [AddReference\(string\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.AddReference(string) 'DiGi\.Typology\.Classes\.Typology\.AddReference\(string\)') for that.
+            [AddReference\(string\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.AddReference(string) 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.AddReference\(string\)') for that.
 
 ```csharp
 public System.Collections.Generic.List<string> References { get; }
@@ -840,9 +960,9 @@ public System.Collections.Generic.List<string> References { get; }
 #### Property Value
 [System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
 
-<a name='DiGi.Typology.Classes.Typology.SubTypologies'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.SubTypologies'></a>
 
-## Typology\.SubTypologies Property
+## Typology\<TTypology,TTypologyItem\>\.SubTypologies Property
 
 Gets or sets the list of sub\-typologies associated with this typology\.
 
@@ -854,42 +974,62 @@ Each sub-typology is stored under the last index of its own path. A sub-typology
 The getter builds a new list on every call, but the sub-typologies in it are the
             instances this typology holds rather than clones of them.
 
+The setter is protected, not private, on purpose: deserialization reflects the property
+            through the concrete type, and reflection does not surface a private accessor declared on a base
+            class, so a private setter here would leave every deserialized tree empty.
+
 ```csharp
-public System.Collections.Generic.List<DiGi.Typology.Classes.Typology>? SubTypologies { get; private set; }
+public System.Collections.Generic.List<TTypology>? SubTypologies { get; protected set; }
 ```
 
 #### Property Value
-[System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
+[System\.Collections\.Generic\.List&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1 'System\.Collections\.Generic\.List\`1')
 
-<a name='DiGi.Typology.Classes.Typology.this[int]'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.this[int]'></a>
 
-## Typology\.this\[int\] Property
+## Typology\<TTypology,TTypologyItem\>\.this\[int\] Property
 
 Gets or sets the sub\-typology filed under the specified index\.
 
 The index is this typology's filing key, which may differ from the index the sub-typology
-            reports through its own path - see [SubTypologies](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.SubTypologies 'DiGi\.Typology\.Classes\.Typology\.SubTypologies'). The getter returns null when
+            reports through its own path - see [SubTypologies](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.SubTypologies 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.SubTypologies'). The getter returns null when
             nothing is filed under the index; assigning null removes the entry.
 
 ```csharp
-public DiGi.Typology.Classes.Typology? this[int index] { get; set; }
+public TTypology? this[int index] { get; set; }
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.Typology.this[int].index'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.this[int].index'></a>
 
 `index` [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')
 
 The index the sub\-typology is filed under\.
 
 #### Property Value
-[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
+[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')
 
-<a name='DiGi.Typology.Classes.Typology.TypologyPath'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TypologyItem'></a>
 
-## Typology\.TypologyPath Property
+## Typology\<TTypology,TTypologyItem\>\.TypologyItem Property
 
-Gets the path information for this typology\.
+Gets the typology item of this typology, or null when it has none\.
+
+The instance this typology holds is returned, not a clone of it - a derived typology reads
+            the fields of its own item through it.
+
+```csharp
+public TTypologyItem? TypologyItem { get; }
+```
+
+#### Property Value
+[TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem')
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TypologyPath'></a>
+
+## Typology\<TTypology,TTypologyItem\>\.TypologyPath Property
+
+Gets the path of this typology, held by its typology item\.
 
 ```csharp
 public DiGi.Typology.Classes.TypologyPath? TypologyPath { get; }
@@ -899,9 +1039,9 @@ public DiGi.Typology.Classes.TypologyPath? TypologyPath { get; }
 [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
 ### Methods
 
-<a name='DiGi.Typology.Classes.Typology.AddReference(string)'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.AddReference(string)'></a>
 
-## Typology\.AddReference\(string\) Method
+## Typology\<TTypology,TTypologyItem\>\.AddReference\(string\) Method
 
 Adds a reference to the typology\.
 
@@ -910,7 +1050,7 @@ public bool AddReference(string? reference);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.Typology.AddReference(string).reference'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.AddReference(string).reference'></a>
 
 `reference` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
 
@@ -918,51 +1058,55 @@ The reference string to add\.
 
 #### Returns
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
-True if the reference was added successfully; otherwise, false\.
+True if the reference was added; otherwise, false \(already present or null\)\.
 
-<a name='DiGi.Typology.Classes.Typology.CompareTo(DiGi.Typology.Classes.Typology)'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.CompareTo(TTypology)'></a>
 
-## Typology\.CompareTo\(Typology\) Method
+## Typology\<TTypology,TTypologyItem\>\.CompareTo\(TTypology\) Method
 
-Compares the current typology instance with another typology instance\.
+Compares the current typology with another typology\.
 
-The typology item is the primary ordering; instances sharing one are ordered by their
-            reference sets and then, recursively, by their sub-typologies, so this method returns zero
-            exactly when [Equals\(Typology\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.Equals(DiGi.Typology.Classes.Typology) 'DiGi\.Typology\.Classes\.Typology\.Equals\(DiGi\.Typology\.Classes\.Typology\)') returns true. Like equality it therefore costs
+The typology item is the primary ordering, compared through the virtual
+            [CompareTo\(TypologyItem\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem.CompareTo(DiGi.Typology.Classes.TypologyItem) 'DiGi\.Typology\.Classes\.TypologyItem\.CompareTo\(DiGi\.Typology\.Classes\.TypologyItem\)'), so an item type overriding it is honoured
+            whatever item type the typology declares. Typologies sharing an item are ordered by
+            their reference sets and then, recursively, by their sub-typologies, so this method returns zero
+            exactly when [Equals\(TTypology\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Equals(TTypology) 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.Equals\(TTypology\)') returns true. Like equality it therefore costs
             O(n) over the sub-typology tree whenever the items tie.
 
 ```csharp
-public int CompareTo(DiGi.Typology.Classes.Typology typology);
+public int CompareTo(TTypology typology);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.Typology.CompareTo(DiGi.Typology.Classes.Typology).typology'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.CompareTo(TTypology).typology'></a>
 
-`typology` [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
+`typology` [TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')
 
-The typology instance to compare against\.
+The typology to compare against\.
+
+Implements [CompareTo\(T\)](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1.compareto#system-icomparable-1-compareto(-0) 'System\.IComparable\`1\.CompareTo\(\`0\)')
 
 #### Returns
 [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')  
 A signed integer that indicates the relative order of the objects being compared\.
 
-<a name='DiGi.Typology.Classes.Typology.ContainsReference(string)'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.ContainsReference(string)'></a>
 
-## Typology\.ContainsReference\(string\) Method
+## Typology\<TTypology,TTypologyItem\>\.ContainsReference\(string\) Method
 
 Determines whether the typology carries a specific reference\.
 
-This tests the reference set directly. Reading [References](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.References 'DiGi\.Typology\.Classes\.Typology\.References') and searching the
+This tests the reference set directly. Reading [References](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.References 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.References') and searching the
             returned list costs a copy and a linear scan instead, which matters on a typology holding many
-            references. Use [Contains\(this Typology, string, bool\)](DiGi.Typology.md#DiGi.Typology.Query.Contains(thisDiGi.Typology.Classes.Typology,string,bool) 'DiGi\.Typology\.Query\.Contains\(this DiGi\.Typology\.Classes\.Typology, string, bool\)') to search the nested
-            typologies as well.
+            references. To search the nested typologies as well use the `Query.Contains` extension of the
+            concrete type - [Contains\(this Typology, string, bool\)](DiGi.Typology.md#DiGi.Typology.Query.Contains(thisDiGi.Typology.Classes.Typology,string,bool) 'DiGi\.Typology\.Query\.Contains\(this DiGi\.Typology\.Classes\.Typology, string, bool\)') for [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology').
 
 ```csharp
 public bool ContainsReference(string? reference);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.Typology.ContainsReference(string).reference'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.ContainsReference(string).reference'></a>
 
 `reference` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
 
@@ -972,34 +1116,9 @@ The reference string to search for\.
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
 True if the typology carries the reference; otherwise, false \(absent or null\)\.
 
-<a name='DiGi.Typology.Classes.Typology.Equals(DiGi.Typology.Classes.Typology)'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Equals(object)'></a>
 
-## Typology\.Equals\(Typology\) Method
-
-Determines whether the specified typology is value\-equal to the current typology\.
-
-Equality is deep: the typology item, the reference set and the whole sub-typology tree,
-            sub-typologies matched by the index they are filed under. The call therefore costs O(n) over
-            that tree.
-
-```csharp
-public bool Equals(DiGi.Typology.Classes.Typology? typology);
-```
-#### Parameters
-
-<a name='DiGi.Typology.Classes.Typology.Equals(DiGi.Typology.Classes.Typology).typology'></a>
-
-`typology` [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
-
-The typology to compare with the current instance\.
-
-#### Returns
-[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
-True if the typologies are value\-equal; otherwise, false\.
-
-<a name='DiGi.Typology.Classes.Typology.Equals(object)'></a>
-
-## Typology\.Equals\(object\) Method
+## Typology\<TTypology,TTypologyItem\>\.Equals\(object\) Method
 
 Determines whether the specified object is value\-equal to the current typology\.
 
@@ -1008,7 +1127,7 @@ public override bool Equals(object? @object);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.Typology.Equals(object).object'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Equals(object).object'></a>
 
 `object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
 
@@ -1016,20 +1135,49 @@ The object to compare with the current instance\.
 
 #### Returns
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
-True if the object is a [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology') of equal value; otherwise, false\.
+True if the object is a [TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology') of equal value; otherwise, false\.
 
-<a name='DiGi.Typology.Classes.Typology.GetHashCode()'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Equals(TTypology)'></a>
 
-## Typology\.GetHashCode\(\) Method
+## Typology\<TTypology,TTypologyItem\>\.Equals\(TTypology\) Method
+
+Determines whether the specified typology is value\-equal to the current typology\.
+
+Equality is deep: the typology item, the reference set and the whole sub-typology tree,
+            sub-typologies matched by the index they are filed under. The items are compared through the
+            virtual [Equals\(TypologyItem\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem.Equals(DiGi.Typology.Classes.TypologyItem) 'DiGi\.Typology\.Classes\.TypologyItem\.Equals\(DiGi\.Typology\.Classes\.TypologyItem\)'), so an item type overriding it is honoured
+            whatever item type the typology declares. The call costs O(n) over the sub-typology tree.
+
+```csharp
+public bool Equals(TTypology? typology);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Equals(TTypology).typology'></a>
+
+`typology` [TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')
+
+The typology to compare with the current instance\.
+
+Implements [Equals\(T\)](https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1.equals#system-iequatable-1-equals(-0) 'System\.IEquatable\`1\.Equals\(\`0\)')
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if the typologies are value\-equal; otherwise, false\.
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.GetHashCode()'></a>
+
+## Typology\<TTypology,TTypologyItem\>\.GetHashCode\(\) Method
 
 Returns a hash code for the current typology based on its item, its references and its
 sub\-typology tree\.
 
 The references and the sub-typologies are combined order-independently, matching the
             unordered semantics of equality. The whole instance is mutable, so the hash follows every
-            change made through the setters, AddReference, RemoveReference and Modify.Update - a typology
-            must not be mutated while it is held as a key of a dictionary or a set. Computing it costs
-            O(n) over the sub-typology tree.
+            change made through the setters, [AddReference\(string\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.AddReference(string) 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.AddReference\(string\)'),
+            [RemoveReference\(string\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.RemoveReference(string) 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.RemoveReference\(string\)') and the `Modify` extensions - a typology must not be
+            mutated while it is held as a key of a dictionary or a set. Computing it costs O(n) over the
+            sub-typology tree.
 
 ```csharp
 public override int GetHashCode();
@@ -1039,9 +1187,9 @@ public override int GetHashCode();
 [System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')  
 A 32\-bit signed integer hash code\.
 
-<a name='DiGi.Typology.Classes.Typology.RemoveReference(string)'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.RemoveReference(string)'></a>
 
-## Typology\.RemoveReference\(string\) Method
+## Typology\<TTypology,TTypologyItem\>\.RemoveReference\(string\) Method
 
 Removes a reference from the typology\.
 
@@ -1050,7 +1198,7 @@ public bool RemoveReference(string? reference);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.Typology.RemoveReference(string).reference'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.RemoveReference(string).reference'></a>
 
 `reference` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
 
@@ -1060,9 +1208,9 @@ The reference string to remove\.
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
 True if the reference was removed; otherwise, false \(absent or null\)\.
 
-<a name='DiGi.Typology.Classes.Typology.ToString()'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.ToString()'></a>
 
-## Typology\.ToString\(\) Method
+## Typology\<TTypology,TTypologyItem\>\.ToString\(\) Method
 
 Returns a string representation of the current typology\.
 
@@ -1072,29 +1220,29 @@ public override string ToString();
 
 #### Returns
 [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')  
-A string representing the typology item or the base object string\.
+The string form of the typology item, or the base object string when there is none\.
 ### Operators
 
-<a name='DiGi.Typology.Classes.Typology.op_Equality(DiGi.Typology.Classes.Typology,DiGi.Typology.Classes.Typology)'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.op_Equality(DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_,DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_)'></a>
 
-## Typology\.operator ==\(Typology, Typology\) Operator
+## Typology\<TTypology,TTypologyItem\>\.operator ==\(Typology\<TTypology,TTypologyItem\>, Typology\<TTypology,TTypologyItem\>\) Operator
 
 Determines whether two typologies are value\-equal \(null\-safe\)\.
 
 ```csharp
-public static bool operator ==(DiGi.Typology.Classes.Typology? typology_1, DiGi.Typology.Classes.Typology? typology_2);
+public static bool operator ==(DiGi.Typology.Classes.Typology<TTypology,TTypologyItem>? typology_1, DiGi.Typology.Classes.Typology<TTypology,TTypologyItem>? typology_2);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.Typology.op_Equality(DiGi.Typology.Classes.Typology,DiGi.Typology.Classes.Typology).typology_1'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.op_Equality(DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_,DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_).typology_1'></a>
 
-`typology_1` [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
+`typology_1` [DiGi\.Typology\.Classes\.Typology&lt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')[,](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem')[&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')
 
 The first typology, or null\.
 
-<a name='DiGi.Typology.Classes.Typology.op_Equality(DiGi.Typology.Classes.Typology,DiGi.Typology.Classes.Typology).typology_2'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.op_Equality(DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_,DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_).typology_2'></a>
 
-`typology_2` [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
+`typology_2` [DiGi\.Typology\.Classes\.Typology&lt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')[,](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem')[&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')
 
 The second typology, or null\.
 
@@ -1102,26 +1250,26 @@ The second typology, or null\.
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
 True if both are null or value\-equal; otherwise, false\.
 
-<a name='DiGi.Typology.Classes.Typology.op_Inequality(DiGi.Typology.Classes.Typology,DiGi.Typology.Classes.Typology)'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.op_Inequality(DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_,DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_)'></a>
 
-## Typology\.operator \!=\(Typology, Typology\) Operator
+## Typology\<TTypology,TTypologyItem\>\.operator \!=\(Typology\<TTypology,TTypologyItem\>, Typology\<TTypology,TTypologyItem\>\) Operator
 
 Determines whether two typologies are not value\-equal \(null\-safe\)\.
 
 ```csharp
-public static bool operator !=(DiGi.Typology.Classes.Typology? typology_1, DiGi.Typology.Classes.Typology? typology_2);
+public static bool operator !=(DiGi.Typology.Classes.Typology<TTypology,TTypologyItem>? typology_1, DiGi.Typology.Classes.Typology<TTypology,TTypologyItem>? typology_2);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.Typology.op_Inequality(DiGi.Typology.Classes.Typology,DiGi.Typology.Classes.Typology).typology_1'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.op_Inequality(DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_,DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_).typology_1'></a>
 
-`typology_1` [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
+`typology_1` [DiGi\.Typology\.Classes\.Typology&lt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')[,](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem')[&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')
 
 The first typology, or null\.
 
-<a name='DiGi.Typology.Classes.Typology.op_Inequality(DiGi.Typology.Classes.Typology,DiGi.Typology.Classes.Typology).typology_2'></a>
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.op_Inequality(DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_,DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_).typology_2'></a>
 
-`typology_2` [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')
+`typology_2` [DiGi\.Typology\.Classes\.Typology&lt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')[,](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')[TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem')[&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')
 
 The second typology, or null\.
 
@@ -2018,8 +2166,12 @@ The path is the primary ordering; items sharing a path are ordered by name and t
             description, compared ordinally, so this method returns zero exactly when
             [Equals\(TypologyItem\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem.Equals(DiGi.Typology.Classes.TypologyItem) 'DiGi\.Typology\.Classes\.TypologyItem\.Equals\(DiGi\.Typology\.Classes\.TypologyItem\)') returns true.
 
+Virtual so that a derived item type can extend the ordering with its own fields; an
+            override should call the base first and only refine a zero result, and must be paired with
+            overrides of [Equals\(TypologyItem\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem.Equals(DiGi.Typology.Classes.TypologyItem) 'DiGi\.Typology\.Classes\.TypologyItem\.Equals\(DiGi\.Typology\.Classes\.TypologyItem\)') and [GetHashCode\(\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem.GetHashCode() 'DiGi\.Typology\.Classes\.TypologyItem\.GetHashCode\(\)').
+
 ```csharp
-public int CompareTo(DiGi.Typology.Classes.TypologyItem typologyItem);
+public virtual int CompareTo(DiGi.Typology.Classes.TypologyItem typologyItem);
 ```
 #### Parameters
 
@@ -2039,8 +2191,13 @@ A value indicating the relative order of the objects being compared\.
 
 Determines whether the specified item is value\-equal to the current item\.
 
+Virtual so that a derived item type can include its own fields; an override must be paired
+            with overrides of [CompareTo\(TypologyItem\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem.CompareTo(DiGi.Typology.Classes.TypologyItem) 'DiGi\.Typology\.Classes\.TypologyItem\.CompareTo\(DiGi\.Typology\.Classes\.TypologyItem\)') and [GetHashCode\(\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem.GetHashCode() 'DiGi\.Typology\.Classes\.TypologyItem\.GetHashCode\(\)'). The
+            [System\.Object\.Equals\(System\.Object\)](https://learn.microsoft.com/en-us/dotnet/api/system.object.equals#system-object-equals(system-object) 'System\.Object\.Equals\(System\.Object\)') override and the operators route through this method, so
+            overriding it is enough for every comparison path.
+
 ```csharp
-public bool Equals(DiGi.Typology.Classes.TypologyItem? typologyItem);
+public virtual bool Equals(DiGi.Typology.Classes.TypologyItem? typologyItem);
 ```
 #### Parameters
 

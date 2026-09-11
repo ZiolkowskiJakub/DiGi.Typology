@@ -163,10 +163,13 @@ namespace DiGi.Typology.Classes
         /// <para>The path is the primary ordering; items sharing a path are ordered by name and then by
         /// description, compared ordinally, so this method returns zero exactly when
         /// <see cref="Equals(TypologyItem)"/> returns true.</para>
+        /// <para>Virtual so that a derived item type can extend the ordering with its own fields; an
+        /// override should call the base first and only refine a zero result, and must be paired with
+        /// overrides of <see cref="Equals(TypologyItem)"/> and <see cref="GetHashCode"/>.</para>
         /// </summary>
         /// <param name="typologyItem">The item to compare with this instance.</param>
         /// <returns>A value indicating the relative order of the objects being compared.</returns>
-        public int CompareTo(TypologyItem typologyItem)
+        public virtual int CompareTo(TypologyItem typologyItem)
         {
             if (typologyItem is null)
             {
@@ -204,10 +207,14 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Determines whether the specified item is value-equal to the current item.
+        /// <para>Virtual so that a derived item type can include its own fields; an override must be paired
+        /// with overrides of <see cref="CompareTo(TypologyItem)"/> and <see cref="GetHashCode"/>. The
+        /// <see cref="object.Equals(object)"/> override and the operators route through this method, so
+        /// overriding it is enough for every comparison path.</para>
         /// </summary>
         /// <param name="typologyItem">The item to compare with the current instance.</param>
         /// <returns>True if the path, the name and the description are all equal; otherwise, false.</returns>
-        public bool Equals(TypologyItem? typologyItem)
+        public virtual bool Equals(TypologyItem? typologyItem)
         {
             if (typologyItem is null)
             {

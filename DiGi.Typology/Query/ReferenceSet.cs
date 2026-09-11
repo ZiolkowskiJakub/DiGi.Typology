@@ -8,7 +8,7 @@ namespace DiGi.Typology
         /// Retrieves the set of references associated with the given typology, optionally including those
         /// carried by its nested typologies.
         /// <para>With <paramref name="includeNested"/> false this is the content of
-        /// <see cref="Classes.Typology.References"/> as a set; the recursive form is what this method adds.
+        /// <see cref="Classes.Typology{TTypology, TTypologyItem}.References"/> as a set; the recursive form is what this method adds.
         /// It is named for the set it returns because the typology already exposes a References property.</para>
         /// </summary>
         /// <param name="typology">The typology whose references are collected.</param>

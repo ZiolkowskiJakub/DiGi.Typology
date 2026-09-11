@@ -232,7 +232,7 @@ public interface ITypologyObject : DiGi.Core.Interfaces.IObject
 
 Derived  
 ↳ [RangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Classes\.RangeValueFilterRule\<TValueType\>')  
-↳ [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
+↳ [Typology&lt;TTypology,TTypologyItem&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')  
 ↳ [TypologyFile](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFile 'DiGi\.Typology\.Classes\.TypologyFile')  
 ↳ [TypologyFilter&lt;TTypologyFilter,TValue&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFilter_TTypologyFilter,TValue_ 'DiGi\.Typology\.Classes\.TypologyFilter\<TTypologyFilter,TValue\>')  
 ↳ [TypologyFilter&lt;TTypologyFilter&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFilter_TTypologyFilter_ 'DiGi\.Typology\.Classes\.TypologyFilter\<TTypologyFilter\>')  
@@ -265,7 +265,7 @@ public interface ITypologySerializableObject : DiGi.Typology.Interfaces.ITypolog
 
 Derived  
 ↳ [RangeValueFilterRule&lt;TValueType&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueFilterRule_TValueType_ 'DiGi\.Typology\.Classes\.RangeValueFilterRule\<TValueType\>')  
-↳ [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
+↳ [Typology&lt;TTypology,TTypologyItem&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>')  
 ↳ [TypologyFile](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFile 'DiGi\.Typology\.Classes\.TypologyFile')  
 ↳ [TypologyFilter&lt;TTypologyFilter,TValue&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFilter_TTypologyFilter,TValue_ 'DiGi\.Typology\.Classes\.TypologyFilter\<TTypologyFilter,TValue\>')  
 ↳ [TypologyFilter&lt;TTypologyFilter&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyFilter_TTypologyFilter_ 'DiGi\.Typology\.Classes\.TypologyFilter\<TTypologyFilter\>')  
