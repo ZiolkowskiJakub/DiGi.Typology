@@ -6,10 +6,12 @@ namespace DiGi.Typology
     public static partial class Query
     {
         /// <summary>Attempts to retrieve the highest index a sub-typology of the given typology is filed under.</summary>
+        /// <typeparam name="TTypology">The concrete typology type.</typeparam>
+        /// <typeparam name="TTypologyItem">The typology item type.</typeparam>
         /// <param name="typology">The typology whose filing indexes are inspected.</param>
         /// <param name="index">When this method returns, contains the highest index if successful; otherwise, -1.</param>
         /// <returns>True if the typology carries at least one sub-typology; otherwise, false.</returns>
-        public static bool TryGetLastIndex(this Classes.Typology? typology, out int index)
+        public static bool TryGetLastIndex<TTypology, TTypologyItem>(this Classes.Typology<TTypology, TTypologyItem>? typology, out int index) where TTypology : Classes.Typology<TTypology, TTypologyItem> where TTypologyItem : Classes.TypologyItem, new()
         {
             index = -1;
 

@@ -1098,8 +1098,8 @@ Determines whether the typology carries a specific reference\.
 
 This tests the reference set directly. Reading [References](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.References 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.References') and searching the
             returned list costs a copy and a linear scan instead, which matters on a typology holding many
-            references. To search the nested typologies as well use the `Query.Contains` extension of the
-            concrete type - [Contains\(this Typology, string, bool\)](DiGi.Typology.md#DiGi.Typology.Query.Contains(thisDiGi.Typology.Classes.Typology,string,bool) 'DiGi\.Typology\.Query\.Contains\(this DiGi\.Typology\.Classes\.Typology, string, bool\)') for [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology').
+            references. Use [Contains&lt;TTypology,TTypologyItem&gt;\(this Typology&lt;TTypology,TTypologyItem&gt;, string, bool\)](DiGi.Typology.md#DiGi.Typology.Query.Contains_TTypology,TTypologyItem_(thisDiGi.Typology.Classes.Typology_TTypology,TTypologyItem_,string,bool) 'DiGi\.Typology\.Query\.Contains\<TTypology,TTypologyItem\>\(this DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>, string, bool\)')
+            to search the nested typologies as well.
 
 ```csharp
 public bool ContainsReference(string? reference);

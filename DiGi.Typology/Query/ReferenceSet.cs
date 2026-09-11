@@ -11,10 +11,12 @@ namespace DiGi.Typology
         /// <see cref="Classes.Typology{TTypology, TTypologyItem}.References"/> as a set; the recursive form is what this method adds.
         /// It is named for the set it returns because the typology already exposes a References property.</para>
         /// </summary>
+        /// <typeparam name="TTypology">The concrete typology type.</typeparam>
+        /// <typeparam name="TTypologyItem">The typology item type.</typeparam>
         /// <param name="typology">The typology whose references are collected.</param>
         /// <param name="includeNested">A value indicating whether to include references from nested typologies.</param>
         /// <returns>A <see cref="HashSet{T}"/> containing the references, empty when the typology is null.</returns>
-        public static HashSet<string> ReferenceSet(this Classes.Typology? typology, bool includeNested = false)
+        public static HashSet<string> ReferenceSet<TTypology, TTypologyItem>(this Classes.Typology<TTypology, TTypologyItem>? typology, bool includeNested = false) where TTypology : Classes.Typology<TTypology, TTypologyItem> where TTypologyItem : Classes.TypologyItem, new()
         {
             HashSet<string> result = [];
 
@@ -25,12 +27,12 @@ namespace DiGi.Typology
 
             result.UnionWith(typology.References);
 
-            if (!includeNested || typology.SubTypologies is not List<Classes.Typology> subTypologies)
+            if (!includeNested || typology.SubTypologies is not List<TTypology> subTypologies)
             {
                 return result;
             }
 
-            foreach (Classes.Typology subTypology in subTypologies)
+            foreach (TTypology subTypology in subTypologies)
             {
                 result.UnionWith(subTypology.ReferenceSet(includeNested));
             }

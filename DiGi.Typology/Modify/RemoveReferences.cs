@@ -9,10 +9,12 @@ namespace DiGi.Typology
         /// <para>Structure and node metadata are left untouched, so what remains is the metadata-only form of the same tree. Use it to strip a solved tree whose node to object association is held elsewhere, rather than re-solving one.</para>
         /// <para>Applied to a sub-typology this strips that branch alone, because Query.SubTypology returns the instance the tree holds rather than a clone of it.</para>
         /// </summary>
+        /// <typeparam name="TTypology">The concrete typology type.</typeparam>
+        /// <typeparam name="TTypologyItem">The typology item type.</typeparam>
         /// <param name="typology">The typology to strip.</param>
         /// <param name="includeNested">A value indicating whether nested typologies are stripped as well.</param>
         /// <returns>True when at least one reference was removed; otherwise, false.</returns>
-        public static bool RemoveReferences(this Classes.Typology? typology, bool includeNested = true)
+        public static bool RemoveReferences<TTypology, TTypologyItem>(this Classes.Typology<TTypology, TTypologyItem>? typology, bool includeNested = true) where TTypology : Classes.Typology<TTypology, TTypologyItem> where TTypologyItem : Classes.TypologyItem, new()
         {
             if (typology is null)
             {
@@ -29,12 +31,12 @@ namespace DiGi.Typology
                 }
             }
 
-            if (!includeNested || typology.SubTypologies is not List<Classes.Typology> subTypologies)
+            if (!includeNested || typology.SubTypologies is not List<TTypology> subTypologies)
             {
                 return result;
             }
 
-            foreach (Classes.Typology subTypology in subTypologies)
+            foreach (TTypology subTypology in subTypologies)
             {
                 if (subTypology.RemoveReferences(includeNested))
                 {

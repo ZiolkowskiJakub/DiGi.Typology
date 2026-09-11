@@ -7,10 +7,10 @@ namespace DiGi.Typology
     {
         /// <summary>
         /// Creates a typology carrying the given item and the given sub-typologies.
-        /// <para>Each sub-typology is cloned and then filed under the last index of its own path. One
-        /// carrying no path, or one whose index is already taken, is filed under the next free index
-        /// rather than being discarded, so the assigned key may differ from the path the sub-typology
-        /// reports. Resolving those indexes is why this is a factory rather than a constructor.</para>
+        /// <para>The sub-typologies are filed by <see cref="Modify.AddSubTypologies{TTypology, TTypologyItem}(Classes.Typology{TTypology, TTypologyItem}, IEnumerable{TTypology})"/>:
+        /// each is cloned and filed under the last index of its own path, or under the next free index
+        /// when it carries no path or its index is already taken. Resolving those indexes is why this is
+        /// a factory rather than a constructor.</para>
         /// </summary>
         /// <param name="typologyItem">The typology item to assign.</param>
         /// <param name="subTypologies">A collection of sub-typologies to associate with the new instance.</param>
@@ -24,39 +24,7 @@ namespace DiGi.Typology
 
             Classes.Typology result = new(typologyItem);
 
-            if (subTypologies is null)
-            {
-                return result;
-            }
-
-            int index_Max = -1;
-
-            foreach (Classes.Typology subTypology in subTypologies)
-            {
-                if (subTypology is null)
-                {
-                    continue;
-                }
-
-                if (Core.Query.Clone(subTypology) is not Classes.Typology subTypology_Temp)
-                {
-                    continue;
-                }
-
-                int index = subTypology_Temp.TypologyPath?.Index ?? -1;
-
-                if (index < 0 || result[index] is not null)
-                {
-                    index = index_Max + 1;
-                }
-
-                result[index] = subTypology_Temp;
-
-                if (index > index_Max)
-                {
-                    index_Max = index;
-                }
-            }
+            result.AddSubTypologies(subTypologies);
 
             return result;
         }

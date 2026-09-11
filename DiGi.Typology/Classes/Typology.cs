@@ -289,8 +289,8 @@ namespace DiGi.Typology.Classes
         /// Determines whether the typology carries a specific reference.
         /// <para>This tests the reference set directly. Reading <see cref="References"/> and searching the
         /// returned list costs a copy and a linear scan instead, which matters on a typology holding many
-        /// references. To search the nested typologies as well use the <c>Query.Contains</c> extension of the
-        /// concrete type - <see cref="Query.Contains(Typology, string, bool)"/> for <see cref="Typology"/>.</para>
+        /// references. Use <see cref="Query.Contains{TTypology, TTypologyItem}(Typology{TTypology, TTypologyItem}, string, bool)"/>
+        /// to search the nested typologies as well.</para>
         /// </summary>
         /// <param name="reference">The reference string to search for.</param>
         /// <returns>True if the typology carries the reference; otherwise, false (absent or null).</returns>

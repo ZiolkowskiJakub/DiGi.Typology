@@ -11,10 +11,12 @@ namespace DiGi.Typology
         /// resolved against the filing keys of the typology reached so far, so a sub-typology filed under
         /// a key differing from the one its own path reports is still found.</para>
         /// </summary>
+        /// <typeparam name="TTypology">The concrete typology type.</typeparam>
+        /// <typeparam name="TTypologyItem">The typology item type.</typeparam>
         /// <param name="typology">The typology the path is resolved against.</param>
         /// <param name="typologyPath">The path used to locate the sub-typology.</param>
         /// <returns>The <see cref="Classes.Typology"/> instance if found; otherwise, null.</returns>
-        public static Classes.Typology? SubTypology(this Classes.Typology? typology, TypologyPath? typologyPath)
+        public static TTypology? SubTypology<TTypology, TTypologyItem>(this Classes.Typology<TTypology, TTypologyItem>? typology, TypologyPath? typologyPath) where TTypology : Classes.Typology<TTypology, TTypologyItem> where TTypologyItem : Classes.TypologyItem, new()
         {
             if (typology is null || typologyPath is null)
             {
@@ -23,7 +25,7 @@ namespace DiGi.Typology
 
             if (typologyPath.Count == 0)
             {
-                return typology;
+                return typology as TTypology;
             }
 
             if (typologyPath.ParentCount <= 0)
@@ -36,7 +38,7 @@ namespace DiGi.Typology
                 return null;
             }
 
-            if (typology[typologyPath_Parent.Index] is not Classes.Typology typology_Parent)
+            if (typology[typologyPath_Parent.Index] is not TTypology typology_Parent)
             {
                 return null;
             }
@@ -48,10 +50,12 @@ namespace DiGi.Typology
         /// Retrieves the sub-typology found at the path described by a sequence of integer indexes,
         /// relative to the given typology.
         /// </summary>
+        /// <typeparam name="TTypology">The concrete typology type.</typeparam>
+        /// <typeparam name="TTypologyItem">The typology item type.</typeparam>
         /// <param name="typology">The typology the path is resolved against.</param>
         /// <param name="values">An enumerable collection of integers representing the typology path.</param>
         /// <returns>The <see cref="Classes.Typology"/> instance if found; otherwise, null.</returns>
-        public static Classes.Typology? SubTypology(this Classes.Typology? typology, IEnumerable<int>? values)
+        public static TTypology? SubTypology<TTypology, TTypologyItem>(this Classes.Typology<TTypology, TTypologyItem>? typology, IEnumerable<int>? values) where TTypology : Classes.Typology<TTypology, TTypologyItem> where TTypologyItem : Classes.TypologyItem, new()
         {
             if (typology is null || values is null)
             {
