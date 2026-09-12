@@ -688,7 +688,8 @@ A string representation of the range\.
 ## Typology Class
 
 Represents a typology node holding a plain [TypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem 'DiGi\.Typology\.Classes\.TypologyItem')\. All behaviour is inherited from
-[Typology&lt;TTypology,TTypologyItem&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>'); this type only exposes the constructors\.
+[Typology&lt;TTypology,TTypologyItem&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_ 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>'); this type exposes the constructors and supplies the
+[CreateNode\(TypologyItem, TypologyPath\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology.CreateNode(DiGi.Typology.Classes.TypologyItem,DiGi.Typology.Classes.TypologyPath) 'DiGi\.Typology\.Classes\.Typology\.CreateNode\(DiGi\.Typology\.Classes\.TypologyItem, DiGi\.Typology\.Classes\.TypologyPath\)') implementation\.
 
 ```csharp
 public class Typology : DiGi.Typology.Classes.Typology<DiGi.Typology.Classes.Typology, DiGi.Typology.Classes.TypologyItem>
@@ -774,6 +775,35 @@ public Typology(System.Text.Json.Nodes.JsonObject? jsonObject);
 `jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
 
 The JSON object containing typology data\.
+### Methods
+
+<a name='DiGi.Typology.Classes.Typology.CreateNode(DiGi.Typology.Classes.TypologyItem,DiGi.Typology.Classes.TypologyPath)'></a>
+
+## Typology\.CreateNode\(TypologyItem, TypologyPath\) Method
+
+Creates a [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology') for the specified full path, taking the name and description of the
+source item\.
+
+```csharp
+public override DiGi.Typology.Classes.Typology CreateNode(DiGi.Typology.Classes.TypologyItem? source, DiGi.Typology.Classes.TypologyPath? path);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.Typology.CreateNode(DiGi.Typology.Classes.TypologyItem,DiGi.Typology.Classes.TypologyPath).source'></a>
+
+`source` [TypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyItem 'DiGi\.Typology\.Classes\.TypologyItem')
+
+The item to take the name and description from; null for an unnamed intermediate node\.
+
+<a name='DiGi.Typology.Classes.Typology.CreateNode(DiGi.Typology.Classes.TypologyItem,DiGi.Typology.Classes.TypologyPath).path'></a>
+
+`path` [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
+
+The full path of the node to create\.
+
+#### Returns
+[Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
+The created typology\.
 
 <a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_'></a>
 
@@ -1115,6 +1145,39 @@ The reference string to search for\.
 #### Returns
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
 True if the typology carries the reference; otherwise, false \(absent or null\)\.
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.CreateNode(TTypologyItem,DiGi.Typology.Classes.TypologyPath)'></a>
+
+## Typology\<TTypology,TTypologyItem\>\.CreateNode\(TTypologyItem, TypologyPath\) Method
+
+Creates a [TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology') node for the specified full path, taking its name, description
+and any fields specific to the derived item type from the source item\.
+
+Generic code cannot construct a [TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology') from an item - a type parameter
+            accepts no constructor arguments - so every node the generic `Modify` extensions create goes through
+            this member. The derived type builds the item through its own path constructor, which is what keeps the
+            derived item's fields on the created node rather than flattening it to the base item.
+
+```csharp
+public abstract TTypology CreateNode(TTypologyItem? source, DiGi.Typology.Classes.TypologyPath? path);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.CreateNode(TTypologyItem,DiGi.Typology.Classes.TypologyPath).source'></a>
+
+`source` [TTypologyItem](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypologyItem 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypologyItem')
+
+The item to take the name, the description and the derived fields from; null for an unnamed intermediate node\.
+
+<a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.CreateNode(TTypologyItem,DiGi.Typology.Classes.TypologyPath).path'></a>
+
+`path` [TypologyPath](DiGi.Typology.Classes.md#DiGi.Typology.Classes.TypologyPath 'DiGi\.Typology\.Classes\.TypologyPath')
+
+The full path of the node to create\.
+
+#### Returns
+[TTypology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.TTypology 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.TTypology')  
+The created node\.
 
 <a name='DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.Equals(object)'></a>
 

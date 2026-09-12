@@ -10,7 +10,7 @@ namespace DiGi.Typology.Visual.Classes
     /// <summary>
     /// A <see cref="TypologyItem"/> carrying the appearance of its node.
     /// <para>The appearance is node metadata, not link data: like the name and the description it is settable, it
-    /// survives <see cref="Modify.RemoveReferences{TTypology, TTypologyItem}(Typology{TTypology, TTypologyItem}, bool)"/>
+    /// survives <see cref="DiGi.Typology.Modify.RemoveReferences{TTypology, TTypologyItem}(Typology{TTypology, TTypologyItem}, bool)"/>
     /// and a re-sync of the references, and it takes part in equality, ordering and the hash. Appearances have no value
     /// equality of their own, so they are compared through their serialized form, which
     /// <see cref="TypologyAppearance"/> keeps canonical.</para>

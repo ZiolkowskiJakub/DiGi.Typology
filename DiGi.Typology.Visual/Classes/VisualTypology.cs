@@ -31,7 +31,7 @@ namespace DiGi.Typology.Visual.Classes
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisualTypology"/> class with a specified typology item.
-        /// <para>Use <see cref="Modify.AddSubTypologies{TTypology, TTypologyItem}(Typology{TTypology, TTypologyItem}, System.Collections.Generic.IEnumerable{TTypology})"/>
+        /// <para>Use <see cref="DiGi.Typology.Modify.AddSubTypologies{TTypology, TTypologyItem}(Typology{TTypology, TTypologyItem}, System.Collections.Generic.IEnumerable{TTypology})"/>
         /// to file sub-typologies under it: filing each one resolves an index against the indexes already taken, which
         /// does not belong in a constructor.</para>
         /// </summary>
@@ -50,6 +50,19 @@ namespace DiGi.Typology.Visual.Classes
         public VisualTypology(string? name, string? description)
             : base(new VisualTypologyItem(null, name, description, null))
         {
+        }
+
+        /// <summary>
+        /// Creates a <see cref="VisualTypology"/> for the specified full path, taking the name, the description and the
+        /// appearance of the source item.
+        /// </summary>
+        /// <param name="source">The item to take the name, the description and the appearance from; null for an unnamed intermediate node.</param>
+        /// <param name="path">The full path of the node to create.</param>
+        /// <returns>The created typology.</returns>
+        public override VisualTypology CreateNode(VisualTypologyItem? source, TypologyPath? path)
+        {
+            VisualTypologyItem item = source is null ? new VisualTypologyItem(path, null, null, null) : new VisualTypologyItem(path, source);
+            return new VisualTypology(item);
         }
     }
 }

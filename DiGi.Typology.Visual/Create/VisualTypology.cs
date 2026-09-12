@@ -140,10 +140,10 @@ namespace DiGi.Typology.Visual
                 {
                     object? object_Value = row[column.Index];
 
-                    // Fully qualified: Typology.Query.RuleData is the reflection path the base solver dispatches through,
-                    // and it reaches the rule data of a base rule and of a Visual rule alike - an unqualified RuleData
-                    // binds to whatever rule type the using block happens to import.
-                    ITypologyFilterRuleData? typologyFilterRuleData = Typology.Query.RuleData(typologyFilterRule, object_Value);
+                    // DiGi.Typology is stated in full so the call pins the base Query.RuleData - the reflection path
+                    // the base solver dispatches through, reaching the rule data of a base rule and of a Visual rule
+                    // alike - rather than whichever RuleData the using block happens to import.
+                    ITypologyFilterRuleData? typologyFilterRuleData = DiGi.Typology.Query.RuleData(typologyFilterRule, object_Value);
                     if (typologyFilterRuleData is null)
                     {
                         continue;
@@ -229,6 +229,31 @@ namespace DiGi.Typology.Visual
 
                 return columns.TryGetValue(uniqueId!, out column_Resolved);
             }
+        }
+
+        /// <summary>
+        /// Creates a <see cref="T:DiGi.Typology.Visual.Classes.VisualTypology"/> carrying the given item and the given sub-typologies.
+        /// <para>The sub-typologies are filed by <c>AddSubTypologies</c>: each is cloned and filed under the last index
+        /// of its own path, or under the next free index when it carries no path or its index is already taken.
+        /// Resolving those indexes is why this is a factory rather than a constructor. This is the
+        /// <see cref="T:DiGi.Typology.Visual.Classes.VisualTypology"/> sibling of the base <c>Create.Typology</c>, which would file a plain node and
+        /// drop the item's appearance.</para>
+        /// </summary>
+        /// <param name="typologyItem">The typology item to assign.</param>
+        /// <param name="subTypologies">A collection of sub-typologies to associate with the new instance.</param>
+        /// <returns>The created typology, or null when both arguments are null.</returns>
+        public static VisualTypology? VisualTypology(this VisualTypologyItem? typologyItem, IEnumerable<VisualTypology>? subTypologies)
+        {
+            if (typologyItem is null && subTypologies is null)
+            {
+                return null;
+            }
+
+            VisualTypology result = new(typologyItem);
+
+            result.AddSubTypologies(subTypologies);
+
+            return result;
         }
     }
 }

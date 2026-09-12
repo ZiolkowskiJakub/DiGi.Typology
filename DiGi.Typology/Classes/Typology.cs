@@ -94,6 +94,19 @@ namespace DiGi.Typology.Classes
         }
 
         /// <summary>
+        /// Creates a <typeparamref name="TTypology"/> node for the specified full path, taking its name, description
+        /// and any fields specific to the derived item type from the source item.
+        /// <para>Generic code cannot construct a <typeparamref name="TTypology"/> from an item - a type parameter
+        /// accepts no constructor arguments - so every node the generic <c>Modify</c> extensions create goes through
+        /// this member. The derived type builds the item through its own path constructor, which is what keeps the
+        /// derived item's fields on the created node rather than flattening it to the base item.</para>
+        /// </summary>
+        /// <param name="source">The item to take the name, the description and the derived fields from; null for an unnamed intermediate node.</param>
+        /// <param name="path">The full path of the node to create.</param>
+        /// <returns>The created node.</returns>
+        public abstract TTypology CreateNode(TTypologyItem? source, TypologyPath? path);
+
+        /// <summary>
         /// Gets or sets the description of the typology, held by its typology item.
         /// <para>The setter creates an empty <typeparamref name="TTypologyItem"/> when the typology has
         /// none.</para>
@@ -538,7 +551,8 @@ namespace DiGi.Typology.Classes
 
     /// <summary>
     /// Represents a typology node holding a plain <see cref="TypologyItem"/>. All behaviour is inherited from
-    /// <see cref="Typology{TTypology, TTypologyItem}"/>; this type only exposes the constructors.
+    /// <see cref="Typology{TTypology, TTypologyItem}"/>; this type exposes the constructors and supplies the
+    /// <see cref="CreateNode(TypologyItem, TypologyPath)"/> implementation.
     /// </summary>
     public class Typology : Typology<Typology, TypologyItem>
     {
@@ -580,6 +594,19 @@ namespace DiGi.Typology.Classes
         public Typology(string? name, string? description)
             : base(new TypologyItem(null, name, description))
         {
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Typology"/> for the specified full path, taking the name and description of the
+        /// source item.
+        /// </summary>
+        /// <param name="source">The item to take the name and description from; null for an unnamed intermediate node.</param>
+        /// <param name="path">The full path of the node to create.</param>
+        /// <returns>The created typology.</returns>
+        public override Typology CreateNode(TypologyItem? source, TypologyPath? path)
+        {
+            TypologyItem item = source is null ? new TypologyItem(path, null, null) : new TypologyItem(path, source);
+            return new Typology(item);
         }
     }
 }

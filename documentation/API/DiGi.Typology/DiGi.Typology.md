@@ -197,6 +197,74 @@ When this method returns, contains the updated or newly created child typology i
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
 True if a direct child was updated or created; otherwise, false\.
 
+<a name='DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology)'></a>
+
+## Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, IEnumerable\<int\>, string, string, TTypology\) Method
+
+Updates an existing direct child of the receiving typology whose name matches, or creates a new one when no match exists\.
+
+Matching is limited to the direct children of [in](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).in 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.in'); their sub-trees are not searched. When a match is found, only [description](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).description 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.description') is applied to the matched child; [values](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).values 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.values') and [name](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).name 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.name') are ignored, and if several children share the name, the first one is used. When no match exists, a new child is created from [values](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).values 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.values'), [name](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).name 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.name') and [description](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).description 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.description').
+
+The new child is built by the receiving typology's [CreateNode\(TTypologyItem, TypologyPath\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.CreateNode(TTypologyItem,DiGi.Typology.Classes.TypologyPath) 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.CreateNode\(TTypologyItem, DiGi\.Typology\.Classes\.TypologyPath\)'),
+            so a derived item type keeps its identity on the created node.
+
+The item type appears in no parameter, so at a call site on a derived typology the type arguments cannot be inferred: state them explicitly,
+            or use the argument-free overload the derived assembly provides.
+
+```csharp
+public static bool TryUpdateByName<TTypology,TTypologyItem>(this TTypology? @in, System.Collections.Generic.IEnumerable<int>? values, string? name, string? description, out TTypology? @out)
+    where TTypology : DiGi.Typology.Classes.Typology<TTypology, TTypologyItem>
+    where TTypologyItem : DiGi.Typology.Classes.TypologyItem, new();
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).TTypology'></a>
+
+`TTypology`
+
+The concrete typology type\.
+
+<a name='DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).TTypologyItem'></a>
+
+`TTypologyItem`
+
+The typology item type\.
+#### Parameters
+
+<a name='DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).in'></a>
+
+`in` [TTypology](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).TTypology 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.TTypology')
+
+The parent typology whose direct children are searched\.
+
+<a name='DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).values'></a>
+
+`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+Integer values used to create the new child when no match is found; ignored when a match exists\.
+
+<a name='DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name matched against the direct children of [in](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).in 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.in'); also the name assigned to a new child\.
+
+<a name='DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).description'></a>
+
+`description` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The description applied to the matched child, or assigned to a new child\.
+
+<a name='DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).out'></a>
+
+`out` [TTypology](DiGi.Typology.md#DiGi.Typology.Modify.TryUpdateByName_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypology).TTypology 'DiGi\.Typology\.Modify\.TryUpdateByName\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypology\)\.TTypology')
+
+When this method returns, contains the updated or newly created child typology if successful; otherwise, null\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if a direct child was updated or created; otherwise, false\.
+
 <a name='DiGi.Typology.Modify.Update(thisDiGi.Typology.Classes.Typology,DiGi.Typology.Classes.TypologyItem)'></a>
 
 ## Modify\.Update\(this Typology, TypologyItem\) Method
@@ -360,6 +428,336 @@ The description of the typology\.
 #### Returns
 [Typology](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology 'DiGi\.Typology\.Classes\.Typology')  
 The updated or created Typology instance, or null if update failed\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string)'></a>
+
+## Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, string\) Method
+
+Updates or creates a sub\-typology using specified name at the current level\.
+
+```csharp
+public static TTypology? Update<TTypology,TTypologyItem>(this TTypology? typology, string? name)
+    where TTypology : DiGi.Typology.Classes.Typology<TTypology, TTypologyItem>
+    where TTypologyItem : DiGi.Typology.Classes.TypologyItem, new();
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string).TTypology'></a>
+
+`TTypology`
+
+The concrete typology type\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string).TTypologyItem'></a>
+
+`TTypologyItem`
+
+The typology item type\.
+#### Parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string).typology'></a>
+
+`typology` [TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, string\)\.TTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name of the typology\.
+
+#### Returns
+[TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, string\)\.TTypology')  
+The updated or created typology instance, or null if update failed\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string,string)'></a>
+
+## Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, string, string\) Method
+
+Updates or creates a sub\-typology using specified name and description at the current level\.
+
+```csharp
+public static TTypology? Update<TTypology,TTypologyItem>(this TTypology? typology, string? name, string? description)
+    where TTypology : DiGi.Typology.Classes.Typology<TTypology, TTypologyItem>
+    where TTypologyItem : DiGi.Typology.Classes.TypologyItem, new();
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string,string).TTypology'></a>
+
+`TTypology`
+
+The concrete typology type\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string,string).TTypologyItem'></a>
+
+`TTypologyItem`
+
+The typology item type\.
+#### Parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string,string).typology'></a>
+
+`typology` [TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string,string).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, string, string\)\.TTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string,string).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name of the typology\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string,string).description'></a>
+
+`description` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The description of the typology\.
+
+#### Returns
+[TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,string,string).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, string, string\)\.TTypology')  
+The updated or created typology instance, or null if update failed\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string)'></a>
+
+## Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, IEnumerable\<int\>, string\) Method
+
+Updates or creates a sub\-typology using specified path values and name\.
+
+```csharp
+public static TTypology? Update<TTypology,TTypologyItem>(this TTypology? typology, System.Collections.Generic.IEnumerable<int>? values, string? name)
+    where TTypology : DiGi.Typology.Classes.Typology<TTypology, TTypologyItem>
+    where TTypologyItem : DiGi.Typology.Classes.TypologyItem, new();
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string).TTypology'></a>
+
+`TTypology`
+
+The concrete typology type\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string).TTypologyItem'></a>
+
+`TTypologyItem`
+
+The typology item type\.
+#### Parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string).typology'></a>
+
+`typology` [TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string\)\.TTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string).values'></a>
+
+`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+The sequence of indices representing the typology path\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name of the typology\.
+
+#### Returns
+[TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string\)\.TTypology')  
+The updated or created typology instance, or null if update failed\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string)'></a>
+
+## Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, IEnumerable\<int\>, string, string\) Method
+
+Updates or creates a sub\-typology using specified path values, name, and description\.
+            
+
+Missing intermediate nodes are created; an existing node is updated in place, keeping its
+            sub-typologies, its references and any item fields specific to the derived item type. When
+            [values](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string).values 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string\)\.values') is null or empty, the node is filed under a new index.
+
+Every node the method creates is built by the receiving typology's
+            [CreateNode\(TTypologyItem, TypologyPath\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.CreateNode(TTypologyItem,DiGi.Typology.Classes.TypologyPath) 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.CreateNode\(TTypologyItem, DiGi\.Typology\.Classes\.TypologyPath\)'), so a
+            derived item type keeps its identity on the created nodes.
+
+The item type appears in no parameter, so at a call site on a derived typology the type
+            arguments cannot be inferred: state them explicitly, or use the argument-free overload the derived
+            assembly provides.
+
+```csharp
+public static TTypology? Update<TTypology,TTypologyItem>(this TTypology? typology, System.Collections.Generic.IEnumerable<int>? values, string? name, string? description)
+    where TTypology : DiGi.Typology.Classes.Typology<TTypology, TTypologyItem>
+    where TTypologyItem : DiGi.Typology.Classes.TypologyItem, new();
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string).TTypology'></a>
+
+`TTypology`
+
+The concrete typology type\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string).TTypologyItem'></a>
+
+`TTypologyItem`
+
+The typology item type\.
+#### Parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string).typology'></a>
+
+`typology` [TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string\)\.TTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string).values'></a>
+
+`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+The sequence of indices representing the typology path\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name of the typology\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string).description'></a>
+
+`description` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The description of the typology\.
+
+#### Returns
+[TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string\)\.TTypology')  
+The updated or created typology instance, or null if update failed\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem)'></a>
+
+## Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, IEnumerable\<int\>, string, string, TTypologyItem\) Method
+
+Updates or creates a sub\-typology at the specified path using the specified name and description\.
+            
+
+Missing intermediate nodes are created; an existing node is updated in place, keeping its
+            sub-typologies, its references and any item fields specific to the derived item type - only the name
+            and description are applied to it. When [values](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).values 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypologyItem\)\.values') is null or empty, the node is filed
+            under a new index.
+
+Every created node is built by the receiving typology's
+            [CreateNode\(TTypologyItem, TypologyPath\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.CreateNode(TTypologyItem,DiGi.Typology.Classes.TypologyPath) 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.CreateNode\(TTypologyItem, DiGi\.Typology\.Classes\.TypologyPath\)'). The
+            [source](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).source 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypologyItem\)\.source') item, when given, supplies the derived item's fields on the created node -
+            a derived item keeps its own fields on the created nodes; when null, the created node carries the name
+            and description only.
+
+```csharp
+public static TTypology? Update<TTypology,TTypologyItem>(this TTypology? typology, System.Collections.Generic.IEnumerable<int>? values, string? name, string? description, TTypologyItem? source)
+    where TTypology : DiGi.Typology.Classes.Typology<TTypology, TTypologyItem>
+    where TTypologyItem : DiGi.Typology.Classes.TypologyItem, new();
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).TTypology'></a>
+
+`TTypology`
+
+The concrete typology type\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).TTypologyItem'></a>
+
+`TTypologyItem`
+
+The typology item type\.
+#### Parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).typology'></a>
+
+`typology` [TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypologyItem\)\.TTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).values'></a>
+
+`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+The sequence of indices representing the typology path, relative to [typology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).typology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypologyItem\)\.typology')\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name of the typology\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).description'></a>
+
+`description` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The description of the typology\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).source'></a>
+
+`source` [TTypologyItem](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).TTypologyItem 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypologyItem\)\.TTypologyItem')
+
+The item to take the derived item's fields from when a node is created; null for a node carrying the name and description only\.
+
+#### Returns
+[TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypologyItem\)\.TTypology')  
+The updated or created typology instance, or null when [typology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,System.Collections.Generic.IEnumerable_int_,string,string,TTypologyItem).typology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, TTypologyItem\)\.typology') is null\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,TTypologyItem)'></a>
+
+## Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, TTypologyItem\) Method
+
+Updates the given typology based on the provided typology item\.
+            
+
+The path carried by the item is relative to [typology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,TTypologyItem).typology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, TTypologyItem\)\.typology'). Missing intermediate
+            nodes are created; an existing node is updated in place, keeping its sub-typologies, its references
+            and any item fields specific to the derived item type - only the name and description are applied
+            to it. When the item carries no path, it is filed under a new index.
+
+Every node the method creates is built by the receiving typology's
+            [CreateNode\(TTypologyItem, TypologyPath\)](DiGi.Typology.Classes.md#DiGi.Typology.Classes.Typology_TTypology,TTypologyItem_.CreateNode(TTypologyItem,DiGi.Typology.Classes.TypologyPath) 'DiGi\.Typology\.Classes\.Typology\<TTypology,TTypologyItem\>\.CreateNode\(TTypologyItem, DiGi\.Typology\.Classes\.TypologyPath\)'), so a
+            derived item type keeps its own fields on the created nodes rather than being flattened to the
+            base item.
+
+```csharp
+public static TTypology? Update<TTypology,TTypologyItem>(this TTypology? typology, TTypologyItem? typologyItem)
+    where TTypology : DiGi.Typology.Classes.Typology<TTypology, TTypologyItem>
+    where TTypologyItem : DiGi.Typology.Classes.TypologyItem, new();
+```
+#### Type parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,TTypologyItem).TTypology'></a>
+
+`TTypology`
+
+The concrete typology type\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,TTypologyItem).TTypologyItem'></a>
+
+`TTypologyItem`
+
+The typology item type\.
+#### Parameters
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,TTypologyItem).typology'></a>
+
+`typology` [TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,TTypologyItem).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, TTypologyItem\)\.TTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,TTypologyItem).typologyItem'></a>
+
+`typologyItem` [TTypologyItem](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,TTypologyItem).TTypologyItem 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, TTypologyItem\)\.TTypologyItem')
+
+The typology item containing updated information\.
+
+#### Returns
+[TTypology](DiGi.Typology.md#DiGi.Typology.Modify.Update_TTypology,TTypologyItem_(thisTTypology,TTypologyItem).TTypology 'DiGi\.Typology\.Modify\.Update\<TTypology,TTypologyItem\>\(this TTypology, TTypologyItem\)\.TTypology')  
+The updated typology instance, or null if either input was null\.
 
 <a name='DiGi.Typology.Query'></a>
 

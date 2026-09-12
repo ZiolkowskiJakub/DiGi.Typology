@@ -86,6 +86,242 @@ A value indicating whether the identified references are stored on the nodes\.
 [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')  
 The solved Visual typology, or null when the table or the chain is null, when the table holds no rows, when a column named by the chain is absent from the table, when a level of the chain carries no rule, when the chain links back on itself, or when a required reference column is absent or unresolvable\.
 
+<a name='DiGi.Typology.Visual.Create.VisualTypology(thisDiGi.Typology.Visual.Classes.VisualTypologyItem,System.Collections.Generic.IEnumerable_DiGi.Typology.Visual.Classes.VisualTypology_)'></a>
+
+## Create\.VisualTypology\(this VisualTypologyItem, IEnumerable\<VisualTypology\>\) Method
+
+Creates a [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology') carrying the given item and the given sub\-typologies\.
+
+The sub-typologies are filed by `AddSubTypologies`: each is cloned and filed under the last index
+            of its own path, or under the next free index when it carries no path or its index is already taken.
+            Resolving those indexes is why this is a factory rather than a constructor. This is the
+            [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology') sibling of the base `Create.Typology`, which would file a plain node and
+            drop the item's appearance.
+
+```csharp
+public static DiGi.Typology.Visual.Classes.VisualTypology? VisualTypology(this DiGi.Typology.Visual.Classes.VisualTypologyItem? typologyItem, System.Collections.Generic.IEnumerable<DiGi.Typology.Visual.Classes.VisualTypology>? subTypologies);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Create.VisualTypology(thisDiGi.Typology.Visual.Classes.VisualTypologyItem,System.Collections.Generic.IEnumerable_DiGi.Typology.Visual.Classes.VisualTypology_).typologyItem'></a>
+
+`typologyItem` [VisualTypologyItem](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypologyItem 'DiGi\.Typology\.Visual\.Classes\.VisualTypologyItem')
+
+The typology item to assign\.
+
+<a name='DiGi.Typology.Visual.Create.VisualTypology(thisDiGi.Typology.Visual.Classes.VisualTypologyItem,System.Collections.Generic.IEnumerable_DiGi.Typology.Visual.Classes.VisualTypology_).subTypologies'></a>
+
+`subTypologies` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+A collection of sub\-typologies to associate with the new instance\.
+
+#### Returns
+[VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')  
+The created typology, or null when both arguments are null\.
+
+<a name='DiGi.Typology.Visual.Modify'></a>
+
+## Modify Class
+
+Argument\-free `Modify.TryUpdateByName` overload for the [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology') receiver\.
+
+The base generic overload takes the item type in no parameter, so at a [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology') call
+            site the type arguments cannot be inferred and would have to be stated explicitly. This overload names the
+            type for the caller and delegates to the base generic form, which builds a created node through
+            `VisualTypology`'s own `CreateNode`, so a created node's appearance is taken from the source item
+            rather than flattened away.
+
+```csharp
+public static class Modify
+```
+
+Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object') → Modify
+### Methods
+
+<a name='DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology)'></a>
+
+## Modify\.TryUpdateByName\(this VisualTypology, IEnumerable\<int\>, string, string, VisualTypology\) Method
+
+Updates an existing direct child of the receiving typology whose name matches, or creates a new one when
+no match exists\.
+
+Matching is limited to the direct children of [in](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).in 'DiGi\.Typology\.Visual\.Modify\.TryUpdateByName\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, DiGi\.Typology\.Visual\.Classes\.VisualTypology\)\.in'); their sub-trees are not
+            searched. When a match is found, only [description](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).description 'DiGi\.Typology\.Visual\.Modify\.TryUpdateByName\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, DiGi\.Typology\.Visual\.Classes\.VisualTypology\)\.description') is applied to the matched child;
+            [values](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).values 'DiGi\.Typology\.Visual\.Modify\.TryUpdateByName\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, DiGi\.Typology\.Visual\.Classes\.VisualTypology\)\.values') and [name](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).name 'DiGi\.Typology\.Visual\.Modify\.TryUpdateByName\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, DiGi\.Typology\.Visual\.Classes\.VisualTypology\)\.name') are ignored, and if several children share the name,
+            the first one is used. When no match exists, a new child is created from [values](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).values 'DiGi\.Typology\.Visual\.Modify\.TryUpdateByName\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, DiGi\.Typology\.Visual\.Classes\.VisualTypology\)\.values'),
+            [name](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).name 'DiGi\.Typology\.Visual\.Modify\.TryUpdateByName\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, DiGi\.Typology\.Visual\.Classes\.VisualTypology\)\.name') and [description](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).description 'DiGi\.Typology\.Visual\.Modify\.TryUpdateByName\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, DiGi\.Typology\.Visual\.Classes\.VisualTypology\)\.description').
+
+```csharp
+public static bool TryUpdateByName(this DiGi.Typology.Visual.Classes.VisualTypology? @in, System.Collections.Generic.IEnumerable<int>? values, string? name, string? description, out DiGi.Typology.Visual.Classes.VisualTypology? @out);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).in'></a>
+
+`in` [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')
+
+The parent typology whose direct children are searched\.
+
+<a name='DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).values'></a>
+
+`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+Integer values used to create the new child when no match is found; ignored when a match exists\.
+
+<a name='DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name matched against the direct children of [in](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).in 'DiGi\.Typology\.Visual\.Modify\.TryUpdateByName\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string, DiGi\.Typology\.Visual\.Classes\.VisualTypology\)\.in'); also the name assigned to a new child\.
+
+<a name='DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).description'></a>
+
+`description` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The description applied to the matched child, or assigned to a new child\.
+
+<a name='DiGi.Typology.Visual.Modify.TryUpdateByName(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string,DiGi.Typology.Visual.Classes.VisualTypology).out'></a>
+
+`out` [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')
+
+When this method returns, contains the updated or newly created child typology if successful; otherwise, null\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True if a direct child was updated or created; otherwise, false\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,string)'></a>
+
+## Modify\.Update\(this VisualTypology, string\) Method
+
+Updates or creates a sub\-typology using specified name at the current level\.
+
+```csharp
+public static DiGi.Typology.Visual.Classes.VisualTypology? Update(this DiGi.Typology.Visual.Classes.VisualTypology? typology, string? name);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,string).typology'></a>
+
+`typology` [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,string).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name of the typology\.
+
+#### Returns
+[VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')  
+The updated or created typology instance, or null if update failed\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,string,string)'></a>
+
+## Modify\.Update\(this VisualTypology, string, string\) Method
+
+Updates or creates a sub\-typology using specified name and description at the current level\.
+
+```csharp
+public static DiGi.Typology.Visual.Classes.VisualTypology? Update(this DiGi.Typology.Visual.Classes.VisualTypology? typology, string? name, string? description);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,string,string).typology'></a>
+
+`typology` [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,string,string).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name of the typology\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,string,string).description'></a>
+
+`description` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The description of the typology\.
+
+#### Returns
+[VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')  
+The updated or created typology instance, or null if update failed\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string)'></a>
+
+## Modify\.Update\(this VisualTypology, IEnumerable\<int\>, string\) Method
+
+Updates or creates a sub\-typology using specified path values and name\.
+
+```csharp
+public static DiGi.Typology.Visual.Classes.VisualTypology? Update(this DiGi.Typology.Visual.Classes.VisualTypology? typology, System.Collections.Generic.IEnumerable<int>? values, string? name);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string).typology'></a>
+
+`typology` [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string).values'></a>
+
+`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+The sequence of indices representing the typology path, relative to [typology](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string).typology 'DiGi\.Typology\.Visual\.Modify\.Update\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string\)\.typology')\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name of the typology\.
+
+#### Returns
+[VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')  
+The updated or created typology instance, or null if update failed\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string)'></a>
+
+## Modify\.Update\(this VisualTypology, IEnumerable\<int\>, string, string\) Method
+
+Updates or creates a sub\-typology using specified path values, name, and description\.
+
+```csharp
+public static DiGi.Typology.Visual.Classes.VisualTypology? Update(this DiGi.Typology.Visual.Classes.VisualTypology? typology, System.Collections.Generic.IEnumerable<int>? values, string? name, string? description);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string).typology'></a>
+
+`typology` [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')
+
+The typology to update\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string).values'></a>
+
+`values` [System\.Collections\.Generic\.IEnumerable&lt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')[System\.Int32](https://learn.microsoft.com/en-us/dotnet/api/system.int32 'System\.Int32')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1 'System\.Collections\.Generic\.IEnumerable\`1')
+
+The sequence of indices representing the typology path, relative to [typology](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string).typology 'DiGi\.Typology\.Visual\.Modify\.Update\(this DiGi\.Typology\.Visual\.Classes\.VisualTypology, System\.Collections\.Generic\.IEnumerable\<int\>, string, string\)\.typology')\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string).name'></a>
+
+`name` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The name of the typology\.
+
+<a name='DiGi.Typology.Visual.Modify.Update(thisDiGi.Typology.Visual.Classes.VisualTypology,System.Collections.Generic.IEnumerable_int_,string,string).description'></a>
+
+`description` [System\.String](https://learn.microsoft.com/en-us/dotnet/api/system.string 'System\.String')
+
+The description of the typology\.
+
+#### Returns
+[VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')  
+The updated or created typology instance, or null if update failed\.
+
 <a name='DiGi.Typology.Visual.Query'></a>
 
 ## Query Class

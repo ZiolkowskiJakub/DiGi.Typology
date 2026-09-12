@@ -1134,6 +1134,35 @@ public VisualTypology(System.Text.Json.Nodes.JsonObject? jsonObject);
 `jsonObject` [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/dotnet/api/system.text.json.nodes.jsonobject 'System\.Text\.Json\.Nodes\.JsonObject')
 
 The JSON object containing typology data\.
+### Methods
+
+<a name='DiGi.Typology.Visual.Classes.VisualTypology.CreateNode(DiGi.Typology.Visual.Classes.VisualTypologyItem,DiGi.Typology.Classes.TypologyPath)'></a>
+
+## VisualTypology\.CreateNode\(VisualTypologyItem, TypologyPath\) Method
+
+Creates a [VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology') for the specified full path, taking the name, the description and the
+appearance of the source item\.
+
+```csharp
+public override DiGi.Typology.Visual.Classes.VisualTypology CreateNode(DiGi.Typology.Visual.Classes.VisualTypologyItem? source, DiGi.Typology.Classes.TypologyPath? path);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualTypology.CreateNode(DiGi.Typology.Visual.Classes.VisualTypologyItem,DiGi.Typology.Classes.TypologyPath).source'></a>
+
+`source` [VisualTypologyItem](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypologyItem 'DiGi\.Typology\.Visual\.Classes\.VisualTypologyItem')
+
+The item to take the name, the description and the appearance from; null for an unnamed intermediate node\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualTypology.CreateNode(DiGi.Typology.Visual.Classes.VisualTypologyItem,DiGi.Typology.Classes.TypologyPath).path'></a>
+
+`path` [DiGi\.Typology\.Classes\.TypologyPath](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.typologypath 'DiGi\.Typology\.Classes\.TypologyPath')
+
+The full path of the node to create\.
+
+#### Returns
+[VisualTypology](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualTypology 'DiGi\.Typology\.Visual\.Classes\.VisualTypology')  
+The created typology\.
 
 <a name='DiGi.Typology.Visual.Classes.VisualTypologyItem'></a>
 
