@@ -10,7 +10,7 @@ namespace DiGi.Typology.Classes
     /// <summary>
     /// Represents a generic base class for range value filter rules.
     /// <para>Ranges are held keyed on <c>Range.Min</c> and enumerated in ascending <c>Min</c> order, so the order they were declared in does not affect which bucket a value resolves to.</para>
-    /// <para>Matching is a closed interval on both ends, so ranges that touch at a boundary both contain it and the lower one wins.</para>
+    /// <para>Matching is a closed interval on both ends, with one rule for ranges that touch: a value equal to a range's <c>Min</c> belongs to that range, so where one range ends exactly where the next begins the boundary goes to the upper one - every such range matches <c>[Min, Max)</c> and only the last range (nothing starts at its <c>Max</c>) matches <c>[Min, Max]</c>. The rule data says which: see <see cref="RangeValueRuleData{TValueType}.MaxExclusive"/>.</para>
     /// </summary>
     /// <typeparam name="TValueType">The type of the range values, which must implement <see cref="IComparable{T}"/>.</typeparam>
     public abstract class RangeValueFilterRule<TValueType> : TypologyFilterRule, ITypologyFilterRule<RangeValueRuleData<TValueType>> where TValueType : IComparable<TValueType>
@@ -64,7 +64,7 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Resolves the filter rule data for the specified value.
-        /// <para>Returns null for a null value, a value that cannot be converted to the range type, and a value outside every declared range. A solver consuming this rule drops such an object rather than bucketing it, so there is no catch-all bucket.</para>
+        /// <para>A value equal to a range's <c>Min</c> resolves to that range before any other is considered, so a boundary two ranges share goes to the upper one; otherwise the ranges are walked in ascending <c>Min</c> order and the first that contains the value wins. Returns null for a null value, a value that cannot be converted to the range type, and a value outside every declared range. A solver consuming this rule drops such an object rather than bucketing it, so there is no catch-all bucket.</para>
         /// </summary>
         /// <param name="object_Value">The value to test against the ranges.</param>
         /// <returns>The matching range rule data, or null if no range matches.</returns>
@@ -73,6 +73,11 @@ namespace DiGi.Typology.Classes
             if (!Core.Query.TryConvert(object_Value, out TValueType? tValueType_Converted) || tValueType_Converted is null)
             {
                 return null;
+            }
+
+            if (dictionary.TryGetValue(tValueType_Converted, out Range<TValueType>? range_AtMin) && range_AtMin is not null)
+            {
+                return new RangeValueRuleData<TValueType>(range_AtMin, MaxExclusive(range_AtMin));
             }
 
             foreach (KeyValuePair<TValueType, Range<TValueType>> keyValuePair in dictionary)
@@ -84,11 +89,26 @@ namespace DiGi.Typology.Classes
 
                 if (keyValuePair.Value.In(tValueType_Converted))
                 {
-                    return new RangeValueRuleData<TValueType>(keyValuePair.Value);
+                    return new RangeValueRuleData<TValueType>(keyValuePair.Value, MaxExclusive(keyValuePair.Value));
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Determines whether the range's <c>Max</c> is handed to the next range: true when another range of this rule starts exactly at it, false for the last range and for a single-value range.
+        /// </summary>
+        /// <param name="range">The range to test.</param>
+        /// <returns>True when a value equal to the range's <c>Max</c> resolves to the range starting there; otherwise, false.</returns>
+        public bool MaxExclusive(Range<TValueType>? range)
+        {
+            if (range is null || range.Max is null || range.Min is null)
+            {
+                return false;
+            }
+
+            return range.Max.CompareTo(range.Min) != 0 && dictionary.ContainsKey(range.Max);
         }
 
         /// <summary>

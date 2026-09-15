@@ -11,7 +11,9 @@ namespace DiGi.Typology.Visual.Classes
     /// fell into, together with the appearance of that bucket.
     /// <para>The appearance is metadata, not identity: equality, ordering and the hash consider the
     /// <see cref="Range{T}"/> alone (as in the base <see cref="RangeValueRuleData{TValueType}"/>), so two rule data
-    /// instances are equal when they wrap equal ranges whatever they look like.</para>
+    /// instances are equal when they wrap equal ranges whatever they look like. So is <see cref="MaxExclusive"/>, which
+    /// records whether the rule hands the range's <c>Max</c> to the range starting there, and drives the text form:
+    /// <c>[min, max)</c> for a range another one follows on, <c>[min, max]</c> for the last.</para>
     /// </summary>
     /// <typeparam name="TValueType">The underlying type of the range values.</typeparam>
     public class VisualRangeValueRuleData<TValueType> : TypologyFilterRuleData<VisualRangeValueRuleData<TValueType>>, IVisualTypologyFilterRuleData
@@ -21,6 +23,9 @@ namespace DiGi.Typology.Visual.Classes
 
         [JsonInclude, JsonPropertyName(nameof(Appearance))]
         private TypologyAppearance? appearance;
+
+        [JsonInclude, JsonPropertyName(nameof(MaxExclusive))]
+        private readonly bool maxExclusive = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisualRangeValueRuleData{TValueType}"/> class from a JSON object.
@@ -46,10 +51,12 @@ namespace DiGi.Typology.Visual.Classes
         /// </summary>
         /// <param name="range">The range the value fell into.</param>
         /// <param name="appearance">The appearance of the bucket; may be null.</param>
-        public VisualRangeValueRuleData(Range<TValueType>? range, TypologyAppearance? appearance)
+        /// <param name="maxExclusive">A value indicating whether the range's <c>Max</c> belongs to the next range rather than to this one.</param>
+        public VisualRangeValueRuleData(Range<TValueType>? range, TypologyAppearance? appearance, bool maxExclusive = false)
         {
             this.appearance = appearance;
             this.range = range;
+            this.maxExclusive = maxExclusive;
         }
 
         /// <summary>
@@ -62,6 +69,7 @@ namespace DiGi.Typology.Visual.Classes
         {
             range = Core.Query.Clone(visualRangeValueRuleData.range);
             appearance = Core.Query.Clone(visualRangeValueRuleData.appearance);
+            maxExclusive = visualRangeValueRuleData.maxExclusive;
         }
 
         /// <summary>
@@ -92,6 +100,18 @@ namespace DiGi.Typology.Visual.Classes
             get
             {
                 return range;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a value equal to the range's <c>Max</c> resolves to the next range rather than to this one - the rule that produced this data has a range starting exactly there.
+        /// </summary>
+        [JsonIgnore]
+        public bool MaxExclusive
+        {
+            get
+            {
+                return maxExclusive;
             }
         }
 
@@ -146,8 +166,8 @@ namespace DiGi.Typology.Visual.Classes
 
         /// <summary>
         /// Returns a string representation of the range rule data.
-        /// <para>The range is rendered as a closed interval, <c>[min, max]</c>, matching the rule's closed-interval matching
-        /// semantics on both ends.</para>
+        /// <para>The range is rendered as the interval the rule actually matches: <c>[min, max)</c> when the <c>Max</c>
+        /// belongs to the next range (<see cref="MaxExclusive"/>), <c>[min, max]</c> otherwise.</para>
         /// </summary>
         /// <returns>A string representation of the range.</returns>
         public override string ToString()
@@ -157,7 +177,7 @@ namespace DiGi.Typology.Visual.Classes
                 return "null";
             }
 
-            return $"[{range.Min}, {range.Max}]";
+            return $"[{range.Min}, {range.Max}{(maxExclusive ? ")" : "]")}";
         }
     }
 }

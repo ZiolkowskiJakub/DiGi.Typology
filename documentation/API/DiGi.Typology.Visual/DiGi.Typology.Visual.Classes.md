@@ -658,7 +658,9 @@ A [DiGi\.Typology\.Classes\.RangeValueFilterRule&lt;&gt;](https://learn.microsof
 
 Like its base it files its ranges keyed on [DiGi\.Core\.Classes\.Range&lt;&gt;\.Min](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1.min 'DiGi\.Core\.Classes\.Range\`1\.Min') and enumerates them in ascending
             `Min` order, so the order they were declared in does not affect which bucket a value resolves to; matching is
-            a closed interval on both ends, so ranges that touch at a boundary both contain it and the lower one wins. The
+            a closed interval on both ends, and a value equal to a range's `Min` belongs to that range, so where one range
+            ends exactly where the next begins the boundary goes to the upper one - `[Min, Max)` for every such range,
+            `[Min, Max]` for the last (see [MaxExclusive](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.MaxExclusive 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>\.MaxExclusive')). The
             difference is the appearance: the base rule is stateless and a consumer reads it back off the matched range,
             whereas here each bucket's appearance is filed on the rule itself, in a [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TypologyAppearanceCollection')
             keyed by the range (see [Key\(this object\)](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Query.Key(thisobject) 'DiGi\.Typology\.Visual\.Query\.Key\(this object\)')), so it survives a round trip, and
@@ -806,15 +808,38 @@ The range to file\.
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
 True if the range was filed; otherwise, false \(null\)\.
 
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.MaxExclusive(DiGi.Core.Classes.Range_TValueType_)'></a>
+
+## VisualRangeValueFilterRule\<TValueType\>\.MaxExclusive\(Range\<TValueType\>\) Method
+
+Determines whether the range's `Max` is handed to the next range: true when another range of this rule starts exactly at it, false for the last range and for a single\-value range\.
+
+```csharp
+public bool MaxExclusive(DiGi.Core.Classes.Range<TValueType>? range);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.MaxExclusive(DiGi.Core.Classes.Range_TValueType_).range'></a>
+
+`range` [DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')
+
+The range to test\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True when a value equal to the range's `Max` resolves to the range starting there; otherwise, false\.
+
 <a name='DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.RuleData(object)'></a>
 
 ## VisualRangeValueFilterRule\<TValueType\>\.RuleData\(object\) Method
 
 Resolves the value to the bucket it falls into and returns the rule data for that bucket\.
 
-The value is converted to [TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType') and matched against the ranges in ascending
-            [DiGi\.Core\.Classes\.Range&lt;&gt;\.Min](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1.min 'DiGi\.Core\.Classes\.Range\`1\.Min') order; the first range that contains it wins. The rule data carries the appearance
-            filed for that range in [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TypologyAppearanceCollection'), by reference, or null when none is filed.
+The value is converted to [TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TValueType'); a value equal to a range's [DiGi\.Core\.Classes\.Range&lt;&gt;\.Min](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1.min 'DiGi\.Core\.Classes\.Range\`1\.Min')
+            resolves to that range before any other is considered, so a boundary two ranges share goes to the upper one;
+            otherwise the ranges are walked in ascending `Min` order and the first that contains the value wins. The
+            rule data carries the appearance filed for that range in [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueFilterRule_TValueType_.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueFilterRule\<TValueType\>\.TypologyAppearanceCollection'), by
+            reference, or null when none is filed.
 
 ```csharp
 public DiGi.Typology.Visual.Classes.VisualRangeValueRuleData<TValueType>? RuleData(object? object_Value);
@@ -842,7 +867,9 @@ fell into, together with the appearance of that bucket\.
 
 The appearance is metadata, not identity: equality, ordering and the hash consider the
             [DiGi\.Core\.Classes\.Range&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1') alone (as in the base [DiGi\.Typology\.Classes\.RangeValueRuleData&lt;&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.rangevalueruledata-1 'DiGi\.Typology\.Classes\.RangeValueRuleData\`1')), so two rule data
-            instances are equal when they wrap equal ranges whatever they look like.
+            instances are equal when they wrap equal ranges whatever they look like. So is [MaxExclusive](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.MaxExclusive 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>\.MaxExclusive'), which
+            records whether the rule hands the range's `Max` to the range starting there, and drives the text form:
+            `[min, max)` for a range another one follows on, `[min, max]` for the last.
 
 ```csharp
 public class VisualRangeValueRuleData<TValueType> : DiGi.Typology.Classes.TypologyFilterRuleData<DiGi.Typology.Visual.Classes.VisualRangeValueRuleData<TValueType>>, DiGi.Typology.Visual.Interfaces.IVisualTypologyFilterRuleData, DiGi.Typology.Visual.Interfaces.ITypologyVisualSerializableObject, DiGi.Typology.Visual.Interfaces.ITypologyVisualObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject, DiGi.Typology.Interfaces.ITypologyFilterRuleData, DiGi.Typology.Interfaces.ITypologySerializableObject
@@ -871,9 +898,9 @@ and the appearance are set afterwards\.
 public VisualRangeValueRuleData();
 ```
 
-<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance)'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance,bool)'></a>
 
-## VisualRangeValueRuleData\(Range\<TValueType\>, TypologyAppearance\) Constructor
+## VisualRangeValueRuleData\(Range\<TValueType\>, TypologyAppearance, bool\) Constructor
 
 Initializes a new instance of the [VisualRangeValueRuleData&lt;TValueType&gt;](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_ 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>') class wrapping a range and
 an appearance\.
@@ -881,21 +908,27 @@ an appearance\.
 Both are stored as given, not cloned, so the caller retains ownership of the instances it passes.
 
 ```csharp
-public VisualRangeValueRuleData(DiGi.Core.Classes.Range<TValueType>? range, DiGi.Typology.Visual.Classes.TypologyAppearance? appearance);
+public VisualRangeValueRuleData(DiGi.Core.Classes.Range<TValueType>? range, DiGi.Typology.Visual.Classes.TypologyAppearance? appearance, bool maxExclusive=false);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance).range'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance,bool).range'></a>
 
 `range` [DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.TValueType 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')
 
 The range the value fell into\.
 
-<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance).appearance'></a>
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance,bool).appearance'></a>
 
 `appearance` [TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance')
 
 The appearance of the bucket; may be null\.
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,DiGi.Typology.Visual.Classes.TypologyAppearance,bool).maxExclusive'></a>
+
+`maxExclusive` [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')
+
+A value indicating whether the range's `Max` belongs to the next range rather than to this one\.
 
 <a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.VisualRangeValueRuleData(DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_)'></a>
 
@@ -950,6 +983,19 @@ Implements [Appearance](DiGi.Typology.Visual.Interfaces.md#DiGi.Typology.Visual.
 
 #### Property Value
 [TypologyAppearance](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearance 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearance')
+
+<a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.MaxExclusive'></a>
+
+## VisualRangeValueRuleData\<TValueType\>\.MaxExclusive Property
+
+Gets a value indicating whether a value equal to the range's `Max` resolves to the next range rather than to this one \- the rule that produced this data has a range starting exactly there\.
+
+```csharp
+public bool MaxExclusive { get; }
+```
+
+#### Property Value
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')
 
 <a name='DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.Range'></a>
 
@@ -1028,8 +1074,8 @@ A 32\-bit signed integer hash code\.
 
 Returns a string representation of the range rule data\.
 
-The range is rendered as a closed interval, `[min, max]`, matching the rule's closed-interval matching
-            semantics on both ends.
+The range is rendered as the interval the rule actually matches: `[min, max)` when the `Max`
+            belongs to the next range ([MaxExclusive](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualRangeValueRuleData_TValueType_.MaxExclusive 'DiGi\.Typology\.Visual\.Classes\.VisualRangeValueRuleData\<TValueType\>\.MaxExclusive')), `[min, max]` otherwise.
 
 ```csharp
 public override string ToString();

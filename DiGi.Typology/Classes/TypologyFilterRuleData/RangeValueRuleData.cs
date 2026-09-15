@@ -6,12 +6,16 @@ namespace DiGi.Typology.Classes
 {
     /// <summary>
     /// Represents the resulting data for a range value rule.
+    /// <para>Besides the range, it records whether the rule hands the range's <c>Max</c> to the range starting there (<see cref="MaxExclusive"/>), so the text form says what the bucket actually matches: <c>[min, max)</c> for a range another one follows on, <c>[min, max]</c> for the last. The flag is metadata: equality and the hash consider the range alone.</para>
     /// </summary>
     /// <typeparam name="TValueType">The underlying type of the range values.</typeparam>
     public class RangeValueRuleData<TValueType> : TypologyFilterRuleData<RangeValueRuleData<TValueType>>
     {
         [JsonInclude, JsonPropertyName(nameof(Range))]
         private readonly Range<TValueType>? range = null;
+
+        [JsonInclude, JsonPropertyName(nameof(MaxExclusive))]
+        private readonly bool maxExclusive = false;
 
         /// <summary>
         /// Gets the range of values.
@@ -22,6 +26,18 @@ namespace DiGi.Typology.Classes
             get
             {
                 return range;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a value equal to the range's <c>Max</c> resolves to the next range rather than to this one - the rule that produced this data has a range starting exactly there.
+        /// </summary>
+        [JsonIgnore]
+        public bool MaxExclusive
+        {
+            get
+            {
+                return maxExclusive;
             }
         }
 
@@ -45,9 +61,11 @@ namespace DiGi.Typology.Classes
         /// Initializes a new instance of the <see cref="RangeValueRuleData{TValueType}"/> class with a specific range.
         /// </summary>
         /// <param name="range">The range values.</param>
-        public RangeValueRuleData(Range<TValueType>? range)
+        /// <param name="maxExclusive">A value indicating whether the range's <c>Max</c> belongs to the next range rather than to this one.</param>
+        public RangeValueRuleData(Range<TValueType>? range, bool maxExclusive = false)
         {
             this.range = range;
+            this.maxExclusive = maxExclusive;
         }
 
         /// <summary>
@@ -58,6 +76,7 @@ namespace DiGi.Typology.Classes
             : base(rangeValueRuleData)
         {
             range = Core.Query.Clone(rangeValueRuleData.range);
+            maxExclusive = rangeValueRuleData.maxExclusive;
         }
 
         /// <summary>
@@ -110,7 +129,7 @@ namespace DiGi.Typology.Classes
 
         /// <summary>
         /// Returns a string representation of the range rule data.
-        /// <para>The range is rendered as a closed interval, <c>[min, max]</c>, matching the rule's closed-interval matching semantics on both ends.</para>
+        /// <para>The range is rendered as the interval the rule actually matches: <c>[min, max)</c> when the <c>Max</c> belongs to the next range (<see cref="MaxExclusive"/>), <c>[min, max]</c> otherwise.</para>
         /// </summary>
         /// <returns>A string representation of the range.</returns>
         public override string ToString()
@@ -120,7 +139,7 @@ namespace DiGi.Typology.Classes
                 return "null";
             }
 
-            return $"[{range.Min}, {range.Max}]";
+            return $"[{range.Min}, {range.Max}{(maxExclusive ? ")" : "]")}";
         }
     }
 }

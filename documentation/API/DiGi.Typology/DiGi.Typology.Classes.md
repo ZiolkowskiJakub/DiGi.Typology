@@ -368,7 +368,7 @@ Represents a generic base class for range value filter rules\.
 
 Ranges are held keyed on `Range.Min` and enumerated in ascending `Min` order, so the order they were declared in does not affect which bucket a value resolves to.
 
-Matching is a closed interval on both ends, so ranges that touch at a boundary both contain it and the lower one wins.
+Matching is a closed interval on both ends, with one rule for ranges that touch: a value equal to a range's `Min` belongs to that range, so where one range ends exactly where the next begins the boundary goes to the upper one - every such range matches `[Min, Max)` and only the last range (nothing starts at its `Max`) matches `[Min, Max]`. The rule data says which: see [MaxExclusive](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueRuleData_TValueType_.MaxExclusive 'DiGi\.Typology\.Classes\.RangeValueRuleData\<TValueType\>\.MaxExclusive').
 
 ```csharp
 public abstract class RangeValueFilterRule<TValueType> : DiGi.Typology.Classes.TypologyFilterRule, DiGi.Typology.Interfaces.ITypologyFilterRule<DiGi.Typology.Classes.RangeValueRuleData<TValueType>>, DiGi.Typology.Interfaces.ITypologyFilterRule, DiGi.Typology.Interfaces.ITypologySerializableObject, DiGi.Typology.Interfaces.ITypologyObject, DiGi.Core.Interfaces.IObject, DiGi.Core.Interfaces.ISerializableObject, DiGi.Core.Interfaces.ICloneableObject<DiGi.Core.Interfaces.ISerializableObject>, DiGi.Core.Interfaces.ICloneableObject
@@ -490,13 +490,34 @@ The range to add\.
 [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
 True if the range was successfully added; otherwise, false\.
 
+<a name='DiGi.Typology.Classes.RangeValueFilterRule_TValueType_.MaxExclusive(DiGi.Core.Classes.Range_TValueType_)'></a>
+
+## RangeValueFilterRule\<TValueType\>\.MaxExclusive\(Range\<TValueType\>\) Method
+
+Determines whether the range's `Max` is handed to the next range: true when another range of this rule starts exactly at it, false for the last range and for a single\-value range\.
+
+```csharp
+public bool MaxExclusive(DiGi.Core.Classes.Range<TValueType>? range);
+```
+#### Parameters
+
+<a name='DiGi.Typology.Classes.RangeValueFilterRule_TValueType_.MaxExclusive(DiGi.Core.Classes.Range_TValueType_).range'></a>
+
+`range` [DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueFilterRule_TValueType_.TValueType 'DiGi\.Typology\.Classes\.RangeValueFilterRule\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')
+
+The range to test\.
+
+#### Returns
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')  
+True when a value equal to the range's `Max` resolves to the range starting there; otherwise, false\.
+
 <a name='DiGi.Typology.Classes.RangeValueFilterRule_TValueType_.RuleData(object)'></a>
 
 ## RangeValueFilterRule\<TValueType\>\.RuleData\(object\) Method
 
 Resolves the filter rule data for the specified value\.
 
-Returns null for a null value, a value that cannot be converted to the range type, and a value outside every declared range. A solver consuming this rule drops such an object rather than bucketing it, so there is no catch-all bucket.
+A value equal to a range's `Min` resolves to that range before any other is considered, so a boundary two ranges share goes to the upper one; otherwise the ranges are walked in ascending `Min` order and the first that contains the value wins. Returns null for a null value, a value that cannot be converted to the range type, and a value outside every declared range. A solver consuming this rule drops such an object rather than bucketing it, so there is no catch-all bucket.
 
 ```csharp
 public DiGi.Typology.Classes.RangeValueRuleData<TValueType>? RuleData(object? object_Value);
@@ -520,6 +541,8 @@ The matching range rule data, or null if no range matches\.
 ## RangeValueRuleData\<TValueType\> Class
 
 Represents the resulting data for a range value rule\.
+
+Besides the range, it records whether the rule hands the range's `Max` to the range starting there ([MaxExclusive](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueRuleData_TValueType_.MaxExclusive 'DiGi\.Typology\.Classes\.RangeValueRuleData\<TValueType\>\.MaxExclusive')), so the text form says what the bucket actually matches: `[min, max)` for a range another one follows on, `[min, max]` for the last. The flag is metadata: equality and the hash consider the range alone.
 
 ```csharp
 public class RangeValueRuleData<TValueType> : DiGi.Typology.Classes.TypologyFilterRuleData<DiGi.Typology.Classes.RangeValueRuleData<TValueType>>
@@ -545,22 +568,28 @@ Initializes a new instance of the [RangeValueRuleData&lt;TValueType&gt;](DiGi.Ty
 public RangeValueRuleData();
 ```
 
-<a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.RangeValueRuleData(DiGi.Core.Classes.Range_TValueType_)'></a>
+<a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.RangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,bool)'></a>
 
-## RangeValueRuleData\(Range\<TValueType\>\) Constructor
+## RangeValueRuleData\(Range\<TValueType\>, bool\) Constructor
 
 Initializes a new instance of the [RangeValueRuleData&lt;TValueType&gt;](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueRuleData_TValueType_ 'DiGi\.Typology\.Classes\.RangeValueRuleData\<TValueType\>') class with a specific range\.
 
 ```csharp
-public RangeValueRuleData(DiGi.Core.Classes.Range<TValueType>? range);
+public RangeValueRuleData(DiGi.Core.Classes.Range<TValueType>? range, bool maxExclusive=false);
 ```
 #### Parameters
 
-<a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.RangeValueRuleData(DiGi.Core.Classes.Range_TValueType_).range'></a>
+<a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.RangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,bool).range'></a>
 
 `range` [DiGi\.Core\.Classes\.Range&lt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')[TValueType](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueRuleData_TValueType_.TValueType 'DiGi\.Typology\.Classes\.RangeValueRuleData\<TValueType\>\.TValueType')[&gt;](https://learn.microsoft.com/en-us/dotnet/api/digi.core.classes.range-1 'DiGi\.Core\.Classes\.Range\`1')
 
 The range values\.
+
+<a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.RangeValueRuleData(DiGi.Core.Classes.Range_TValueType_,bool).maxExclusive'></a>
+
+`maxExclusive` [System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')
+
+A value indicating whether the range's `Max` belongs to the next range rather than to this one\.
 
 <a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.RangeValueRuleData(DiGi.Typology.Classes.RangeValueRuleData_TValueType_)'></a>
 
@@ -596,6 +625,19 @@ public RangeValueRuleData(System.Text.Json.Nodes.JsonObject jsonObject);
 
 The JSON object containing range rule data\.
 ### Properties
+
+<a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.MaxExclusive'></a>
+
+## RangeValueRuleData\<TValueType\>\.MaxExclusive Property
+
+Gets a value indicating whether a value equal to the range's `Max` resolves to the next range rather than to this one \- the rule that produced this data has a range starting exactly there\.
+
+```csharp
+public bool MaxExclusive { get; }
+```
+
+#### Property Value
+[System\.Boolean](https://learn.microsoft.com/en-us/dotnet/api/system.boolean 'System\.Boolean')
 
 <a name='DiGi.Typology.Classes.RangeValueRuleData_TValueType_.Range'></a>
 
@@ -673,7 +715,7 @@ A 32\-bit signed integer hash code\.
 
 Returns a string representation of the range rule data\.
 
-The range is rendered as a closed interval, `[min, max]`, matching the rule's closed-interval matching semantics on both ends.
+The range is rendered as the interval the rule actually matches: `[min, max)` when the `Max` belongs to the next range ([MaxExclusive](DiGi.Typology.Classes.md#DiGi.Typology.Classes.RangeValueRuleData_TValueType_.MaxExclusive 'DiGi\.Typology\.Classes\.RangeValueRuleData\<TValueType\>\.MaxExclusive')), `[min, max]` otherwise.
 
 ```csharp
 public override string ToString();

@@ -13,7 +13,9 @@ namespace DiGi.Typology.Visual.Classes
     /// A <see cref="RangeValueFilterRule{TValueType}"/> that also carries the appearance of each of its buckets.
     /// <para>Like its base it files its ranges keyed on <see cref="Range{T}.Min"/> and enumerates them in ascending
     /// <c>Min</c> order, so the order they were declared in does not affect which bucket a value resolves to; matching is
-    /// a closed interval on both ends, so ranges that touch at a boundary both contain it and the lower one wins. The
+    /// a closed interval on both ends, and a value equal to a range's <c>Min</c> belongs to that range, so where one range
+    /// ends exactly where the next begins the boundary goes to the upper one - <c>[Min, Max)</c> for every such range,
+    /// <c>[Min, Max]</c> for the last (see <see cref="VisualRangeValueRuleData{TValueType}.MaxExclusive"/>). The
     /// difference is the appearance: the base rule is stateless and a consumer reads it back off the matched range,
     /// whereas here each bucket's appearance is filed on the rule itself, in a <see cref="TypologyAppearanceCollection"/>
     /// keyed by the range (see <see cref="Query.Key(object)"/>), so it survives a round trip, and
@@ -138,9 +140,11 @@ namespace DiGi.Typology.Visual.Classes
 
         /// <summary>
         /// Resolves the value to the bucket it falls into and returns the rule data for that bucket.
-        /// <para>The value is converted to <typeparamref name="TValueType"/> and matched against the ranges in ascending
-        /// <see cref="Range{T}.Min"/> order; the first range that contains it wins. The rule data carries the appearance
-        /// filed for that range in <see cref="TypologyAppearanceCollection"/>, by reference, or null when none is filed.</para>
+        /// <para>The value is converted to <typeparamref name="TValueType"/>; a value equal to a range's <see cref="Range{T}.Min"/>
+        /// resolves to that range before any other is considered, so a boundary two ranges share goes to the upper one;
+        /// otherwise the ranges are walked in ascending <c>Min</c> order and the first that contains the value wins. The
+        /// rule data carries the appearance filed for that range in <see cref="TypologyAppearanceCollection"/>, by
+        /// reference, or null when none is filed.</para>
         /// </summary>
         /// <param name="object_Value">The value to match against the ranges.</param>
         /// <returns>The rule data wrapping the matched range and its appearance, or null when the value is not convertible or no range contains it.</returns>
@@ -149,6 +153,11 @@ namespace DiGi.Typology.Visual.Classes
             if (!Core.Query.TryConvert(object_Value, out TValueType? tValueType_Converted) || tValueType_Converted is null)
             {
                 return null;
+            }
+
+            if (dictionary.TryGetValue(tValueType_Converted, out Range<TValueType>? range_AtMin) && range_AtMin is not null)
+            {
+                return new VisualRangeValueRuleData<TValueType>(range_AtMin, typologyAppearanceCollection[range_AtMin], MaxExclusive(range_AtMin));
             }
 
             foreach (KeyValuePair<TValueType, Range<TValueType>> keyValuePair in dictionary)
@@ -160,11 +169,26 @@ namespace DiGi.Typology.Visual.Classes
 
                 if (keyValuePair.Value.In(tValueType_Converted))
                 {
-                    return new VisualRangeValueRuleData<TValueType>(keyValuePair.Value, typologyAppearanceCollection[keyValuePair.Value]);
+                    return new VisualRangeValueRuleData<TValueType>(keyValuePair.Value, typologyAppearanceCollection[keyValuePair.Value], MaxExclusive(keyValuePair.Value));
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Determines whether the range's <c>Max</c> is handed to the next range: true when another range of this rule starts exactly at it, false for the last range and for a single-value range.
+        /// </summary>
+        /// <param name="range">The range to test.</param>
+        /// <returns>True when a value equal to the range's <c>Max</c> resolves to the range starting there; otherwise, false.</returns>
+        public bool MaxExclusive(Range<TValueType>? range)
+        {
+            if (range is null || range.Max is null || range.Min is null)
+            {
+                return false;
+            }
+
+            return range.Max.CompareTo(range.Min) != 0 && dictionary.ContainsKey(range.Max);
         }
     }
 }
