@@ -9,6 +9,10 @@ namespace DiGi.Typology.Visual.Classes
     /// <summary>
     /// The Visual counterpart of <see cref="UniqueValueFilterRule"/>: buckets a value by equality and carries an
     /// appearance per value.
+    /// <para>Where a range rule declares its buckets through its <c>Ranges</c>, this rule declares them through the
+    /// appearances it files: a value resolves a bucket only when an appearance is filed for it, and <see cref="RuleData(object)"/>
+    /// resolves nothing for the rest - the same resolve-nothing semantics a range rule applies to a value outside every
+    /// declared range, so a solve lists exactly the declared values the data carries rather than every value present.</para>
     /// <para>The rule data is created at solve time, so the appearances live here, in a
     /// <see cref="Classes.TypologyAppearanceCollection"/> keyed by the value - see <see cref="Query.Key(object)"/> for
     /// the key a value resolves to - and <see cref="RuleData(object)"/> hands the value's appearance to the
@@ -64,15 +68,23 @@ namespace DiGi.Typology.Visual.Classes
         }
 
         /// <summary>
-        /// Wraps the value in the rule data of its bucket, together with the appearance filed for the value in
-        /// <see cref="TypologyAppearanceCollection"/>, by reference, or null when none is filed.
-        /// <para>Every value gets a bucket, as in <see cref="UniqueValueFilterRule"/>; <c>null</c> is the NULL bucket.</para>
+        /// Resolves the value to the bucket it declares and returns the rule data for that bucket.
+        /// <para>A value resolves a bucket exactly when an appearance is filed for it in <see cref="TypologyAppearanceCollection"/>,
+        /// which the rule data then carries by reference; a value with no filed appearance resolves nothing, as a range rule
+        /// resolves nothing for a value outside every declared range. <c>null</c> is the NULL bucket, declared by filing an
+        /// appearance for <c>null</c> like any other value.</para>
         /// </summary>
-        /// <param name="object">The value to bucket.</param>
-        /// <returns>The rule data wrapping the value and its appearance.</returns>
+        /// <param name="object">The value to resolve.</param>
+        /// <returns>The rule data wrapping the value and its appearance, or null when no appearance is filed for the value.</returns>
         public VisualUniqueValueRuleData? RuleData(object? @object)
         {
-            return new VisualUniqueValueRuleData(@object, typologyAppearanceCollection[@object]);
+            TypologyAppearance? typologyAppearance = typologyAppearanceCollection[@object];
+            if (typologyAppearance is null)
+            {
+                return null;
+            }
+
+            return new VisualUniqueValueRuleData(@object, typologyAppearance);
         }
     }
 }

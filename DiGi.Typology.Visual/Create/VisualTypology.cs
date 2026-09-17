@@ -26,7 +26,9 @@ namespace DiGi.Typology.Visual
         /// <para>A row whose value resolves to no bucket at a level is excluded from that level's subtree, and from every
         /// level below it. A range rule resolves nothing for a null value, a value it cannot convert, and a value outside
         /// every declared range, so rows with no value in a range column are absent below that point. A unique value rule
-        /// buckets nulls instead, under the name "null". There is no catch-all bucket.</para>
+        /// resolves a bucket only for the values its definition declares - the ones carrying a filed appearance - so rows
+        /// with an undeclared value are absent below that point, the same way rows outside every declared range are. A null
+        /// value is the NULL bucket, declared by filing an appearance for <c>null</c>. There is no catch-all bucket.</para>
         /// <para>With <paramref name="includeReferences"/> set, every node from the matched one up to the root stores the
         /// reference - the reference column's cell value, read from the resolved column - so an ancestor's references are
         /// those of its whole subtree. Clear it to solve structure, node metadata and appearance only, for a tree whose

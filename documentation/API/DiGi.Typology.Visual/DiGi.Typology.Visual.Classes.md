@@ -1453,6 +1453,11 @@ A 32\-bit signed integer hash code\.
 The Visual counterpart of [DiGi\.Typology\.Classes\.UniqueValueFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevaluefilterrule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule'): buckets a value by equality and carries an
 appearance per value\.
 
+Where a range rule declares its buckets through its `Ranges`, this rule declares them through the
+            appearances it files: a value resolves a bucket only when an appearance is filed for it, and [RuleData\(object\)](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule.RuleData(object) 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueFilterRule\.RuleData\(object\)')
+            resolves nothing for the rest - the same resolve-nothing semantics a range rule applies to a value outside every
+            declared range, so a solve lists exactly the declared values the data carries rather than every value present.
+
 The rule data is created at solve time, so the appearances live here, in a
             [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.TypologyAppearanceCollection') keyed by the value - see [Key\(this object\)](DiGi.Typology.Visual.md#DiGi.Typology.Visual.Query.Key(thisobject) 'DiGi\.Typology\.Visual\.Query\.Key\(this object\)') for
             the key a value resolves to - and [RuleData\(object\)](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule.RuleData(object) 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueFilterRule\.RuleData\(object\)') hands the value's appearance to the
@@ -1539,10 +1544,12 @@ Implements [TypologyAppearanceCollection](DiGi.Typology.Visual.Interfaces.md#DiG
 
 ## VisualUniqueValueFilterRule\.RuleData\(object\) Method
 
-Wraps the value in the rule data of its bucket, together with the appearance filed for the value in
-[TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueFilterRule\.TypologyAppearanceCollection'), by reference, or null when none is filed\.
+Resolves the value to the bucket it declares and returns the rule data for that bucket\.
 
-Every value gets a bucket, as in [DiGi\.Typology\.Classes\.UniqueValueFilterRule](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.classes.uniquevaluefilterrule 'DiGi\.Typology\.Classes\.UniqueValueFilterRule'); `null` is the NULL bucket.
+A value resolves a bucket exactly when an appearance is filed for it in [TypologyAppearanceCollection](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueFilterRule.TypologyAppearanceCollection 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueFilterRule\.TypologyAppearanceCollection'),
+            which the rule data then carries by reference; a value with no filed appearance resolves nothing, as a range rule
+            resolves nothing for a value outside every declared range. `null` is the NULL bucket, declared by filing an
+            appearance for `null` like any other value.
 
 ```csharp
 public DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData? RuleData(object? @object);
@@ -1553,13 +1560,13 @@ public DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData? RuleData(object? 
 
 `object` [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system.object 'System\.Object')
 
-The value to bucket\.
+The value to resolve\.
 
 Implements [RuleData\(object\)](https://learn.microsoft.com/en-us/dotnet/api/digi.typology.interfaces.itypologyfilterrule-1.ruledata#digi-typology-interfaces-itypologyfilterrule-1-ruledata(system-object) 'DiGi\.Typology\.Interfaces\.ITypologyFilterRule\`1\.RuleData\(System\.Object\)')
 
 #### Returns
 [VisualUniqueValueRuleData](DiGi.Typology.Visual.Classes.md#DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData 'DiGi\.Typology\.Visual\.Classes\.VisualUniqueValueRuleData')  
-The rule data wrapping the value and its appearance\.
+The rule data wrapping the value and its appearance, or null when no appearance is filed for the value\.
 
 <a name='DiGi.Typology.Visual.Classes.VisualUniqueValueRuleData'></a>
 
